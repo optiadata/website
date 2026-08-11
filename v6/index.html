@@ -56,13 +56,14 @@ html { scroll-behavior: smooth; overflow-x: hidden; scroll-snap-type: y mandator
    so it applies before layout, and before the browser decides which lazy
    images are worth fetching immediately. */
 html.routing-case .hero, html.routing-case main { display: none; }
-/* #solutions, #customers and #approach already reserve nav clearance via
-   their own padding-top: calc(66px + gutter) - adding scroll-margin-top on
-   top of that double-counts the offset, pushing the section 66px further
-   down than its own height accounts for and cutting its bottom off the
-   viewport. Only #core and #contact need scroll-margin-top, since they
-   don't have that internal padding. */
-#contact { scroll-margin-top: 66px; }
+/* Every full-page section reserves its own nav clearance with an internal
+   padding-top of calc(66px + gutter), so none of them need scroll-margin-top.
+   Contact used to carry one because its columns had no such padding, but on
+   the LAST section a scroll-margin-top is actively harmful: it puts the final
+   snap position 66px before the end of the document, and since mandatory snap
+   must rest on a snap position, the last 66px of the page became unreachable.
+   That is what was clipping the bottom of Core and of Contact itself. The
+   clearance now lives inside Contact's two columns instead. */
 /* Every top-level "page" is a snap point, and the container is mandatory so a
    scroll gesture always resolves to one - proximity left a dead zone where a
    fast scroll or PageDown could rest mid-section with no correction, cutting
@@ -101,18 +102,31 @@ html.routing-case .hero, html.routing-case main { display: none; }
 /* Contact is two columns side by side on desktop (fits one viewport) but
    stacks to two full-height rows on mobile (2x viewport) - only force a
    hard stop for it above the mobile breakpoint. */
-@media (min-width: 761px) {
+@media (min-width: 761px) and (min-height: 701px) {
   .contact { scroll-snap-stop: always; }
 }
 body {
   margin: 0;
-  overflow-x: hidden;
+  /* clip, not hidden. Setting one axis to hidden forces the other to auto,
+     which made body a scroll container - and a section resolves its
+     scroll-snap-align against its NEAREST scroll container ancestor, so the
+     alignment was being matched to body (scroll-snap-type: none) and never
+     reached html, where the mandatory snap actually lives. Nothing on the page
+     snapped. overflow: clip clips the same way without creating a scroll
+     container, so the alignment reaches html. */
+  overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
   font-family: 'Switzer', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-body.menu-open { overflow: hidden; }
+/* The scroll container is html, and body's overflow does not propagate to the
+   viewport while html's own overflow is not visible, so locking body alone
+   never actually froze the page behind the open menu. Lock html instead, and
+   keep body on clip so it does not become a scroll container and re-break
+   snapping while the menu is open. */
+body.menu-open { overflow-x: clip; }
+html:has(body.menu-open) { overflow: hidden; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea { font: inherit; }
 button { color: inherit; }
@@ -558,9 +572,9 @@ p { text-wrap: pretty; }
 
 
 .approach { background: var(--paper); color: var(--ink); }
-.approach__intro { min-height: 100svh; padding: calc(66px + var(--gutter)) var(--gutter) var(--gutter); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 16px; align-content: start; }
+.approach__intro { min-height: 100svh; padding: calc(66px + var(--gutter)) var(--gutter) var(--gutter); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 16px; align-content: center; }
 .approach__intro .eyebrow { grid-column: 1 / 4; }
-.approach__headline { grid-column: 1 / 11; margin: 3vh 0 4vh; font-size: clamp(2.6rem, 5.6vw, 6.2rem); font-weight: 500; line-height: .92; letter-spacing: -.055em; }
+.approach__headline { grid-column: 1 / 11; margin: var(--space-s) 0 var(--space-m); font-size: clamp(2.6rem, 5.6vw, 6.2rem); font-weight: 500; line-height: .92; letter-spacing: -.055em; }
 .approach__headline em { display: block; margin-left: 6%; font-family: 'Zodiak', Georgia, serif; font-weight: 400; }
 .approach__lead { grid-column: 7 / 13; margin: 0; font-size: clamp(1.12rem, 1.8vw, 1.6rem); line-height: 1.33; letter-spacing: -.025em; }
 .approach__lead span, .approach-chapter__body span { display: block; margin-bottom: .75em; }
@@ -592,13 +606,13 @@ p { text-wrap: pretty; }
 
 
 .contact { min-height: 100svh; display: grid; grid-template-columns: 56% 44%; background: var(--blue); color: white; }
-.contact__visual { position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; padding: var(--gutter); display: grid; grid-template-rows: auto 1fr auto; }
+.contact__visual { position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; padding: calc(66px + var(--gutter)) var(--gutter) var(--gutter); display: grid; grid-template-rows: auto 1fr auto; }
 .contact__visual img { position: absolute; inset: 0; z-index: -2; }
 .contact__visual::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,7,13,.22), rgba(5,7,13,.77)); }
-.contact__title { align-self: center; max-width: 8ch; margin: 8vh 0; font-size: clamp(4.5rem, 9vw, 9.4rem); font-weight: 500; line-height: .77; letter-spacing: -.075em; }
+.contact__title { align-self: center; max-width: 8ch; margin: var(--space-m) 0; font-size: clamp(4.5rem, 9vw, 9.4rem); font-weight: 500; line-height: .77; letter-spacing: -.075em; }
 .contact__title em { display: block; margin-left: 18%; font-family: 'Zodiak', Georgia, serif; font-weight: 400; }
 .contact__body { max-width: 45rem; margin: 0; padding-top: 15px; border-top: 1px solid var(--line-light); font-size: clamp(1.03rem, 1.42vw, 1.3rem); line-height: 1.36; }
-.contact__form { min-height: 100svh; padding: var(--gutter); display: grid; grid-template-rows: auto 1fr auto; background: var(--blue); border-left: 1px solid var(--line-light); }
+.contact__form { min-height: 100svh; padding: calc(66px + var(--gutter)) var(--gutter) var(--gutter); display: grid; grid-template-rows: auto 1fr auto; background: var(--blue); border-left: 1px solid var(--line-light); }
 .contact__form form { align-self: center; }
 .field { margin-bottom: 25px; }
 .field label { display: block; margin-bottom: 8px; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
@@ -633,7 +647,6 @@ p { text-wrap: pretty; }
 
 @media (max-width: 760px) {
   .site-nav { height: 58px; }
-  #contact { scroll-margin-top: 58px; }
   .wordmark svg { height: 34px; }
   .nav-toggle { display: block; }
   .nav-links {
