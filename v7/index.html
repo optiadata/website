@@ -1155,6 +1155,45 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
   .by-role__closer p { font-size: 1.05rem; }
 }
 
+
+/* ============================================================
+   LEGAL PAGE (privacy policy)
+   A .case-page so it routes on the same hash router, but held to
+   a reading measure with a plainer type scale than a case study.
+   ============================================================ */
+.legal-page__inner { max-width: 44rem; margin: 0 auto; padding: calc(66px + 6vh) var(--gutter) 12vh; }
+.legal-page__head { margin-bottom: var(--space-l); padding-bottom: var(--space-s); border-bottom: 1px solid var(--line-dark); }
+.legal-page__head h1 { margin: 0 0 .8rem; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(2.2rem, 4.4vw, 3.4rem); line-height: 1.02; letter-spacing: -.04em; }
+.legal-page__meta { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--blue); }
+.legal-section { margin-bottom: var(--space-l); }
+.legal-section h2 { margin: 0 0 1rem; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.2vw, 1.8rem); line-height: 1.1; letter-spacing: -.03em; }
+.legal-section h3 { margin: 1.8rem 0 .7rem; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--blue); }
+.legal-section p { margin: 0 0 1rem; font-size: .98rem; line-height: 1.62; }
+.legal-section p:last-child { margin-bottom: 0; }
+.legal-section ul { margin: 0 0 1rem 1.1rem; padding: 0; font-size: .98rem; line-height: 1.62; }
+.legal-section li { margin-bottom: .5rem; }
+.legal-section a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.legal-address { display: flex; flex-direction: column; gap: 4px; font-style: normal; font-size: .98rem; line-height: 1.55; }
+.legal-address strong { font-weight: 600; }
+
+/* Three items in the footer line now, so they distribute rather than sitting
+   hard against the two edges. */
+.direct { gap: 12px 24px; flex-wrap: wrap; }
+.direct .direct__legal { color: inherit; }
+.direct .direct__legal:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 560px) {
+  .direct { justify-content: flex-start; }
+}
+
+
+/* Registration number sits on its own line: at 11px uppercase it is too long
+   to share the row with the email and the policy link without crowding both.
+   The footer is hidden on every routed page, so the same identity line is
+   repeated at the foot of the privacy policy. */
+.direct__copyright { margin: 10px 0 0; font-size: 10px; line-height: 1.55; letter-spacing: .06em; text-transform: uppercase; opacity: .68; }
+.legal-identity { margin-top: var(--space-s); padding-top: var(--space-xs); border-top: 1px solid var(--line-dark); font-size: .84rem; line-height: 1.55; opacity: .72; }
+
 </style>
 </head>
 <body>
@@ -1186,12 +1225,12 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     // hiding it later in the routing script (after the whole document has
     // parsed) is too late, since Chrome had already started fetching any
     // lazy image it judged close enough to the initial viewport.
-    if (/^#(about-page|case-[a-z-]+)$/.test(location.hash)) {
+    if (/^#(about-page|privacy-policy|case-[a-z-]+)$/.test(location.hash)) {
       document.documentElement.classList.add('routing-case');
       // Set here too, not just in the routing script below, so a cold load
       // straight onto one of the two paper-topped routes never paints a white
       // wordmark on a light ground before the router runs.
-      if (/^#(about-page|case-index)$/.test(location.hash)) {
+      if (/^#(about-page|privacy-policy|case-index)$/.test(location.hash)) {
         document.documentElement.classList.add('routing-case--light');
       }
     }
@@ -2609,6 +2648,204 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     </div>
   </section>
 
+  <section class="case-page legal-page" id="privacy-policy">
+    <div class="legal-page__inner">
+      <a class="case-page__back" href="#contact">&larr; Back</a>
+      <header class="legal-page__head">
+        <h1>Privacy Policy</h1>
+        <p class="legal-page__meta"><span>Policy owner: Chief Information Security Officer</span><span>Effective date: 1 August 2025</span></p>
+      </header>
+
+      <div class="legal-section">
+        <h2>Our policy</h2>
+        <p>At Optia Data we take the privacy and security of your personal information very seriously. When You use the Website, App or otherwise communicate with Us, You will be providing Optia Data with certain information, some of which We will collect. This information could potentially be Personally Identifiable Information (PII). To help You understand what information We collect, how it will be used and how We protect it from disclosure, We&rsquo;ve written this Privacy Policy. If You&rsquo;re providing Optia Data with PII of an individual other than You, it is your responsibility to ensure You have that individual&rsquo;s consent and all rights to share this information with Optia Data.</p>
+        <p>We value your information and privacy as much as you do. We don&rsquo;t sell or rent any of the information we collect or process to third parties. This includes Your PII and/or any information you upload to our App. Your access to and use of our Services is subject to our Terms of Service. By using our Website, App and/or communicating with Optia Data, you agree to this Privacy Policy.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Cookies</h2>
+        <p>In order to run Our services (Our App and Website), Optia Data utilises Cookies, Pixel tags and Logs. Optia Data will issue cookies to your computer when You use the Website and/or App, for them to run properly. If your browser preferences are set up to reject cookies, your access to Our services will be limited. Cookies, pixel tags, and/or logs can be used to identify your IP address, browser type, domain name, and specific web pages through which You click, and/or email messages You open. Cookies help Us provide additional functionality to Our services and analyse service usage more accurately. We will not collect personal information (except with your permission) via Our use of cookies.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>What information we collect</h2>
+        <p>When You use Our Website, contact Us, use the Optia Data App, create an account to use the App, and/or someone, such as your organisation&rsquo;s administrator, creates an account on your behalf, Optia Data will collect the following PII:</p>
+        <ul>
+          <li>Your name</li>
+          <li>Your email address</li>
+          <li>Information You provide via fillable forms or text boxes (including your browser&rsquo;s address bar)</li>
+          <li>IP address</li>
+          <li>Unique identifier(s) We assign to users as part of monitoring user experience</li>
+          <li>Information regarding the device You are using, including the hardware model, operating system and version, unique device identifiers, network information, IP address, and/or App information</li>
+          <li>Information about all of your interactions with the App (Usage Data) and how the App is performing (Data). Users may disable tracking of Usage Data for the App by disabling tracking for all users of the App through the administrator panel</li>
+          <li>Information gathered through cookies, pixel tags, logs, or other similar technologies. See the &ldquo;Cookies&rdquo; section above</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h2>Personal health information (PHI)</h2>
+        <h3>What is personal health information?</h3>
+        <p>Personal Health Information (PHI) is any information that can be used to identify an individual and their health condition. This includes, but is not limited to, information such as:</p>
+        <ul>
+          <li>Name</li>
+          <li>Address</li>
+          <li>Date of birth</li>
+          <li>Social Security number</li>
+          <li>Medical history</li>
+          <li>Treatment records</li>
+          <li>Lab results</li>
+          <li>Genetic information</li>
+        </ul>
+        <h3>Does Optia Data collect PHI?</h3>
+        <p>Optia Data does not knowingly collect or store PHI. Our platform is not designed to handle sensitive data like health information.</p>
+        <h3>How we handle PHI inadvertently uploaded</h3>
+        <p>In the unlikely event that PHI is uploaded to our platform, we will take the following steps:</p>
+        <ul>
+          <li>We will take all reasonable steps to identify the PHI.</li>
+          <li>We will restrict access to the PHI to authorised personnel only.</li>
+          <li>We will work with the individual or organisation that uploaded the PHI to delete it securely.</li>
+          <li>We will report any breaches of PHI to the appropriate authorities as required by law.</li>
+        </ul>
+        <h3>Your responsibilities regarding PHI</h3>
+        <p>You are responsible for ensuring that you have the legal right to upload any PHI to our platform. You should also obtain any necessary consents from individuals before uploading their PHI.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>How we use your information</h2>
+        <p>Optia Data may use your information for the following purposes:</p>
+        <ul>
+          <li>To respond to your requests for information, products, or services, and to provide customer service and support</li>
+          <li>To administer your App User Account</li>
+          <li>To enable You to access and use of the App, and to enable You to communicate, collaborate, and share information with those You designate</li>
+          <li>To send You technical notices, updates, security alerts, and support and administrative messages</li>
+          <li>To inform You about our products and services</li>
+          <li>To monitor your user experience</li>
+          <li>For legal compliance, such as to enforce our legal rights, to comply in good faith with applicable laws, and to protect users of the App</li>
+          <li>To enable Optia Data to proactively help customers maintain the performance and functionality of deployments of the App</li>
+          <li>To enable Optia Data to verify your license to use the App</li>
+          <li>For other general business purposes, such as: to provide, operate, maintain, make modifications to and improve the App, and for marketing, advertising, research and development</li>
+          <li>For other purposes about which We notify you</li>
+        </ul>
+        <p>We will notify you and/or ask for your authorisation before using your information for any other purposes. Optia Data also may collect via the App information that does not identify or locate You personally and We reserve the right to maintain, disclose, or otherwise use such information without limitation, including aggregated with other information to improve the App.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Artificial intelligence (AI) and machine learning (ML)</h2>
+        <p>Optia Data affirms that it does not use, develop, improve, or train generalised/non-personalised AI and/or ML models by using customer data either uploaded by the users or pulled through third party APIs available on Optia Data platform. Optia Data also does not transfer customer data either uploaded by the users or pulled through third party APIs to any third-party AI/ML models or tools.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Who we share your information with</h2>
+        <p>Except as provided below, Optia Data will not share PII with third parties, unless You have consented to the disclosure. In certain circumstances, Optia Data may share certain PII with third party service providers that need your information to provide the following operational or other support services to Optia Data:</p>
+        <ul>
+          <li>Email marketing</li>
+          <li>Data management</li>
+          <li>Database hosting</li>
+          <li>Payment card processing</li>
+          <li>Shipping services</li>
+          <li>Communication services</li>
+          <li>Cloud services</li>
+        </ul>
+        <p>To ensure the confidentiality and security of your PII, such service providers must agree to safeguard your PII shared with them, if any. These service providers are also restricted by contract from using your PII in any way other than to provide services for Optia Data. Optia Data does not share the information contained in your organisation&rsquo;s App User Accounts with any third parties. Optia Data may also provide your PII to third parties in the following special cases:</p>
+        <ul>
+          <li>Whenever we believe that disclosure is reasonably necessary to comply with any applicable law, regulation, legal process, government request or a judge request, including in connection with national security or law enforcement requirements (e.g. to respond to subpoenas and court orders, to exercise legal rights or defend against legal claims, to investigate and/or take action against illegal activities, suspected fraud, threats, enforcement/violation of our Terms of Service, agreements and policies). In each case, We will make reasonable efforts to verify the validity of the request before disclosing your personal information.</li>
+          <li>To protect the security or integrity of the App and/or Website.</li>
+          <li>To respond to an emergency, which We believe in good faith requires Us to disclose information to assist in preventing serious bodily injury or death of any person.</li>
+        </ul>
+        <p>Optia Data may also share or transfer your PII with our subsidiaries, affiliates, and partners, to facilitate our global operations and in accordance with applicable laws. We may also provide your PII to a third party in connection with a merger or acquisition of Optia Data, either in part or in whole, or the assignment or other transfer of the App. If such third party proposes to materially change the privacy practices described in the Privacy Policy, You will be informed in a prominent manner enabling You to choose whether to opt-in and agree to the new practices. This applies both for PII collected before and after any merger, acquisition, assignment or other transfer. Your organisation&rsquo;s admin may contact Us to request that We no longer share its authorised users&rsquo; PII.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Where we operate and store your information</h2>
+        <p>We primarily store information collected from You within the European Economic Area, the United States and in other countries and territories. To facilitate our global operations, We may transfer and access such personal information from around the world, including from other countries in which Optia Data has operations. Optia Data is based in and operates the App and site out of the United Kingdom. When We obtain personal information about You, We may process such information outside of the country in which You are located, including in the United Kingdom. The countries in which We process your information may not have the same data protection laws as the country in which You are located. We store your data with Third Parties that are GDPR compliant and store data in GDPR Compliant Countries. We will protect your information as described in this Privacy Policy.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Your rights</h2>
+        <p>According to the applicable data protection legislation, you have certain rights as a so-called &ldquo;data subject&rdquo;. Below, we have listed your rights. Your rights include the following:</p>
+        <ul>
+          <li><strong>Right to access.</strong> You are entitled to access the personal data that we handle. You are also entitled to receive certain information about what we do with the personal data. Such information is provided in this document.</li>
+          <li><strong>Right to rectification.</strong> Under certain circumstances, you are entitled to correct inaccurate personal data concerning you and to have incomplete personal data completed. Please note that we might not be able to correct inaccurate personal data provided by you due to e.g. the airlines rules, and that such particular change may incur a cost.</li>
+          <li><strong>Right to erasure.</strong> Under certain circumstances, you are entitled to have your personal data erased. This is the so-called &ldquo;right to be forgotten&rdquo;.</li>
+          <li><strong>Right to restriction of processing.</strong> Under certain circumstances, you are entitled to restrict how we use your personal data.</li>
+          <li><strong>Right to data portability.</strong> You are entitled to receive your personal data (or have your personal data directly transmitted to another data controller) in a structured, commonly used and machine-readable format from us.</li>
+          <li><strong>Right to object.</strong> You are entitled to object to certain types of handling of personal data that we carry out. This applies to all our activities that are based on our &ldquo;legitimate interest&rdquo;.</li>
+        </ul>
+        <p>Finally, you also have the right to lodge a complaint with the applicable data protection supervisory authority.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Retention period</h2>
+        <p>We will not retain your personal information longer than necessary to fulfil the purposes for which it is processed, including the security of our processing complying with legal and regulatory obligations (e.g. audit, accounting, statutory retention terms), handling disputes and for the establishment, exercise or defence of legal claims.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Accessing, changing or deleting your information</h2>
+        <p>You can request access to, change or delete PII Optia Data holds by sending Us an email at <a href="mailto:hello@optiadata.com">hello@optiadata.com</a>. You can also opt-out on the use of cookies, logs and/or pixel tags by sending Us an email to the same address. Your request will be verified and We will respond to You as soon as possible in accordance with our legal obligations.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Collection of information by third party sites and sponsors</h2>
+        <p>Our Website and App contains links to other websites, including those of our partners and sponsors, whose information practices may be different from ours. Please consult those third party websites&rsquo; privacy notices for further information on how they handle Your information.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>User data</h2>
+        <p>All the information You upload in any way to your or your company&rsquo;s App User Account is User Data. We don&rsquo;t have access to User Data, it is not collected in any way and we don&rsquo;t provide it to third parties except for our cloud services and hosting providers, who store the data You feed into your account. You are responsible for all User Data you store in your or your organisation&rsquo;s User Account. This means You must have the rights to handle, use and reproduce the information You keep in Optia Data and We are not responsible for legal, regulatory or property infringements You might be committing by uploading (or otherwise feeding) information into your User Account.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Marketing emails</h2>
+        <p>To keep You up to date with what&rsquo;s happening at Optia Data and how to make the most of our services, We&rsquo;ll occasionally send You emails to your registered email address. If You wish to stop receiving our emails, You can unsubscribe at any time by following the unsubscribe link at the bottom of our emails.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Payment</h2>
+        <p>If You purchase from us, We may collect your credit or debit card number, expiration date, or other payment details (collectively, &ldquo;Payment Information&rdquo;). We may provide Payment Information and other personal information to our third party payment processors in order to complete purchases made with Us. Pursuant to the &ldquo;Who we share your information with&rdquo; section above, our third party payment processors are bound by contractual obligations to keep such personal information confidential and use it only for the purposes for which We disclose it to them. However, We are not responsible for our third party payment processors&rsquo; use of any Payment Information or other personal information they collect in connection with your transactions on the Website.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Age requirements</h2>
+        <p>Our services are not intended to be used by, nor does Optia Data knowingly collect personal information from individuals under the age of thirteen (13). If You become aware that an individual under the age of 13 has provided Us with personal information, please contact Us immediately at <a href="mailto:hello@optiadata.com">hello@optiadata.com</a>. If we become aware that an individual under the age of 13 has provided Us with personal information, we will immediately take action to delete such information.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Security</h2>
+        <p>Optia Data will take reasonable and appropriate physical, electronic, and procedural safeguards and security measures in an effort to protect all PII it collects via the App and Website from loss, misuse, and unauthorised access, disclosure, alteration, and destruction. Please note that no electronic transmission of information can be entirely secure. We cannot guarantee that the security measures We have in place will never be defeated or fail, or that such measures will always be sufficient or effective. Any transmission of information is at your own risk. We are not responsible for circumvention of any Website or App privacy settings or our security measures.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Policy updates</h2>
+        <p>Periodically, we may update this Privacy Policy and will make the new version available on this page. If We make any material changes, we will notify you via email and in the App before the effective date of the policy, in order to obtain your consent.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>Our European Union representative</h2>
+        <p>Under Article 27 of the GDPR, we have appointed an EU Representative to act as our data protection agent. Our nominated EU Representative is:</p>
+        <address class="legal-address">
+          <strong>Instant EU GDPR Representative Ltd.</strong>
+          <span>Adam Brogden</span>
+          <span><a href="mailto:contact@gdprlocal.com">contact@gdprlocal.com</a></span>
+          <span><a href="tel:+35315549700">+353 1 554 9700</a></span>
+          <span>Office 2, 12A Lower Main Street, Lucan, Co. Dublin K78 X5P8, Ireland</span>
+        </address>
+      </div>
+
+      <div class="legal-section">
+        <h2>Contact us</h2>
+        <p>If You have any questions about our Privacy Policy, please don&rsquo;t hesitate to get in touch by sending Us an email at <a href="mailto:privacy@optiadata.com">privacy@optiadata.com</a>.</p>
+        <p class="legal-identity">&copy; 2026 Optia Data Limited. All rights reserved. Company Registration No: 15884308</p>
+      </div>
+
+      <div class="case-cta">
+        <div class="case-cta__actions">
+          <a href="#contact">Back to contact</a>
+          <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="contact" id="contact">
     <div class="contact__visual">
       <img data-src="images/blue-light-with-soft-luminous-points.jpg" alt="Blue light with soft luminous points" loading="lazy">
@@ -2626,7 +2863,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <button class="submit-btn" type="submit">Start a conversation</button>
         <p class="submit-note" id="submitNote" role="status"></p>
       </form>
-      <p class="direct"><a href="mailto:hello@optiadata.com">hello@optiadata.com</a><span>&copy; 2026 Optia Data</span></p>
+      <p class="direct"><a href="mailto:hello@optiadata.com">hello@optiadata.com</a><a class="direct__legal" href="#privacy-policy">Privacy Policy</a></p>
+      <p class="direct__copyright">&copy; 2026 Optia Data Limited. All rights reserved. Company Registration No: 15884308</p>
     </div>
   </footer>
 
