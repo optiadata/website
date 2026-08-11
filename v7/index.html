@@ -1049,7 +1049,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
    and the display lines, Switzer for body copy.
    ============================================================ */
 .proved-cases--light { background: var(--paper); color: var(--ink); }
-.proved-cases--light .proved-cases__title { margin-top: 0; margin-bottom: var(--space-s); max-width: 20ch; }
+/* The base .proved-cases .eyebrow is near-white, left from when this section
+   sat on the Ultraviolet ground. On paper it has to be the accent instead. */
+.proved-cases--light .eyebrow { color: var(--blue); }
+.proved-cases--light .proved-cases__title { margin-top: var(--space-2xs); margin-bottom: var(--space-s); max-width: 20ch; }
 .proved-cases--light .proved-cases__title em { font-style: italic; color: var(--blue); }
 
 .cost-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(12px, 1.3vw, 20px); margin-bottom: var(--space-m); }
@@ -1350,6 +1353,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
     <section class="proved-cases proved-cases--light" id="proved-cases">
       <div class="proved-cases__inner">
+        <p class="eyebrow">Common problems</p>
         <h2 class="proved-cases__title">The Cost of <em>Getting It Wrong.</em></h2>
         <div class="cost-grid">
           <div class="cost-card">
@@ -1370,10 +1374,9 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
 
         <div class="proved-cases__narrative">
-          <h3 class="proved-cases__sub">The pattern</h3>
-          <p class="proved-cases__lede">This is not an analyst problem. It is a pipeline problem.</p>
-          <p>Capable commercial teams are asked to make eight-figure decisions on brittle, patched-together spreadsheets. When NielsenIQ will not reconcile with internal SAP, or a retailer EPOS feed breaks your model, it is your credibility in the room that pays for it.</p>
-          <p class="proved-cases__close">Optia catches and resolves discrepancies before they reach a category deck, a board pack, or a buyer meeting.</p>
+          <p class="proved-cases__lede">This is not an analyst problem. It is a commercial risk.</p>
+          <p>Capable teams are being asked to make major decisions using brittle, patched up spreadsheets. When syndicated data doesn&rsquo;t reconcile with internal systems, a retailer feed silently drops products, or one incorrect SKU distorts an entire forecast, it is not the data that gets questioned. It is the person presenting it.</p>
+          <p class="proved-cases__close">Optia catches and resolves discrepancies before they reach your category reporting, a board pack or a buyer meeting so your teams have confidence in their numbers.</p>
         </div>
       </div>
     </section>
