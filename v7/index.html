@@ -1011,6 +1011,55 @@ p { text-wrap: pretty; }
   .case-stat { break-inside: avoid; }
 }
 
+
+/* ============================================================
+   THE COST OF GETTING IT WRONG
+   Light-ground rework. The Ultraviolet moves out of the section
+   background and into the figure cards, so the page reads as part
+   of the site's light run rather than a full-bleed colour break.
+   Type faces and scale are the site's own: Zodiak for the figures
+   and the display lines, Switzer for body copy.
+   ============================================================ */
+.proved-cases--light { background: var(--paper); color: var(--ink); }
+.proved-cases--light .proved-cases__title { margin-top: 0; margin-bottom: var(--space-s); max-width: 20ch; }
+.proved-cases--light .proved-cases__title em { font-style: italic; color: var(--blue); }
+
+.cost-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(12px, 1.3vw, 20px); margin-bottom: var(--space-m); }
+.cost-card { display: flex; flex-direction: column; gap: 10px; padding: clamp(18px, 2vw, 28px) clamp(16px, 1.7vw, 24px); border-radius: 10px; color: #fff;
+  background: linear-gradient(155deg, #5b3cff 0%, #4828e5 44%, #2c19ad 100%); }
+.cost-card__figure { font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(1.9rem, 3.3vw, 3rem); line-height: .98; letter-spacing: -.03em; }
+.cost-card__body { margin: 0; font-size: clamp(.88rem, 1vw, .98rem); line-height: 1.38; opacity: .93; }
+/* The second card carries no figure, so the sentence itself is set at display
+   scale rather than leaving the card looking like it had lost its number. */
+.cost-card--statement { justify-content: center; }
+.cost-card--statement .cost-card__body { font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.1rem, 1.6vw, 1.45rem); line-height: 1.16; letter-spacing: -.025em; opacity: 1; }
+
+.proved-cases--light .proved-cases__narrative { max-width: 60rem; margin-top: 0; }
+.proved-cases__sub { margin: 0 0 .6rem; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); }
+.proved-cases--light .proved-cases__narrative .proved-cases__lede { margin: 0 0 .8rem; font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.45rem, 2.5vw, 2.15rem); line-height: 1.1; letter-spacing: -.03em; }
+.proved-cases--light .proved-cases__narrative p:not(.proved-cases__lede) { margin: 0 0 .75rem; font-size: clamp(.98rem, 1.2vw, 1.12rem); line-height: 1.45; letter-spacing: -.01em; }
+.proved-cases--light .proved-cases__narrative .proved-cases__close { margin-bottom: 0; font-weight: 600; color: var(--blue); }
+
+@media (max-width: 1024px) {
+  .cost-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .cost-grid { grid-template-columns: 1fr; gap: 8px; margin-bottom: var(--space-s); }
+  .cost-card { flex-direction: row; align-items: baseline; gap: 12px; padding: 13px 16px; }
+  .cost-card__figure { flex: none; font-size: 1.5rem; }
+  .cost-card--statement { flex-direction: column; }
+  /* Measured at 854px of content against an 812px viewport, which pushed the
+     closing line below the fold. The type steps down here only, to bring the
+     whole argument onto one screen at the common phone sizes (375x812,
+     390x844). It still overruns at 375x667, as capabilities, customers,
+     approach and core already do, and scroll-snap is off at this width, so
+     the tail is reachable by ordinary scrolling. */
+  .cost-card__body { font-size: .86rem; line-height: 1.32; }
+  .proved-cases--light .proved-cases__title { font-size: clamp(1.95rem, 8.4vw, 2.55rem); margin-bottom: var(--space-xs); }
+  .proved-cases--light .proved-cases__narrative .proved-cases__lede { font-size: 1.22rem; margin-bottom: .55rem; }
+  .proved-cases--light .proved-cases__narrative p:not(.proved-cases__lede) { font-size: .93rem; line-height: 1.4; margin-bottom: .6rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1158,20 +1207,32 @@ p { text-wrap: pretty; }
       <a class="customers__cta" href="#contact"><strong>Don't have that secure data environment?</strong><span class="cta-link">Start a conversation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
     </section>
 
-    <section class="proved-cases" id="proved-cases">
+    <section class="proved-cases proved-cases--light" id="proved-cases">
       <div class="proved-cases__inner">
-        <p class="eyebrow">Proved Cases</p>
         <h2 class="proved-cases__title">The Cost of <em>Getting It Wrong.</em></h2>
-          <div class="proof-grid proof-grid--strip">
-            <div class="proof-grid__item"><span class="icon-chip icon-chip--muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg></span><p class="proof-grid__lede"><strong>80%</strong> of analyst time goes on preparing data, not analysing it.</p></div>
-            <div class="proof-grid__item"><span class="icon-chip icon-chip--muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13l-3-3"></path><path d="M20 17H7l3 3"></path></svg></span><p class="proof-grid__lede"><strong>Retailers</strong> big numbers reported as others.</p></div>
-            <div class="proof-grid__item"><span class="icon-chip icon-chip--muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6"></path><circle cx="17" cy="9" r="2.3"></circle><path d="M15.5 14c2.8.3 5 2.3 5.5 5.4"></path></svg></span><p class="proof-grid__lede"><strong>10 to 15 people</strong> edit the same reporting file every month.</p></div>
-            <div class="proof-grid__item"><span class="icon-chip icon-chip--muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"></path><path d="M12 10v4"></path><circle cx="12" cy="17" r=".5" fill="currentColor" stroke="none"></circle></svg></span><p class="proof-grid__lede"><strong>2 days</strong> to find out one wrong SKU that impacted forecast report by 250%.</p></div>
+        <div class="cost-grid">
+          <div class="cost-card">
+            <span class="cost-card__figure">80%</span>
+            <p class="cost-card__body">of analyst time goes on preparing data, not analysing it.</p>
           </div>
+          <div class="cost-card cost-card--statement">
+            <p class="cost-card__body">Retailer EPOS and syndicated market data rarely agree on the same week.</p>
+          </div>
+          <div class="cost-card">
+            <span class="cost-card__figure">10 to 15</span>
+            <p class="cost-card__body">people edit the same reporting file every month.</p>
+          </div>
+          <div class="cost-card">
+            <span class="cost-card__figure">2 days</span>
+            <p class="cost-card__body">to trace one wrong SKU that had skewed a forecast by 250%.</p>
+          </div>
+        </div>
 
         <div class="proved-cases__narrative">
-            <p>None of that is your fault. It happens when capable people are handed fragmented data and deadlines. Errors like these go undetected for months, sometimes years. And you are left wondering whether your own numbers are right.</p>
-            <p class="case-full__section-lede">Optia resolves such errors before they become damaging.</p>
+          <h3 class="proved-cases__sub">The pattern</h3>
+          <p class="proved-cases__lede">This is not an analyst problem. It is a pipeline problem.</p>
+          <p>Capable commercial teams are asked to make eight-figure decisions on brittle, patched-together spreadsheets. When NielsenIQ will not reconcile with internal SAP, or a retailer EPOS feed breaks your model, it is your credibility in the room that pays for it.</p>
+          <p class="proved-cases__close">Optia catches and resolves discrepancies before they reach a category deck, a board pack, or a buyer meeting.</p>
         </div>
       </div>
     </section>
