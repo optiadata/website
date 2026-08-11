@@ -164,6 +164,12 @@ p { text-wrap: pretty; }
   border-color: var(--line-dark);
   backdrop-filter: blur(12px);
 }
+/* Routes that open straight onto paper rather than a dark image: the case
+   studies index and the about page. Without this the white wordmark and links
+   sat invisible on the light ground until the scroll handler fired at 24px.
+   The wordmark and the burger both paint from currentColor, so colour alone
+   carries all three. */
+html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line-dark); }
 .wordmark { display: inline-flex; align-items: center; padding: 5px 0; margin: -5px 0; }
 .wordmark svg { display: block; height: 46px; width: auto; fill: currentColor; }
 .nav-links { display: flex; align-items: center; gap: clamp(14px, 1.7vw, 26px); }
@@ -760,8 +766,11 @@ p { text-wrap: pretty; }
 .case-controls__group { display: flex; flex-direction: column; gap: 10px; }
 .case-controls__label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); }
 .case-controls__set { display: flex; flex-wrap: wrap; gap: 8px; }
-.case-filter, .case-sort__btn { min-height: 38px; padding: 0 15px; border: 1px solid var(--line-dark); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: .84rem; letter-spacing: -.01em; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
-.case-filter:hover, .case-sort__btn:hover { border-color: var(--ink); }
+/* Matches .customer-filter in the Customers section: square, 44px, uppercase
+   12px/600 at .09em, filling on hover and when selected. Only the two colours
+   flip, because these sit on paper rather than on the Ultraviolet ground. */
+.case-filter, .case-sort__btn { min-height: 44px; padding: 0 15px; border: 1px solid var(--line-dark); border-radius: 0; background: transparent; color: inherit; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+.case-filter:hover, .case-sort__btn:hover,
 .case-filter.is-active, .case-sort__btn.is-active { background: var(--blue); border-color: var(--blue); color: #fff; }
 .case-filter:focus-visible, .case-sort__btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 .case-count { margin: 0 0 var(--space-s); font-size: .84rem; letter-spacing: .01em; opacity: .7; }
@@ -1079,17 +1088,17 @@ p { text-wrap: pretty; }
    ============================================================ */
 .by-role { display: flex; align-items: center; }
 .by-role__shell { width: 100%; max-width: 84rem; margin: 0 auto; }
-.by-role .eyebrow { color: var(--ice); }
-.by-role__prompt { max-width: 24ch; margin: var(--space-2xs) 0 var(--space-m); font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.7rem, 3.4vw, 3rem); line-height: 1.1; letter-spacing: -.03em; }
+.by-role__prompt { max-width: 24ch; margin: 0 0 var(--space-m); font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.7rem, 3.4vw, 3rem); line-height: 1.1; letter-spacing: -.03em; }
 
-.roles { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: var(--space-m); }
-.role { display: inline-flex; align-items: baseline; gap: 10px; min-height: 46px; padding: 0 18px; border: 1px solid rgba(255,255,255,.36); border-radius: 999px; background: transparent; color: #fff; font: inherit; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
-.role:hover { border-color: #fff; }
-.role__num { font-size: 11px; font-weight: 600; letter-spacing: .09em; opacity: .6; }
-.role__name { font-size: clamp(.86rem, 1vw, .96rem); letter-spacing: -.01em; }
-/* White on Ultraviolet measures 7.8:1 either way round, so the selected pill
-   can invert without dropping below AA. */
-.role[aria-selected="true"] { background: #fff; border-color: #fff; color: var(--blue); }
+.roles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-m); }
+/* Same treatment as .customer-filter in the Customers section: square, 44px,
+   uppercase 12px/600 at .09em, filling white on hover and when selected.
+   Both sit on the Ultraviolet ground, so the colours carry over unchanged.
+   White on Ultraviolet measures 7.8:1 either way round, so the selected
+   button inverts without dropping below AA. */
+.role { display: inline-flex; align-items: baseline; gap: 9px; min-height: 44px; padding: 0 15px; border: 1px solid rgba(255,255,255,.5); border-radius: 0; background: transparent; color: #fff; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+.role__num { opacity: .6; }
+.role:hover, .role[aria-selected="true"] { background: #fff; color: var(--blue); }
 .role[aria-selected="true"] .role__num { opacity: .55; }
 .role:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
 
@@ -1164,6 +1173,12 @@ p { text-wrap: pretty; }
     // lazy image it judged close enough to the initial viewport.
     if (/^#(about-page|case-[a-z-]+)$/.test(location.hash)) {
       document.documentElement.classList.add('routing-case');
+      // Set here too, not just in the routing script below, so a cold load
+      // straight onto one of the two paper-topped routes never paints a white
+      // wordmark on a light ground before the router runs.
+      if (/^#(about-page|case-index)$/.test(location.hash)) {
+        document.documentElement.classList.add('routing-case--light');
+      }
     }
   </script>
 
@@ -1270,11 +1285,11 @@ p { text-wrap: pretty; }
         <a class="customer-filters__cases" href="#case-index"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>Selected case studies</a>
       </div>
       <div class="customer-list" id="customerList">
-        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samworth"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/starbucks-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/vithit-logo-white.png" alt="VitHit" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/mufg-logo-white.png" alt="MUFG" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/mufg-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/clear-one-advantage-logo-white.png" alt="Clear One Advantage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/clear-one-advantage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Engineering"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Education"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samworth"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-starbucks"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/starbucks-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-arla"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-international-beverage"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-bacardi"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-campari"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-golden-acre"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samyang"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-henkel"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-vithit"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/vithit-logo-white.png" alt="VitHit" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/mufg-logo-white.png" alt="MUFG" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/mufg-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/clear-one-advantage-logo-white.png" alt="Clear One Advantage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/clear-one-advantage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Engineering" href="#case-qts"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Education" href="#case-ilg"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Health" href="#case-oracare"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
       </div>
       <a class="customers__cta" href="#contact"><strong>Don't have that secure data environment?</strong><span class="cta-link">Start a conversation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
     </section>
@@ -1311,8 +1326,7 @@ p { text-wrap: pretty; }
 
     <section class="customers by-role" id="by-role">
       <div class="by-role__shell">
-        <p class="eyebrow">By role</p>
-        <p class="by-role__prompt">Pick the week that looks like yours.</p>
+        <p class="by-role__prompt">How bad is your week?</p>
 
         <div class="roles" role="tablist" aria-label="Choose your role">
           <button class="role" type="button" role="tab" id="tab-1" aria-controls="p-1" aria-selected="true" tabindex="0">
@@ -1528,97 +1542,7 @@ p { text-wrap: pretty; }
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-australian-vintage" data-sector="Consumer" data-name="Australian Vintage" data-order="1">
-          <span class="case-tile__media"><img data-src="images/australian-vintage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/australian-vintage.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Australian Vintage</span>
-            <span class="case-tile__title">&pound;26m of misclassified sales, caught before the board saw it</span>
-            <span class="case-tile__stats"><b>&pound;26m corrected</b><b>~793 SKUs recovered</b></span>
-            <span class="case-tile__excerpt">A classification problem in no and low alcohol misstated around &pound;26 million of category performance, and a later delivery dropped about 793 SKUs. Optia's validation controls caught both before publication and secured corrected historical data.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-golden-acre" data-sector="Consumer" data-name="Golden Acre Foods" data-order="2">
-          <span class="case-tile__media"><img data-src="images/golden-acre-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:30% 50%"><span class="case-tile__badge"><img data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Golden Acre Foods</span>
-            <span class="case-tile__title">One weekly view across four retailers</span>
-            <span class="case-tile__stats"><b>4 major retailers</b><b>30% less time</b></span>
-            <span class="case-tile__excerpt">Thousands of product records had incomplete SKU information and there was no historical depth to tell a real trend from a weekly wobble. Optia now delivers a harmonised view across Tesco, Sainsbury's, Asda and Morrisons every Wednesday, with two full years of comparable history behind it.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-samworth" data-sector="Consumer" data-name="Samworth Brothers" data-order="3">
-          <span class="case-tile__media"><img data-src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Samworth Brothers</span>
-            <span class="case-tile__title">One board-ready view across six categories</span>
-            <span class="case-tile__stats"><b>6 categories</b><b>~1 week reclaimed</b></span>
-            <span class="case-tile__excerpt">Six operating companies each reported their own way, so the group board pack took around a week of Excel work every month. Optia harmonised five external sources with internal submissions into one model, and a data quality review caught reporting errors that had gone unnoticed.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-vithit" data-sector="Consumer" data-name="Vit Hit" data-order="4">
-          <span class="case-tile__media"><img data-src="images/vithit-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 38%"><span class="case-tile__badge"><img data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Vit Hit</span>
-            <span class="case-tile__title">Distribution and promotion, finally visible next to sales</span>
-            <span class="case-tile__stats"><b>4 categories</b><b>3 years of history</b></span>
-            <span class="case-tile__excerpt">Previous reporting told Vit Hit what had happened but not why. Optia built a model across four categories and three market levels, with three years of weekly history, so the sales team could see whether growth came from distribution, promotion, price or rate of sale.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-international-beverage" data-sector="Consumer" data-name="International Beverage" data-order="5">
-          <span class="case-tile__media"><img data-src="images/international-beverage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">International Beverage</span>
-            <span class="case-tile__title">One insight manager, out of the critical path</span>
-            <span class="case-tile__stats"><b>7 data sources</b><b>156 weeks loaded</b></span>
-            <span class="case-tile__excerpt">The monthly leadership pack was built by hand by a single insight manager, across seven sources on different calendars. Optia is building one governed model to feed both the Power BI environment and the existing PowerPoint, with history extended from 13 weeks to 156.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-samyang" data-sector="Consumer" data-name="Samyang Foods" data-order="6">
-          <span class="case-tile__media case-tile__media--product"><img data-src="images/samyang-hero.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Samyang Foods</span>
-            <span class="case-tile__title">Sell-out, sell-through and sell-in, side by side</span>
-            <span class="case-tile__stats"><b>5 European markets</b><b>3 data layers</b></span>
-            <span class="case-tile__excerpt">Buldak's rapid European growth left three views of the business being managed separately, with no simple way to explain why they disagreed. Optia is building one model across five markets so demand, distributor sales and supply can be compared directly.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-bacardi" data-sector="Consumer" data-name="Bacardi" data-order="7">
-          <span class="case-tile__media"><img data-src="images/bacardi-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 34%"><span class="case-tile__badge"><img data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Bacardi</span>
-            <span class="case-tile__title">40+ hours a month of manual reporting, removed</span>
-            <span class="case-tile__stats"><b>8 source systems</b><b>40+ hours a month</b></span>
-            <span class="case-tile__excerpt">On-trade and off-trade data arrived separately, and a total trade view needed manual reconciliation that was not always done. Two projects later, eight source systems feed one automated model and report generation runs in minutes rather than days.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-qts" data-sector="Engineering" data-name="QTS Data Centres" data-order="8">
-          <span class="case-tile__media"><img data-src="images/qts-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 44%"><span class="case-tile__badge"><img data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">QTS Data Centres</span>
-            <span class="case-tile__title">Twelve months of maintenance, compressed into nine and a half</span>
-            <span class="case-tile__stats"><b>45MW site</b><b>12 months into 9.5</b></span>
-            <span class="case-tile__excerpt">Thousands of assets, three handover phases and a web of redundancy and seasonal constraints meant no simple way to prove every rule had been respected. Optia's constraint-based model cannot produce a schedule that breaks them, and returned a full replan in five days.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-ilg" data-sector="Education" data-name="Inspired Learning Group" data-order="9">
-          <span class="case-tile__media"><img data-src="images/ilg-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
-          <span class="case-tile__body">
-            <span class="case-tile__client">Inspired Learning Group</span>
-            <span class="case-tile__title">Reporting built around the decisions heads can actually make</span>
-            <span class="case-tile__stats"><b>~25 settings</b><b>5 source systems</b></span>
-            <span class="case-tile__excerpt">A group P&amp;L can run to hundreds of lines, only a few of which a head can influence, and the data sat across five systems on different rhythms. Optia connected all five and structured the reporting around who needs to make the decision.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
-          </span>
-        </a>
-        <a class="case-tile" href="#case-campari" data-sector="Consumer" data-name="Campari" data-order="10">
+        <a class="case-tile" href="#case-campari" data-sector="Consumer" data-name="Campari" data-order="1">
           <span class="case-tile__media"><img data-src="images/campari-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Campari</span>
@@ -1628,13 +1552,103 @@ p { text-wrap: pretty; }
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-starbucks" data-sector="Consumer" data-name="Starbucks EMEA" data-order="11">
+        <a class="case-tile" href="#case-starbucks" data-sector="Consumer" data-name="Starbucks EMEA" data-order="2">
           <span class="case-tile__media case-tile__media--product"><img data-src="images/starbucks-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="images/starbucks-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Starbucks EMEA</span>
             <span class="case-tile__title">33 monthly reports, replaced by one explorable model</span>
             <span class="case-tile__stats"><b>16 markets</b><b>33 reports replaced</b></span>
             <span class="case-tile__excerpt">Sixteen markets produced 33 separate monthly reports that were hard to compare or trend. Optia consolidated them, reconstructed 13 missing periods, then built an intelligence layer that drafts commentary from three different commercial perspectives.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-bacardi" data-sector="Consumer" data-name="Bacardi" data-order="3">
+          <span class="case-tile__media"><img data-src="images/bacardi-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 34%"><span class="case-tile__badge"><img data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Bacardi</span>
+            <span class="case-tile__title">40+ hours a month of manual reporting, removed</span>
+            <span class="case-tile__stats"><b>8 source systems</b><b>40+ hours a month</b></span>
+            <span class="case-tile__excerpt">On-trade and off-trade data arrived separately, and a total trade view needed manual reconciliation that was not always done. Two projects later, eight source systems feed one automated model and report generation runs in minutes rather than days.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-australian-vintage" data-sector="Consumer" data-name="Australian Vintage" data-order="4">
+          <span class="case-tile__media"><img data-src="images/australian-vintage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/australian-vintage.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Australian Vintage</span>
+            <span class="case-tile__title">&pound;26m of misclassified sales, caught before the board saw it</span>
+            <span class="case-tile__stats"><b>&pound;26m corrected</b><b>~793 SKUs recovered</b></span>
+            <span class="case-tile__excerpt">A classification problem in no and low alcohol misstated around &pound;26 million of category performance, and a later delivery dropped about 793 SKUs. Optia's validation controls caught both before publication and secured corrected historical data.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-golden-acre" data-sector="Consumer" data-name="Golden Acre Foods" data-order="5">
+          <span class="case-tile__media"><img data-src="images/golden-acre-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:30% 50%"><span class="case-tile__badge"><img data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Golden Acre Foods</span>
+            <span class="case-tile__title">One weekly view across four retailers</span>
+            <span class="case-tile__stats"><b>4 major retailers</b><b>30% less time</b></span>
+            <span class="case-tile__excerpt">Thousands of product records had incomplete SKU information and there was no historical depth to tell a real trend from a weekly wobble. Optia now delivers a harmonised view across Tesco, Sainsbury's, Asda and Morrisons every Wednesday, with two full years of comparable history behind it.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-samworth" data-sector="Consumer" data-name="Samworth Brothers" data-order="6">
+          <span class="case-tile__media"><img data-src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Samworth Brothers</span>
+            <span class="case-tile__title">One board-ready view across six categories</span>
+            <span class="case-tile__stats"><b>6 categories</b><b>~1 week reclaimed</b></span>
+            <span class="case-tile__excerpt">Six operating companies each reported their own way, so the group board pack took around a week of Excel work every month. Optia harmonised five external sources with internal submissions into one model, and a data quality review caught reporting errors that had gone unnoticed.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-vithit" data-sector="Consumer" data-name="Vit Hit" data-order="7">
+          <span class="case-tile__media"><img data-src="images/vithit-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 38%"><span class="case-tile__badge"><img data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Vit Hit</span>
+            <span class="case-tile__title">Distribution and promotion, finally visible next to sales</span>
+            <span class="case-tile__stats"><b>4 categories</b><b>3 years of history</b></span>
+            <span class="case-tile__excerpt">Previous reporting told Vit Hit what had happened but not why. Optia built a model across four categories and three market levels, with three years of weekly history, so the sales team could see whether growth came from distribution, promotion, price or rate of sale.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-international-beverage" data-sector="Consumer" data-name="International Beverage" data-order="8">
+          <span class="case-tile__media"><img data-src="images/international-beverage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">International Beverage</span>
+            <span class="case-tile__title">One insight manager, out of the critical path</span>
+            <span class="case-tile__stats"><b>7 data sources</b><b>156 weeks loaded</b></span>
+            <span class="case-tile__excerpt">The monthly leadership pack was built by hand by a single insight manager, across seven sources on different calendars. Optia is building one governed model to feed both the Power BI environment and the existing PowerPoint, with history extended from 13 weeks to 156.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-samyang" data-sector="Consumer" data-name="Samyang Foods" data-order="9">
+          <span class="case-tile__media case-tile__media--product"><img data-src="images/samyang-hero.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Samyang Foods</span>
+            <span class="case-tile__title">Sell-out, sell-through and sell-in, side by side</span>
+            <span class="case-tile__stats"><b>5 European markets</b><b>3 data layers</b></span>
+            <span class="case-tile__excerpt">Buldak's rapid European growth left three views of the business being managed separately, with no simple way to explain why they disagreed. Optia is building one model across five markets so demand, distributor sales and supply can be compared directly.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-qts" data-sector="Engineering" data-name="QTS Data Centres" data-order="10">
+          <span class="case-tile__media"><img data-src="images/qts-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 44%"><span class="case-tile__badge"><img data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">QTS Data Centres</span>
+            <span class="case-tile__title">Twelve months of maintenance, compressed into nine and a half</span>
+            <span class="case-tile__stats"><b>45MW site</b><b>12 months into 9.5</b></span>
+            <span class="case-tile__excerpt">Thousands of assets, three handover phases and a web of redundancy and seasonal constraints meant no simple way to prove every rule had been respected. Optia's constraint-based model cannot produce a schedule that breaks them, and returned a full replan in five days.</span>
+            <span class="case-tile__meta">Read the case study &rarr;</span>
+          </span>
+        </a>
+        <a class="case-tile" href="#case-ilg" data-sector="Education" data-name="Inspired Learning Group" data-order="11">
+          <span class="case-tile__media"><img data-src="images/ilg-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+          <span class="case-tile__body">
+            <span class="case-tile__client">Inspired Learning Group</span>
+            <span class="case-tile__title">Reporting built around the decisions heads can actually make</span>
+            <span class="case-tile__stats"><b>~25 settings</b><b>5 source systems</b></span>
+            <span class="case-tile__excerpt">A group P&amp;L can run to hundreds of lines, only a few of which a head can influence, and the data sat across five systems on different rhythms. Optia connected all five and structured the reporting around who needs to make the decision.</span>
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
@@ -2758,6 +2772,13 @@ p { text-wrap: pretty; }
             if (isActive) { p.setAttribute('role', 'main'); } else { p.removeAttribute('role'); }
           });
           document.documentElement.classList.add('routing-case');
+          // The nav is white by default because every other route opens on a
+          // dark image. The case index and the about page open straight onto
+          // paper, so the wordmark and links were invisible until the scroll
+          // handler kicked in at 24px. A .case-study always has its dark hero
+          // at the top, so it keeps the white nav.
+          document.documentElement.classList.toggle('routing-case--light',
+            !!activePage && !activePage.classList.contains('case-study'));
           if (mainEl) { mainEl.hidden = true; mainEl.style.display = 'none'; }
           if (footerEl) { footerEl.hidden = true; footerEl.style.display = 'none'; }
           // Force the browser to apply the layout change above before we ask it
@@ -2770,6 +2791,7 @@ p { text-wrap: pretty; }
           if (activePage && activePage.scrollIntoView) { activePage.scrollIntoView({ block: 'start' }); }
         } else {
           document.documentElement.classList.remove('routing-case');
+          document.documentElement.classList.remove('routing-case--light');
           promoteHomeImages();
           casePages.forEach(function (p) { p.classList.remove('is-active'); p.removeAttribute('role'); });
           if (mainEl) { mainEl.hidden = false; mainEl.style.display = ''; }
