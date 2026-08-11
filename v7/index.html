@@ -917,6 +917,92 @@ p { text-wrap: pretty; }
   .case-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* ------------------------------------------------------------------------
+   Mobile image scale-down. 760px is this site's existing mobile breakpoint
+   (see the block above and the matching min-width: 761px rules), so these
+   sit on the same boundary rather than introducing a second one at 768px.
+
+   Measured before this change at 375x667, 390x844 and 428x926, every
+   full-bleed image rendered at exactly 100% of the viewport height: the hero
+   photo, all three pillar panels and the Approach visual pause. Each was a
+   full screen of photography a reader had to scroll past to reach any copy.
+
+   Everything here is inside the media query, so desktop is untouched.
+   ------------------------------------------------------------------------ */
+@media (max-width: 760px) {
+  :root {
+    /* Single knob for the capped decorative visuals: ~30vh, floored so it
+       still reads as an image on a short phone and ceilinged so it cannot
+       take over a tall one. */
+    --m-visual-h: clamp(180px, 26vh, 250px);
+  }
+
+  /* Hero. The photo was the section's entire background; it becomes a band
+     pinned to the top edge and the copy is padded clear of it. z-index lifts
+     it above the two tint overlays (which stay on the ink ground behind the
+     copy, so the Ultraviolet cast is preserved) rather than being washed out
+     by the 180deg darkening gradient. */
+  .hero { padding-top: calc(66px + var(--m-visual-h) + var(--space-s)); }
+  .hero__image { inset: 0 0 auto 0; height: var(--m-visual-h); z-index: 0; }
+  /* Holds the slat pattern in frame instead of the blown-out top edge. */
+  .hero__image img { object-fit: cover; object-position: 58% 64%; }
+
+  /* Pillars: Foundation, Context, Intelligence. The image panel sat at a full
+     100svh directly under each copy panel, which is what made every pillar two
+     screens tall. Capping it alone was not enough: the copy panel was also
+     locked to 100svh, which left the capped image stranded below a full screen
+     of flat colour. So the image moves above the copy (order, overriding the
+     --reverse rule that resets it) and the copy panel sizes to its content.
+     The band sits under the fixed nav exactly as the hero band does. */
+  .layer__image, .layer--reverse .layer__image {
+    order: -1;
+    height: var(--m-visual-h);
+    min-height: 0;
+  }
+  .layer__image img { object-fit: cover; object-position: 50% 45%; }
+  .layer__copy { min-height: 0; padding-top: var(--space-m); }
+  /* The section is min-height:100svh, so with a fixed-height image row the
+     leftover space was being handed to the image's row and showing .layer's
+     own (unset) background as a paper-coloured band under the photo. Giving
+     the copy row the 1fr makes its colour run to the bottom edge instead. */
+  .layer { grid-template-rows: auto 1fr; }
+
+  /* Approach "waves of blue light". Deliberately NOT the 80-140px break strip:
+     this block carries a display headline that measures 195-223px at these
+     widths, so a strip that thin cannot hold it without shrinking the type,
+     and the type is meant to stay as it is. Capped instead, which takes it
+     from 100% of the viewport to roughly 40% with the headline and its
+     gradient overlay intact. */
+  .visual-pause { min-height: clamp(300px, 42vh, 380px); }
+  /* It keeps its snap position - dropping scroll-snap-align entirely turned it
+     into an orphan block between two full-page sections, which mandatory snap
+     then skipped past without ever resting anywhere it was visible. Only the
+     forced hard stop goes, since halting a fast gesture on a 354px divider is
+     not worth it. */
+  .visual-pause { scroll-snap-stop: normal; }
+
+  /* About page. Already close to target at 28-34%, but the images are sized by
+     their own aspect ratio, so this pins them and crops rather than letting a
+     tall image set the height. */
+  .about-page__image img { height: var(--m-visual-h); object-fit: cover; object-position: 50% 50%; }
+
+  /* Case study headers already come in at 18-19% via their 16/7 aspect ratio.
+     This only bites approaching 760px, where the ratio would otherwise make
+     them tall again. */
+  .case-full__media { max-height: var(--m-visual-h); }
+}
+
+/* v7 only. .case-hero is this version's case-study header and was set to
+   clamp(400px, 66svh, 660px), so on a phone the photo took two thirds of the
+   screen before any of the study could be read. It carries real copy - back
+   link, client logo, title, standfirst and the stat headline - so it is capped
+   rather than reduced to a decorative band, on the same reasoning as the
+   Approach visual pause. */
+@media (max-width: 760px) {
+  .case-hero { min-height: clamp(340px, 44svh, 460px); }
+  .case-hero__img { object-position: 50% 42%; }
+}
+
 @media print {
   .case-hero { min-height: 0; page-break-inside: avoid; }
   .case-hero__img, .case-hero::before, .case-hero::after { display: none; }
