@@ -38,6 +38,11 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; overflow-x: hidden; scroll-snap-type: y mandatory; }
+/* See the inline script right before .hero in the body - this has to be a
+   plain CSS rule (not something toggled only by the later routing script)
+   so it applies before layout, and before the browser decides which lazy
+   images are worth fetching immediately. */
+html.routing-case .hero, html.routing-case main { display: none; }
 /* #solutions, #customers and #approach already reserve nav clearance via
    their own padding-top: calc(66px + gutter) - adding scroll-margin-top on
    top of that double-counts the offset, pushing the section 66px further
@@ -691,8 +696,29 @@ p { text-wrap: pretty; }
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open navigation"><span></span><span></span></button>
   </nav>
 
+  <script>
+    // Runs before the hero/main below are parsed, so that when landing
+    // directly on a #case-... URL, the browser's lazy-load distance check
+    // never sees the hero/home content as "on screen" in the first place -
+    // hiding it later in the routing script (after the whole document has
+    // parsed) is too late, since Chrome had already started fetching any
+    // lazy image it judged close enough to the initial viewport.
+    if (/^#(about-page|case-[a-z-]+)$/.test(location.hash)) {
+      document.documentElement.classList.add('routing-case');
+    }
+  </script>
+
   <header class="hero" id="top">
-    <div class="hero__image"><img src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.jpg" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager" fetchpriority="high"></div>
+    <div class="hero__image"><img id="heroImg" data-src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.jpg" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager" fetchpriority="high"></div>
+    <script>
+      // Promoted here rather than in the routing script at the bottom of the
+      // page, so on the home route this starts fetching immediately during
+      // parse - same timing as a plain eager src - instead of waiting for
+      // the rest of the document to parse first.
+      if (!document.documentElement.classList.contains('routing-case')) {
+        document.getElementById('heroImg').src = document.getElementById('heroImg').getAttribute('data-src');
+      }
+    </script>
     <div class="hero__main">
       <h1 class="hero__title">Intelligence.</h1>
       <p class="hero__sub">Built for Decisions.</p>
@@ -728,7 +754,7 @@ p { text-wrap: pretty; }
         <h2 class="layer__title">Get the data <em>right.</em></h2>
         <p class="layer__body">We bring together your data: syndicated market, sales and marketing or your own internal numbers, creating one governed, audited and secure environment. Your data, reconciled and reliable, with a clear trail from which every figure originates. The result? Numbers that match and reporting that runs itself. Most people undervalue this, which is why any AI will give confident, wrong answers</p>
       </div>
-      <div class="layer__image"><img src="images/minimal-blue-architectural-panels-meeting-at-a-seam.jpg" alt="Minimal blue architectural panels meeting at a seam" loading="lazy" decoding="async"></div>
+      <div class="layer__image"><img data-src="images/minimal-blue-architectural-panels-meeting-at-a-seam.jpg" alt="Minimal blue architectural panels meeting at a seam" loading="lazy" decoding="async"></div>
     </section>
 
     <section class="layer layer--reverse">
@@ -737,7 +763,7 @@ p { text-wrap: pretty; }
         <h2 class="layer__title layer__title--fit">Give your data <em>meaning.</em></h2>
         <p class="layer__body">Data on its own doesn't know your categories, your definitions, your hierarchies or your quirks. We codify that meaning in a managed layer: the business rules, definitions and relationships that let your people - and any AI - read your data correctly.</p>
       </div>
-      <div class="layer__image"><img src="images/close-up-of-illuminated-blue-perforated-panels.jpg" alt="Close-up of illuminated blue perforated panels" loading="lazy" decoding="async"></div>
+      <div class="layer__image"><img data-src="images/close-up-of-illuminated-blue-perforated-panels.jpg" alt="Close-up of illuminated blue perforated panels" loading="lazy" decoding="async"></div>
     </section>
 
     <section class="layer layer--ink">
@@ -746,7 +772,7 @@ p { text-wrap: pretty; }
         <h2 class="layer__title layer__title--fit">Know what <em>to do next.</em></h2>
         <p class="layer__body">Dashboards, ad-hoc answers and enhanced assisted analysis. Every insight identifies real value and how to unlock it. Every recommendation is provided to improve your business, based on your governed data. All verified by a human analyst. Decisions made with confidence, actionable insights not vanity metrics.</p>
       </div>
-      <div class="layer__image"><img src="images/blue-architectural-panels-violet-toned.jpg" alt="Blue architectural panels, violet-toned" loading="lazy" decoding="async"></div>
+      <div class="layer__image"><img data-src="images/blue-architectural-panels-violet-toned.jpg" alt="Blue architectural panels, violet-toned" loading="lazy" decoding="async"></div>
     </section>
 
     <section class="layers-cta reveal" aria-label="Which layer fits you">
@@ -783,11 +809,11 @@ p { text-wrap: pretty; }
         <button class="customer-filter" type="button" data-filter="Health" aria-pressed="false">Health</button>
       </div>
       <div class="customer-list" id="customerList">
-        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samworth"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/starbucks-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/vithit-logo-white.png" alt="VitHit" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/mufg-logo-white.png" alt="MUFG" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/mufg-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/clear-one-advantage-logo-white.png" alt="Clear One Advantage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/clear-one-advantage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Engineering"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Education"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" src="images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samworth"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/starbucks-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/vithit-logo-white.png" alt="VitHit" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/mufg-logo-white.png" alt="MUFG" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/mufg-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/clear-one-advantage-logo-white.png" alt="Clear One Advantage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/clear-one-advantage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Engineering"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Education"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
       </div>
       <a class="customers__cta" href="#contact"><strong>Don't have that secure data environment?</strong><span class="cta-link">Start a conversation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
     </section>
@@ -815,22 +841,22 @@ p { text-wrap: pretty; }
         <p class="eyebrow">Selected case studies</p>
         <div class="case-studies__grid">
           <a class="case-card" href="#case-samworth">
-            <span class="case-card__media"><img src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async"><span class="case-card__badge"><img src="images/samworth-brothers.png" alt="Samworth Brothers" loading="lazy" decoding="async"></span></span>
+            <span class="case-card__media"><img data-src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/samworth-brothers.png" alt="Samworth Brothers" loading="lazy" decoding="async"></span></span>
             <span class="case-card__title">One board-ready view across six categories</span>
             <span class="case-card__meta">Samworth Brothers &rarr;</span>
           </a>
           <a class="case-card" href="#case-arla">
-            <span class="case-card__media"><img src="images/dairy-farmland-landscape.jpg" alt="Dairy farmland landscape" loading="lazy" decoding="async"><span class="case-card__badge"><img src="images/arla.png" alt="Arla" loading="lazy" decoding="async"></span></span>
+            <span class="case-card__media"><img data-src="images/dairy-farmland-landscape.jpg" alt="Dairy farmland landscape" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/arla.png" alt="Arla" loading="lazy" decoding="async"></span></span>
             <span class="case-card__title">One trusted view across 16 markets</span>
             <span class="case-card__meta">Arla Foods &rarr;</span>
           </a>
           <a class="case-card" href="#case-australianvintage">
-            <span class="case-card__media"><img src="images/vineyard-landscape.jpg" alt="Vineyard landscape" loading="lazy" decoding="async"><span class="case-card__badge"><img src="images/australian-vintage.png" alt="Australian Vintage" loading="lazy" decoding="async"></span></span>
+            <span class="case-card__media"><img data-src="images/vineyard-landscape.jpg" alt="Vineyard landscape" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/australian-vintage.png" alt="Australian Vintage" loading="lazy" decoding="async"></span></span>
             <span class="case-card__title">&pound;26m of misclassified sales, corrected</span>
             <span class="case-card__meta">Australian Vintage &rarr;</span>
           </a>
           <a class="case-card" href="#case-goldenacre">
-            <span class="case-card__media"><img src="images/fresh-produce.jpg" alt="Fresh produce" loading="lazy" decoding="async"><span class="case-card__badge"><img src="images/golden-acre-foods.png" alt="Golden Acre Foods" loading="lazy" decoding="async"></span></span>
+            <span class="case-card__media"><img data-src="images/fresh-produce.jpg" alt="Fresh produce" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/golden-acre-foods.png" alt="Golden Acre Foods" loading="lazy" decoding="async"></span></span>
             <span class="case-card__title">One weekly view across four retailers</span>
             <span class="case-card__meta">Golden Acre Foods &rarr;</span>
           </a>
@@ -851,7 +877,7 @@ p { text-wrap: pretty; }
       </article>
 
       <div class="visual-pause">
-        <img src="images/waves-of-repeated-blue-light.jpg" alt="Waves of repeated blue light" loading="lazy">
+        <img data-src="images/waves-of-repeated-blue-light.jpg" alt="Waves of repeated blue light" loading="lazy">
         <h2 class="visual-pause__line">Technology accelerates the work. <em>People remain accountable.</em></h2>
       </div>
 
@@ -886,7 +912,7 @@ p { text-wrap: pretty; }
         <h1>We think the human is the point.</h1>
         <p class="case-full__sub">The story behind Optia, in our founder's own words.</p>
       </div>
-      <div class="about-page__image"><img src="images/detail-of-illuminated-blue-architectural-panels.jpg" alt="Detail of illuminated blue architectural panels" loading="lazy" decoding="async"></div>
+      <div class="about-page__image"><img data-src="images/detail-of-illuminated-blue-architectural-panels.jpg" alt="Detail of illuminated blue architectural panels" loading="lazy" decoding="async"></div>
       <div class="case-full__section">
         <h2>Our story</h2>
         <span class="about-page__sub">(unedited from our founder...)</span>
@@ -904,7 +930,7 @@ p { text-wrap: pretty; }
         <p>We're a specialist data company with deep expertise and partnerships in consumer, but with a growing reputation in other fields. My team covers all the bases. Data and Software engineering expertise gained over decades from the best technical universities and Fortune 500 companies. Bleeding edge innovation skills honed in the labs of the most forward thinking global management consultancies and CPG behemoths. Analyst skillsets influenced by years working in and for CPGs and digital startups alike. Customer success, empathy and an innate understanding of what someone needs that can only have been honed on the playing fields of England.</p>
         <p>We have spent years in the detail of syndicated datasets, doing the unglamorous work that makes commercial numbers reliable for big household names. We are human, we are diverse, we are located all around the world and have the ability to listen to the needs of our customers and then work out and implement the best possible solution available today. Every project we take on is either slightly different to the previous, or very different. All this coupled with backgrounds building and maintaining data platforms and softwares and natural curiosity that is seeing us test and push the boundaries of the latest technologies, mean that our customers want us not just to solve the problem at hand, but to join them wherever they are on their data journey.</p>
       </div>
-      <div class="about-page__image"><img src="images/soft-defocused-blue-light-detail.jpg" alt="Soft, defocused blue light detail" loading="lazy" decoding="async"></div>
+      <div class="about-page__image"><img data-src="images/soft-defocused-blue-light-detail.jpg" alt="Soft, defocused blue light detail" loading="lazy" decoding="async"></div>
       <div class="case-full__section">
         <h2>Why a name matters</h2>
         <p>We have always known that the data to insights journey is fraught with issues of 'garbage in garbage out'. The challenge conversational AI poses is that it may make even garbage look interesting and correct. Conversational AI must be fed data that is correct by design and also presented in a way that means the LLMs have a miniscule chance of hallucinating or cooking up something random. This requires strong data foundations and data presentation skills. At Optia, we have understood these challenges and are continuously on a mission to improve our capabilities around these emerging challenges.</p>
@@ -919,7 +945,7 @@ p { text-wrap: pretty; }
       <div class="where-we-work">
         <h3 class="where-we-work__title">Where we work</h3>
         <div class="where-we-work__map">
-          <img src="images/world-map-showing-optia-s-locations-in-london-barcelona-nure.png" alt="World map showing Optia's locations in London, Barcelona, Nuremberg, Abu Dhabi, Bangalore, Chicago and New York" loading="lazy" decoding="async">
+          <img data-src="images/world-map-showing-optia-s-locations-in-london-barcelona-nure.png" alt="World map showing Optia's locations in London, Barcelona, Nuremberg, Abu Dhabi, Bangalore, Chicago and New York" loading="lazy" decoding="async">
           <svg class="where-we-work__overlay" viewBox="0 0 1920 975" aria-hidden="true" focusable="false">
             <path class="wwm-line" d="M918,168 Q902.8,184.6 900,207"></path><path class="wwm-line" d="M918,168 Q945.8,174.0 965,195"></path><path class="wwm-line" d="M918,168 Q1065.8,204.5 1165,320"></path><path class="wwm-line" d="M918,168 Q1150.3,218.8 1310,395"></path><path class="wwm-line" d="M918,168 Q654.4,99.6 400,197"></path><path class="wwm-line" d="M918,168 Q676.0,114.8 448,212"></path>
             <g class="wwm-city"><circle class="wwm-ring" cx="918" cy="168" r="6" style="animation-delay:0.00s"></circle><circle class="wwm-dot" cx="918" cy="168" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="900" cy="207" r="6" style="animation-delay:0.35s"></circle><circle class="wwm-dot" cx="900" cy="207" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="965" cy="195" r="6" style="animation-delay:0.70s"></circle><circle class="wwm-dot" cx="965" cy="195" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="1165" cy="320" r="6" style="animation-delay:1.05s"></circle><circle class="wwm-dot" cx="1165" cy="320" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="1310" cy="395" r="6" style="animation-delay:1.40s"></circle><circle class="wwm-dot" cx="1310" cy="395" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="400" cy="197" r="6" style="animation-delay:1.75s"></circle><circle class="wwm-dot" cx="400" cy="197" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="448" cy="212" r="6" style="animation-delay:2.10s"></circle><circle class="wwm-dot" cx="448" cy="212" r="5"></circle></g>
@@ -933,10 +959,10 @@ p { text-wrap: pretty; }
     <section class="case-page" id="case-samworth">
     <div class="case-page__inner">
       <a class="case-page__back" href="#customers">&larr; Back to customers</a>
-      <div class="case-full__media"><img src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async"></div>
+      <div class="case-full__media"><img data-src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async"></div>
 
       <div class="case-full__header">
-        <img src="images/samworth-brothers.png" alt="Samworth Brothers" style="display:block;width:auto;height:auto;max-width:200px;margin:0 0 3vh" loading="lazy" decoding="async">
+        <img data-src="images/samworth-brothers.png" alt="Samworth Brothers" style="display:block;width:auto;height:auto;max-width:200px;margin:0 0 3vh" loading="lazy" decoding="async">
         <span class="case-full__eyebrow">Samworth Brothers &middot; Case study</span>
         <h1>One board-ready view across six categories and sixteen competitors</h1>
         <p class="case-full__sub">How Samworth Brothers replaced a fragmented monthly reporting process with a consistent view of category, retailer and competitor performance across the group.</p>
@@ -1019,7 +1045,7 @@ p { text-wrap: pretty; }
         <p>This allows users to move from a board-level question into the supporting category, retailer or competitor detail without rebuilding the analysis in Excel.</p>
       </div>
 
-      <div class="about-page__image"><img src="images/detail-of-illuminated-blue-architectural-panels-2.jpg" alt="Detail of illuminated blue architectural panels" loading="lazy" decoding="async"></div>
+      <div class="about-page__image"><img data-src="images/detail-of-illuminated-blue-architectural-panels-2.jpg" alt="Detail of illuminated blue architectural panels" loading="lazy" decoding="async"></div>
 
       <div class="case-full__section">
         <h2>Making different categories comparable</h2>
@@ -1117,7 +1143,7 @@ p { text-wrap: pretty; }
   <section class="case-page" id="case-arla">
     <div class="case-page__inner">
       <a class="case-page__back" href="#customers">&larr; Back to customers</a>
-      <div class="case-full__media"><img src="images/dairy-farmland-landscape.jpg" alt="Dairy farmland landscape" loading="lazy" decoding="async"></div>
+      <div class="case-full__media"><img data-src="images/dairy-farmland-landscape.jpg" alt="Dairy farmland landscape" loading="lazy" decoding="async"></div>
       <div class="case-full__header">
         <span class="case-full__eyebrow">Arla Foods &middot; Case study</span>
         <h1>One trusted view of brand and category performance across 16 markets</h1>
@@ -1228,7 +1254,7 @@ p { text-wrap: pretty; }
   <section class="case-page" id="case-australianvintage">
     <div class="case-page__inner">
       <a class="case-page__back" href="#customers">&larr; Back to customers</a>
-      <div class="case-full__media"><img src="images/vineyard-landscape.jpg" alt="Vineyard landscape" loading="lazy" decoding="async"></div>
+      <div class="case-full__media"><img data-src="images/vineyard-landscape.jpg" alt="Vineyard landscape" loading="lazy" decoding="async"></div>
       <div class="case-full__header">
         <span class="case-full__eyebrow">Australian Vintage &middot; Case study</span>
         <h1>Trusted category insight, protected before it reaches the board</h1>
@@ -1348,7 +1374,7 @@ p { text-wrap: pretty; }
   <section class="case-page" id="case-goldenacre">
     <div class="case-page__inner">
       <a class="case-page__back" href="#customers">&larr; Back to customers</a>
-      <div class="case-full__media"><img src="images/fresh-produce.jpg" alt="Fresh produce" loading="lazy" decoding="async"></div>
+      <div class="case-full__media"><img data-src="images/fresh-produce.jpg" alt="Fresh produce" loading="lazy" decoding="async"></div>
       <div class="case-full__header">
         <span class="case-full__eyebrow">Golden Acre Foods &middot; Case study</span>
         <h1>One trusted weekly view across four major retailers</h1>
@@ -1475,7 +1501,7 @@ p { text-wrap: pretty; }
 
   <footer class="contact" id="contact">
     <div class="contact__visual">
-      <img src="images/blue-light-with-soft-luminous-points.jpg" alt="Blue light with soft luminous points" loading="lazy">
+      <img data-src="images/blue-light-with-soft-luminous-points.jpg" alt="Blue light with soft luminous points" loading="lazy">
       <p class="eyebrow eyebrow--section">Start here</p>
       <h2 class="contact__title">Start somewhere <em>real.</em></h2>
       <p class="contact__body">No pitch and no jargon. Tell us what's slowing your commercial decisions down and we'll show you how we'd approach it, including a free assessment.</p>
@@ -1618,10 +1644,29 @@ p { text-wrap: pretty; }
         return false;
       }
 
+      // Home's own images (hero, layers, customer logos, contact photo) are
+      // held back as data-src rather than src - a loading="lazy" image can
+      // still get fetched by the browser even inside a display:none
+      // ancestor, which was defeating the whole point when landing directly
+      // on a #case-... URL. Promoting to a real src only happens once we
+      // know home is actually the active route.
+      function promoteHomeImages() {
+        document.querySelectorAll('img[data-src]').forEach(function (img) {
+          img.src = img.getAttribute('data-src');
+          img.removeAttribute('data-src');
+        });
+      }
+
       function applyRoute(targetHash) {
         var hash = targetHash !== undefined ? targetHash : location.hash.slice(1);
         if (isCaseId(hash)) {
           var activePage = document.getElementById(hash);
+          if (activePage) {
+            activePage.querySelectorAll('img[data-src]').forEach(function (img) {
+              img.src = img.getAttribute('data-src');
+              img.removeAttribute('data-src');
+            });
+          }
           casePages.forEach(function (p) {
             var isActive = p.id === hash;
             p.classList.toggle('is-active', isActive);
@@ -1630,6 +1675,7 @@ p { text-wrap: pretty; }
             // landmark at all, which is what axe was flagging.
             if (isActive) { p.setAttribute('role', 'main'); } else { p.removeAttribute('role'); }
           });
+          document.documentElement.classList.add('routing-case');
           if (mainEl) { mainEl.hidden = true; mainEl.style.display = 'none'; }
           if (footerEl) { footerEl.hidden = true; footerEl.style.display = 'none'; }
           // Force the browser to apply the layout change above before we ask it
@@ -1641,6 +1687,8 @@ p { text-wrap: pretty; }
           window.scrollTo(0, 0);
           if (activePage && activePage.scrollIntoView) { activePage.scrollIntoView({ block: 'start' }); }
         } else {
+          document.documentElement.classList.remove('routing-case');
+          promoteHomeImages();
           casePages.forEach(function (p) { p.classList.remove('is-active'); p.removeAttribute('role'); });
           if (mainEl) { mainEl.hidden = false; mainEl.style.display = ''; }
           if (footerEl) { footerEl.hidden = false; footerEl.style.display = ''; }
