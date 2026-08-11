@@ -709,16 +709,16 @@ p { text-wrap: pretty; }
   </script>
 
   <header class="hero" id="top">
-    <div class="hero__image"><img id="heroImg" data-src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.jpg" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager" fetchpriority="high"></div>
-    <script>
-      // Promoted here rather than in the routing script at the bottom of the
-      // page, so on the home route this starts fetching immediately during
-      // parse - same timing as a plain eager src - instead of waiting for
-      // the rest of the document to parse first.
-      if (!document.documentElement.classList.contains('routing-case')) {
-        document.getElementById('heroImg').src = document.getElementById('heroImg').getAttribute('data-src');
-      }
-    </script>
+    <div class="hero__image"><img src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.jpg" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager" fetchpriority="high"></div>
+    <!-- Deliberately a plain eager src, not the data-src pattern used below.
+         fetchpriority="high" only helps if the browser's HTML preload
+         scanner can see a real src while it's still speculatively parsing -
+         swapping it in later via JS (as tested) pushed home's own LCP from
+         ~2.9s to ~7.5s. The trade-off: this image still loads even when
+         routing straight to a case page, at a fixed ~840KB cost - accepted,
+         since home's LCP matters more than trimming that one image on the
+         five case-study views. -->
+
     <div class="hero__main">
       <h1 class="hero__title">Intelligence.</h1>
       <p class="hero__sub">Built for Decisions.</p>
