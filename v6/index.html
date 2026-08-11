@@ -709,15 +709,16 @@ p { text-wrap: pretty; }
   </script>
 
   <header class="hero" id="top">
-    <div class="hero__image"><img src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.jpg" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager" fetchpriority="high"></div>
+    <div class="hero__image"><img src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.jpg" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager"></div>
     <!-- Deliberately a plain eager src, not the data-src pattern used below.
-         fetchpriority="high" only helps if the browser's HTML preload
-         scanner can see a real src while it's still speculatively parsing -
-         swapping it in later via JS (as tested) pushed home's own LCP from
-         ~2.9s to ~7.5s. The trade-off: this image still loads even when
-         routing straight to a case page, at a fixed ~840KB cost - accepted,
-         since home's LCP matters more than trimming that one image on the
-         five case-study views. -->
+         A src assigned by JS after the fact loses the browser's preload
+         scanner entirely, which measurably hurt home's own LCP when tried.
+         fetchpriority="high" is intentionally left off: on the five
+         case-study/about views this image still loads unconditionally
+         (eager ignores display:none, same as a bare src would) at a fixed
+         ~840KB cost, and marking it high-priority made it compete with
+         bandwidth that view's own actually-visible image needed under
+         mobile throttling, measurably hurting THAT page's LCP instead. -->
 
     <div class="hero__main">
       <h1 class="hero__title">Intelligence.</h1>
