@@ -1088,7 +1088,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
    ============================================================ */
 .by-role { display: flex; align-items: center; }
 .by-role__shell { width: 100%; max-width: 84rem; margin: 0 auto; }
-.by-role__prompt { max-width: 24ch; margin: 0 0 var(--space-m); font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.7rem, 3.4vw, 3rem); line-height: 1.1; letter-spacing: -.03em; }
+/* Same display setting as .proved-cases__title, so the two section openers
+   read at the same weight rather than one being a headline and the other a
+   standfirst. */
+.by-role__prompt { max-width: 22ch; margin: 0 0 var(--space-m); font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(2.8rem, 5.6vw, 5.3rem); line-height: 1; letter-spacing: -.02em; }
 
 .roles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--space-m); }
 /* Same treatment as .customer-filter in the Customers section: square, 44px,
@@ -1096,7 +1099,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
    Both sit on the Ultraviolet ground, so the colours carry over unchanged.
    White on Ultraviolet measures 7.8:1 either way round, so the selected
    button inverts without dropping below AA. */
-.role { display: inline-flex; align-items: baseline; gap: 9px; min-height: 44px; padding: 0 15px; border: 1px solid rgba(255,255,255,.5); border-radius: 0; background: transparent; color: #fff; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+/* Centred, not baseline-aligned: the number and the name are now the same
+   12px, so a shared baseline bought nothing and pinned the pair to the top of
+   the 44px box. */
+.role { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 0 15px; border: 1px solid rgba(255,255,255,.5); border-radius: 0; background: transparent; color: #fff; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
 .role__num { opacity: .6; }
 .role:hover, .role[aria-selected="true"] { background: #fff; color: var(--blue); }
 .role[aria-selected="true"] .role__num { opacity: .55; }
@@ -1133,7 +1139,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     scrollbar-width: none; -ms-overflow-style: none; }
   .roles::-webkit-scrollbar { display: none; }
   .role { flex: none; scroll-snap-align: start; min-height: 42px; padding: 0 14px; gap: 8px; }
-  .by-role__prompt { font-size: clamp(1.45rem, 6.6vw, 1.9rem); margin-bottom: var(--space-s); }
+  .by-role__prompt { font-size: clamp(1.95rem, 8.4vw, 2.55rem); margin-bottom: var(--space-s); }
   .role-panel__body { font-size: .95rem; line-height: 1.45; }
   .by-role__cta { width: 100%; justify-content: center; }
   .by-role__closer { margin-top: var(--space-s); padding-top: var(--space-xs); gap: 12px; }
