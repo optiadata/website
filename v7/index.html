@@ -76,9 +76,18 @@ html.routing-case .hero, html.routing-case main { display: none; }
    trap scrolling at their entrance, since the browser must not scroll past a
    stop-always point even to read further into a long section. */
 .hero, .chapter-intro, .layer, .capabilities, .customers, .proved-cases,
-.approach__intro, .approach-chapter, .visual-pause, .core, .contact {
+.approach__intro, .approach-chapter, .visual-pause, .core, .contact,
+.layers-cta {
   scroll-snap-align: start;
 }
+/* .layers-cta was missing from the list above, which left it an orphan block
+   between .layer--ink and .capabilities with no snap position of its own.
+   Measured at every viewport from 1902x860 down to 375x667: 0px of it visible
+   when snapped to the pillar before it and 24px (6-7%) when snapped to the
+   section after, so the "start a conversation" link never had a resting place
+   and a mandatory-snap gesture jumped straight over it. It gets a snap point
+   but deliberately no scroll-snap-stop: always - at 325-395px it is well under
+   a viewport, and forcing a hard halt on a short block is not warranted. */
 .hero, .chapter-intro,
 .approach__intro, .approach-chapter, .visual-pause {
   scroll-snap-stop: always;
