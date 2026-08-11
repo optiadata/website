@@ -1248,6 +1248,83 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 .direct__credit a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.4); }
 .direct__credit a:hover { border-bottom-color: currentColor; }
 
+
+/* ============================================================
+   PATTERN CAROUSEL  (The Cost of Getting It Wrong)
+   Three thematic sets of four cards. Every column holds all three
+   of its faces stacked on the same grid cell, so the column sizes
+   itself to its tallest face and nothing shifts when the set
+   changes. No JS measurement, no height animation.
+   ============================================================ */
+.pattern-carousel__eyebrow { margin: 0 0 6px; }
+.pattern-themes { display: grid; margin-bottom: var(--space-s); }
+.pattern-theme { grid-area: 1 / 1; margin: 0; font-family: 'Zodiak', Georgia, serif; font-style: italic; font-size: clamp(1.2rem, 2.1vw, 1.75rem); line-height: 1.15; letter-spacing: -.025em; color: var(--ink); opacity: 0; visibility: hidden; transition: opacity .32s cubic-bezier(.4,0,1,1), visibility 0s .32s; }
+.pattern-theme.is-active { opacity: .9; visibility: visible; transition: opacity .46s cubic-bezier(.16,1,.3,1), visibility 0s; }
+
+.pattern-grid { display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch; gap: clamp(12px, 1.3vw, 20px); margin: 0 0 var(--space-s); padding: 0; list-style: none; }
+/* Every face shares one cell, so the column is as tall as its tallest face. */
+.pattern-col { display: grid; }
+.pattern-card { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 8px; padding: clamp(18px, 2vw, 28px) clamp(16px, 1.7vw, 24px); border-radius: 10px; color: #fff;
+  background: linear-gradient(155deg, #5b3cff 0%, #4828e5 44%, #2c19ad 100%);
+  opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(10px);
+  transition: opacity .32s cubic-bezier(.4,0,1,1), transform .32s cubic-bezier(.4,0,1,1), visibility 0s .32s; }
+.pattern-card.is-active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
+  transition: opacity .46s cubic-bezier(.16,1,.3,1), transform .46s cubic-bezier(.16,1,.3,1), visibility 0s; }
+/* Leaving state has to be its own rule: the resting hidden state sits at
+   +10px ready to enter, but an outgoing face has to travel to -8px. */
+.pattern-card.is-leaving { opacity: 0; visibility: visible; transform: translateY(-8px);
+  transition: opacity .32s cubic-bezier(.4,0,1,1), transform .32s cubic-bezier(.4,0,1,1); }
+
+.pattern-card__figure { margin: 0; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(1.9rem, 3.3vw, 3rem); line-height: .98; letter-spacing: -.03em; hyphens: none; }
+.pattern-card__lead { margin: 0; font-size: clamp(.88rem, 1vw, .98rem); line-height: 1.38; opacity: .93; }
+.pattern-card__support { margin: auto 0 0; padding-top: 10px; font-size: clamp(.78rem, .88vw, .86rem); line-height: 1.4; opacity: .74; }
+/* No figure: the lead becomes the display line, so a set with no numbers at
+   all (set 3) still reads as deliberate rather than as a set missing its data. */
+.pattern-card--statement .pattern-card__lead { font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.1rem, 1.6vw, 1.45rem); line-height: 1.16; letter-spacing: -.025em; opacity: 1; }
+
+.pattern-controls { display: flex; align-items: center; justify-content: flex-end; gap: clamp(16px, 2vw, 28px); margin-bottom: var(--space-m); }
+.pattern-dots { display: flex; align-items: center; gap: 10px; }
+.pattern-dot { width: 30px; height: 30px; padding: 0; border: 0; background: transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.pattern-dot::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); opacity: .24; transition: opacity .25s ease, transform .25s ease; }
+.pattern-dot.is-active::after { opacity: 1; transform: scale(1.15); }
+.pattern-dot:hover::after { opacity: .6; }
+.pattern-dot.is-active:hover::after { opacity: 1; }
+.pattern-toggle { min-height: 30px; padding: 0 2px; border: 0; background: transparent; color: var(--blue); font-family: inherit; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
+.pattern-toggle:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pattern-dot:focus-visible, .pattern-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 2px; }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+@media (max-width: 900px) {
+  .pattern-grid { grid-template-columns: repeat(2, 1fr); }
+  .pattern-controls { justify-content: flex-start; }
+}
+@media (max-width: 640px) {
+  /* The third line per card pushed the section past one screen at 375x812.
+     The scale steps down here only; two-by-two is preserved because a set of
+     four has to be readable in one glance for the rotation to mean anything. */
+  .pattern-card { padding: 12px 13px; gap: 4px; border-radius: 8px; }
+  .pattern-card__figure { font-size: 1.42rem; }
+  .pattern-card__lead { font-size: .76rem; line-height: 1.28; }
+  .pattern-card--statement .pattern-card__lead { font-size: .88rem; line-height: 1.12; }
+  .pattern-card__support { font-size: .68rem; line-height: 1.3; padding-top: 5px; }
+  .pattern-grid { gap: 8px; margin-bottom: var(--space-xs); }
+  .pattern-themes { margin-bottom: var(--space-2xs); }
+  .pattern-theme { font-size: 1.02rem; }
+  .pattern-carousel__eyebrow { margin-bottom: 3px; }
+  .pattern-controls { margin-bottom: var(--space-s); gap: 14px; }
+  .pattern-dot { width: 26px; height: 26px; }
+}
+/* Auto-rotation is disabled in JS under reduced motion; this is the manual
+   swap: opacity only, no travel. */
+@media (prefers-reduced-motion: reduce) {
+  .pattern-card, .pattern-card.is-active, .pattern-card.is-leaving, .pattern-theme, .pattern-theme.is-active {
+    transform: none !important;
+    transition: opacity .12s linear, visibility 0s !important;
+  }
+  .pattern-card:not(.is-active), .pattern-theme:not(.is-active) { transition: opacity .12s linear, visibility 0s .12s !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1416,23 +1493,83 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="proved-cases__inner">
         <p class="eyebrow">Common problems</p>
         <h2 class="proved-cases__title">The Cost of <em>Getting It Wrong.</em></h2>
-        <div class="cost-grid">
-          <div class="cost-card">
-            <span class="cost-card__figure">80%</span>
-            <p class="cost-card__body">of analyst time goes on preparing data, not analysing it.</p>
-          </div>
-          <div class="cost-card cost-card--statement">
-            <p class="cost-card__body">Retailer EPOS and syndicated market data rarely agree on the same week.</p>
-          </div>
-          <div class="cost-card">
-            <span class="cost-card__figure">10 to 15</span>
-            <p class="cost-card__body">people edit the same reporting file every month.</p>
-          </div>
-          <div class="cost-card">
-            <span class="cost-card__figure">2 days</span>
-            <p class="cost-card__body">to trace one wrong SKU that had skewed a forecast by 250%.</p>
-          </div>
+      <div class="pattern-carousel" id="patternCarousel" role="group" aria-roledescription="carousel" aria-label="What we hear from commercial teams">
+        <p class="eyebrow pattern-carousel__eyebrow">What we hear</p>
+        <div class="pattern-themes">
+          <p class="pattern-theme is-active" data-set="working-day">&ldquo;This is my working day&rdquo;</p>
+          <p class="pattern-theme" data-set="cost" aria-hidden="true">&ldquo;This could cost us&rdquo;</p>
+          <p class="pattern-theme" data-set="credibility" aria-hidden="true">&ldquo;My credibility is exposed&rdquo;</p>
         </div>
+        <ul class="pattern-grid" id="patternGrid" aria-live="off">
+          <li class="pattern-col">
+            <article class="pattern-card is-active" data-set="working-day">
+              <p class="pattern-card__figure">80%</p>
+              <p class="pattern-card__lead">of analyst time goes on preparing data.</p>
+              <p class="pattern-card__support">Just 20% remains for the work they were hired to do.</p>
+            </article>
+            <article class="pattern-card" data-set="cost" aria-hidden="true" inert>
+              <p class="pattern-card__figure">250%</p>
+              <p class="pattern-card__lead">One wrong SKU skewed a forecast.</p>
+              <p class="pattern-card__support">The correction took two seconds. Finding the problem took two days.</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="credibility" aria-hidden="true" inert>
+              <p class="pattern-card__lead">A retailer challenges your number.</p>
+              <p class="pattern-card__support">Nobody in the meeting can explain where it came from.</p>
+            </article>
+          </li>
+          <li class="pattern-col">
+            <article class="pattern-card pattern-card--statement is-active" data-set="working-day">
+              <p class="pattern-card__lead">Retailer EPOS says one thing. Syndicated data says another.</p>
+              <p class="pattern-card__support">The meeting starts in ten minutes and nobody knows which number is true.</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="cost" aria-hidden="true" inert>
+              <p class="pattern-card__lead">Lost distribution is reported as falling consumer demand.</p>
+              <p class="pattern-card__support">The brand team responds to the wrong problem.</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="credibility" aria-hidden="true" inert>
+              <p class="pattern-card__lead">Sales, finance, supply chain and marketing report different numbers.</p>
+              <p class="pattern-card__support">Four versions of the same business but no agreed truth.</p>
+            </article>
+          </li>
+          <li class="pattern-col">
+            <article class="pattern-card is-active" data-set="working-day">
+              <p class="pattern-card__figure">10 to 15</p>
+              <p class="pattern-card__lead">people edit the same reporting file every month.</p>
+              <p class="pattern-card__support">One overwritten formula is all it takes. Nobody notices until the numbers are presented.</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="cost" aria-hidden="true" inert>
+              <p class="pattern-card__lead">A promotion is declared successful.</p>
+              <p class="pattern-card__support">The sales weeks and promotional calendar were never aligned.</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="credibility" aria-hidden="true" inert>
+              <p class="pattern-card__lead">One data-provider update breaks two years of reporting logic.</p>
+              <p class="pattern-card__support">Yesterday everything worked. Today nothing reconciles.</p>
+            </article>
+          </li>
+          <li class="pattern-col">
+            <article class="pattern-card pattern-card--statement is-active" data-set="working-day">
+              <p class="pattern-card__lead">One person knows how it all works.</p>
+              <p class="pattern-card__support">When they leave, where do you start?</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="cost" aria-hidden="true" inert>
+              <p class="pattern-card__lead">A retailer range review is built on products mapped to the wrong category.</p>
+              <p class="pattern-card__support">The recommendation is confident. The evidence underneath it is not.</p>
+            </article>
+            <article class="pattern-card pattern-card--statement" data-set="credibility" aria-hidden="true" inert>
+              <p class="pattern-card__lead">The board wants an AI strategy.</p>
+              <p class="pattern-card__support">The data powering it is still not ready.</p>
+            </article>
+          </li>
+        </ul>
+        <div class="pattern-controls">
+          <div class="pattern-dots" role="group" aria-label="Choose a set">
+            <button type="button" class="pattern-dot is-active" data-index="0" aria-current="true"><span class="visually-hidden">Show set 1 of 3, This is my working day</span></button>
+            <button type="button" class="pattern-dot" data-index="1"><span class="visually-hidden">Show set 2 of 3, This could cost us</span></button>
+            <button type="button" class="pattern-dot" data-index="2"><span class="visually-hidden">Show set 3 of 3, My credibility is exposed</span></button>
+          </div>
+          <button type="button" class="pattern-toggle" id="patternToggle" aria-pressed="false">Pause</button>
+        </div>
+      </div>
 
         <div class="proved-cases__narrative">
           <p class="proved-cases__lede">This is not an analyst problem. It is a commercial risk.</p>
@@ -3336,6 +3473,298 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         else if (event.key === 'End') { next = tabs[tabs.length - 1]; }
         if (next) { event.preventDefault(); select(next, true); }
       });
+    })();
+  </script>
+
+
+  <script>
+    (function () {
+      var root = document.getElementById('patternCarousel');
+      if (!root) { return; }
+
+      /* Canonical copy record. The static markup above is generated from this,
+         so the twelve statements are real crawlable text AND have one source.
+         Edit here and regenerate rather than editing the markup directly. */
+      var patternSets = [
+              {
+                      "id": "working-day",
+                      "theme": "This is my working day",
+                      "cards": [
+                              {
+                                      "figure": "80%",
+                                      "lead": "of analyst time goes on preparing data.",
+                                      "support": "Just 20% remains for the work they were hired to do."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "Retailer EPOS says one thing. Syndicated data says another.",
+                                      "support": "The meeting starts in ten minutes and nobody knows which number is true."
+                              },
+                              {
+                                      "figure": "10 to 15",
+                                      "lead": "people edit the same reporting file every month.",
+                                      "support": "One overwritten formula is all it takes. Nobody notices until the numbers are presented."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "One person knows how it all works.",
+                                      "support": "When they leave, where do you start?"
+                              }
+                      ]
+              },
+              {
+                      "id": "cost",
+                      "theme": "This could cost us",
+                      "cards": [
+                              {
+                                      "figure": "250%",
+                                      "lead": "One wrong SKU skewed a forecast.",
+                                      "support": "The correction took two seconds. Finding the problem took two days."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "Lost distribution is reported as falling consumer demand.",
+                                      "support": "The brand team responds to the wrong problem."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "A promotion is declared successful.",
+                                      "support": "The sales weeks and promotional calendar were never aligned."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "A retailer range review is built on products mapped to the wrong category.",
+                                      "support": "The recommendation is confident. The evidence underneath it is not."
+                              }
+                      ]
+              },
+              {
+                      "id": "credibility",
+                      "theme": "My credibility is exposed",
+                      "cards": [
+                              {
+                                      "figure": null,
+                                      "lead": "A retailer challenges your number.",
+                                      "support": "Nobody in the meeting can explain where it came from."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "Sales, finance, supply chain and marketing report different numbers.",
+                                      "support": "Four versions of the same business but no agreed truth."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "One data-provider update breaks two years of reporting logic.",
+                                      "support": "Yesterday everything worked. Today nothing reconciles."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "The board wants an AI strategy.",
+                                      "support": "The data powering it is still not ready."
+                              }
+                      ]
+              }
+      ];
+
+      var grid    = document.getElementById('patternGrid');
+      var toggle  = document.getElementById('patternToggle');
+      var dots    = Array.prototype.slice.call(root.querySelectorAll('.pattern-dot'));
+      var themes  = Array.prototype.slice.call(root.querySelectorAll('.pattern-theme'));
+      var cols    = Array.prototype.slice.call(root.querySelectorAll('.pattern-col'));
+      var faces   = cols.map(function (col) {
+        return Array.prototype.slice.call(col.querySelectorAll('.pattern-card'));
+      });
+
+      var DWELL = 9000, OUT_MS = 320, IN_MS = 460;
+      var TOTAL_SHOWINGS = patternSets.length * 2;   // each set twice, then stop
+
+      var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var narrowQuery = window.matchMedia('(max-width: 640px)');
+      var stagger = function () { return narrowQuery.matches ? 100 : 150; };
+
+      var index = 0;
+      var shown = 1;              // set 1 is already on screen at first paint
+      /* Two families, deliberately separate. waitTimer is the dwell and is
+         cancelled freely on pause. animTimers drive an in-flight cascade and
+         must NOT be cancellable: killing them mid-sweep strands half the
+         columns on the old set and leaves a face stuck in is-leaving. */
+      var waitTimer = null;
+      var animTimers = [];
+      var paused = false;         // pause/play toggle
+      var hovering = false, focused = false, visible = true, inView = true;
+      var autoCancelled = motionQuery.matches;   // dot click or reduced motion kills auto
+
+      function clearWait() {
+        if (waitTimer) { clearTimeout(waitTimer); waitTimer = null; }
+      }
+      function wait(fn, ms) { clearWait(); waitTimer = setTimeout(fn, ms); }
+      function anim(fn, ms) { animTimers.push(setTimeout(fn, ms)); }
+      function teardown() {
+        clearWait();
+        animTimers.forEach(clearTimeout);
+        animTimers = [];
+      }
+
+      function setLive(mode) { grid.setAttribute('aria-live', mode); }
+
+      function showFace(face, on) {
+        if (on) {
+          face.classList.add('is-active');
+          face.removeAttribute('aria-hidden');
+          face.removeAttribute('inert');
+        } else {
+          face.classList.remove('is-active');
+          face.setAttribute('aria-hidden', 'true');
+          face.setAttribute('inert', '');
+        }
+      }
+
+      function paintDots() {
+        dots.forEach(function (d, i) {
+          var on = i === index;
+          d.classList.toggle('is-active', on);
+          if (on) { d.setAttribute('aria-current', 'true'); }
+          else { d.removeAttribute('aria-current'); }
+        });
+      }
+
+      function goTo(next, immediate) {
+        if (next === index) { return; }
+        var prev = index;
+        index = next;
+
+        themes.forEach(function (t, i) {
+          var on = i === index;
+          t.classList.toggle('is-active', on);
+          if (on) { t.removeAttribute('aria-hidden'); } else { t.setAttribute('aria-hidden', 'true'); }
+        });
+
+        var step = immediate ? 0 : stagger();
+        faces.forEach(function (col, c) {
+          var out = col[prev], into = col[index];
+          anim(function () {
+            out.classList.add('is-leaving');
+            showFace(out, false);
+            showFace(into, true);
+            anim(function () { out.classList.remove('is-leaving'); }, OUT_MS + 20);
+          }, c * step);
+        });
+
+        paintDots();
+      }
+
+      /* Dwell is measured from the moment the LAST card has finished entering,
+         not from the start of the cascade, so every set gets the same read time. */
+      function cascadeMs() { return (faces.length - 1) * stagger() + IN_MS; }
+
+      function blocked() {
+        return paused || hovering || focused || !visible || !inView || autoCancelled;
+      }
+
+      function schedule() {
+        clearWait();
+        if (blocked() || shown >= TOTAL_SHOWINGS) { return; }
+        wait(function () {
+          if (blocked() || shown >= TOTAL_SHOWINGS) { return; }
+          goTo((index + 1) % patternSets.length, false);
+          shown++;
+          if (shown >= TOTAL_SHOWINGS) {
+            // Two full loops done. Stop where we are and flip the toggle to play.
+            paused = true;
+            setToggle();
+            setLive('polite');
+            clearWait();
+            return;
+          }
+          wait(schedule, cascadeMs());
+        }, DWELL);
+      }
+
+      function setToggle() {
+        toggle.textContent = paused ? 'Play' : 'Pause';
+        toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+        toggle.setAttribute('aria-label', paused ? 'Play automatic rotation' : 'Pause automatic rotation');
+      }
+
+      /* Every resume restarts the full dwell rather than resuming a part-spent
+         timer, so a card is never yanked away moments after you look back. */
+      function resume() { if (!blocked()) { schedule(); } }
+      function halt() { clearWait(); }
+
+      root.addEventListener('mouseenter', function () { hovering = true; halt(); });
+      root.addEventListener('mouseleave', function () { hovering = false; resume(); });
+      /* Only keyboard focus pauses. The intent is not to yank content away from
+         someone navigating it, and that is a keyboard concern. Counting mouse
+         focus too created a trap: clicking Play focuses the Play button, which
+         then blocked the very resume the click asked for. */
+      root.addEventListener('focusin', function (event) {
+        var el = event.target;
+        if (el && el.matches && el.matches(':focus-visible')) {
+          focused = true; halt(); setLive('polite');
+        }
+      });
+      root.addEventListener('focusout', function () { focused = false; resume(); });
+
+      document.addEventListener('visibilitychange', function () {
+        visible = !document.hidden;
+        if (visible) { resume(); } else { halt(); }
+      });
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            inView = e.intersectionRatio >= 0.4;
+            if (inView) { resume(); } else { halt(); }
+          });
+        }, { threshold: [0, 0.4, 1] }).observe(root);
+      }
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () {
+          autoCancelled = true;          // a deliberate choice ends auto for the session
+          paused = true;
+          setToggle();
+          setLive('polite');
+          clearWait();
+          goTo(i, motionQuery.matches);
+        });
+      });
+
+      toggle.addEventListener('click', function () {
+        paused = !paused;
+        setToggle();
+        if (paused) {
+          setLive('polite');
+          clearWait();
+        } else {
+          autoCancelled = motionQuery.matches;
+          shown = Math.min(shown, TOTAL_SHOWINGS - 1);
+          setLive('off');
+          resume();
+        }
+      });
+
+      function applyMotion() {
+        if (motionQuery.matches) {
+          autoCancelled = true;
+          paused = true;
+          clearWait();
+          setLive('polite');
+        } else if (!paused) {
+          autoCancelled = false;
+          setLive('off');
+          resume();
+        }
+        setToggle();
+      }
+      if (motionQuery.addEventListener) { motionQuery.addEventListener('change', applyMotion); }
+      else if (motionQuery.addListener) { motionQuery.addListener(applyMotion); }
+
+      window.addEventListener('pagehide', teardown);
+
+      setToggle();
+      paintDots();
+      if (!motionQuery.matches) { schedule(); }
     })();
   </script>
 
