@@ -314,7 +314,12 @@ p { text-wrap: pretty; }
   min-height: 100svh;
   padding: calc(66px + var(--gutter)) var(--gutter) var(--gutter);
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  /* Was auto/1fr/auto with the title centred in the 1fr row, which gave it an
+     identical gap above and below - 180px each at 1902x860, so 360px of void.
+     Pinning the title just under the eyebrow and anchoring the closing text to
+     the bottom edge keeps the eyebrow/title pairing tight and puts the slack
+     in one place instead of splitting it either side of the headline. */
+  grid-template-rows: auto auto 1fr;
   background: var(--paper);
   color: var(--ink);
 }
@@ -323,10 +328,10 @@ p { text-wrap: pretty; }
 .layer__number { display: flex; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid currentColor; font-size: 13px; }
 .layer__number--icon { justify-content: flex-start; align-items: center; gap: 10px; }
 .layer__number--icon svg { width: 19px; height: 19px; flex-shrink: 0; }
-.layer__title { align-self: center; max-width: 9ch; margin: 3vh 0; font-size: clamp(3.2rem, 6vw, 6.6rem); font-weight: 500; line-height: .81; letter-spacing: -.07em; }
+.layer__title { align-self: start; max-width: 9ch; margin: var(--space-l) 0 0; font-size: clamp(3.2rem, 6vw, 6.6rem); font-weight: 500; line-height: .81; letter-spacing: -.07em; }
 .layer__title--fit { max-width: 11ch; }
 .layer__title em { display: block; font-family: 'Zodiak', Georgia, serif; font-weight: 400; }
-.layer__body { max-width: 45rem; margin: 0 0 0 24%; font-size: clamp(1.02rem, 1.38vw, 1.3rem); line-height: 1.36; letter-spacing: -.02em; }
+.layer__body { align-self: end; max-width: 45rem; margin: 0 0 0 24%; font-size: clamp(1.02rem, 1.38vw, 1.3rem); line-height: 1.36; letter-spacing: -.02em; }
 .layer__image { min-height: 100svh; overflow: hidden; position: relative; }
 .layer__image img { position: absolute; inset: 0; transform: scale(1.015); }
 
