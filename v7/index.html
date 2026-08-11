@@ -404,6 +404,13 @@ p { text-wrap: pretty; }
 .customer-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 15px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
 .customer-filter { min-height: 44px; padding: 0 15px; border: 1px solid rgba(255,255,255,.5); border-radius: 0; background: transparent; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
 .customer-filter:hover, .customer-filter.is-active { background: white; color: var(--blue); }
+/* Sits on the same row as the sector filters but is a link, not a filter, so
+   it is pushed to the right margin and carries a leading arrow. */
+.customer-filters__cases { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 18px; background: #fff; color: var(--blue); font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: background .2s ease; }
+.customer-filters__cases svg { flex: none; width: 16px; height: 16px; transition: transform .25s cubic-bezier(.2,.7,.2,1); }
+.customer-filters__cases:hover { background: var(--ice); }
+.customer-filters__cases:hover svg { transform: translateX(3px); }
+.customer-filters__cases:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
 .customer-list { display: grid; grid-template-columns: repeat(4, 1fr); padding: var(--space-m) 0 var(--space-l); }
 .customer-name { min-height: clamp(82px, 12vh, 118px); padding: var(--space-2xs) 20px var(--space-2xs) 0; display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,.24); border-bottom: 1px solid rgba(255,255,255,.24); font-size: clamp(1.05rem, 1.55vw, 1.42rem); line-height: 1.1; transition: background .2s ease; }
 .customer-name:nth-child(4n+2), .customer-name:nth-child(4n+3), .customer-name:nth-child(4n+4) { padding-left: 20px; }
@@ -691,6 +698,9 @@ p { text-wrap: pretty; }
   .customers__lead { margin-left: 0; }
   .customer-filters { flex-wrap: nowrap; overflow-x: auto; }
   .customer-filter { flex: 0 0 auto; }
+  /* The auto margin would push it a full scroll-width away from Health inside
+     a nowrap strip, so it just trails the filters here. */
+  .customer-filters__cases { margin-left: 0; flex: 0 0 auto; }
   .customer-list { grid-template-columns: 1fr 1fr; }
   .customer-name:nth-child(n) { min-height: clamp(74px, 11vh, 94px); padding: var(--space-2xs) 12px var(--space-2xs) 0; border-right: 1px solid rgba(255,255,255,.24); }
   .customer-logo-swap { height: 38px; }
@@ -1060,6 +1070,67 @@ p { text-wrap: pretty; }
   .proved-cases--light .proved-cases__narrative p:not(.proved-cases__lede) { font-size: .93rem; line-height: 1.4; margin-bottom: .6rem; }
 }
 
+
+/* ============================================================
+   BY ROLE
+   Replaces the selected-case-studies strip. Stays on the
+   Ultraviolet ground (it inherits .customers) with the site's
+   own faces: Zodiak for the display lines, Switzer for body.
+   ============================================================ */
+.by-role { display: flex; align-items: center; }
+.by-role__shell { width: 100%; max-width: 84rem; margin: 0 auto; }
+.by-role .eyebrow { color: var(--ice); }
+.by-role__prompt { max-width: 24ch; margin: var(--space-2xs) 0 var(--space-m); font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.7rem, 3.4vw, 3rem); line-height: 1.1; letter-spacing: -.03em; }
+
+.roles { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: var(--space-m); }
+.role { display: inline-flex; align-items: baseline; gap: 10px; min-height: 46px; padding: 0 18px; border: 1px solid rgba(255,255,255,.36); border-radius: 999px; background: transparent; color: #fff; font: inherit; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+.role:hover { border-color: #fff; }
+.role__num { font-size: 11px; font-weight: 600; letter-spacing: .09em; opacity: .6; }
+.role__name { font-size: clamp(.86rem, 1vw, .96rem); letter-spacing: -.01em; }
+/* White on Ultraviolet measures 7.8:1 either way round, so the selected pill
+   can invert without dropping below AA. */
+.role[aria-selected="true"] { background: #fff; border-color: #fff; color: var(--blue); }
+.role[aria-selected="true"] .role__num { opacity: .55; }
+.role:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
+
+.role-panel[hidden] { display: none; }
+.role-panel:focus-visible { outline: 2px solid var(--ice); outline-offset: 6px; }
+.role-panel__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 64px); padding-top: var(--space-s); border-top: 1px solid var(--line-light); }
+.role-panel__label { margin: 0 0 .7rem; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ice); }
+.role-panel__nightmare, .role-panel__hook { margin: 0 0 .8rem; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.2vw, 1.9rem); line-height: 1.1; letter-spacing: -.03em; }
+.role-panel__hook { color: var(--ice); }
+.role-panel__body { margin: 0; max-width: 42ch; font-size: clamp(.98rem, 1.15vw, 1.06rem); line-height: 1.5; opacity: .92; }
+
+.by-role__closer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; margin-top: var(--space-m); padding-top: var(--space-s); border-top: 1px solid var(--line-light); }
+.by-role__closer p { margin: 0; font-family: 'Zodiak', Georgia, serif; font-size: clamp(1.15rem, 1.9vw, 1.6rem); line-height: 1.15; letter-spacing: -.025em; }
+.by-role__cta { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 22px; background: #fff; color: var(--blue); font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; text-decoration: none; transition: background .2s ease; }
+.by-role__cta:hover { background: var(--ice); }
+
+@keyframes rolePanelIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+.role-panel[data-anim] .role-panel__grid { animation: rolePanelIn .32s cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .role-panel[data-anim] .role-panel__grid { animation: none; } }
+
+@media (max-width: 860px) {
+  .role-panel__grid { grid-template-columns: 1fr; gap: var(--space-s); }
+}
+@media (max-width: 560px) {
+  /* Wrapped, the four pills stacked into four rows and pushed the closer well
+     below the fold. As a single scrolling strip they cost one row. The
+     negative margins bleed it to the screen edge so it reads as scrollable
+     rather than as a row that happens to be cut off. */
+  .roles { flex-wrap: nowrap; overflow-x: auto; gap: 7px;
+    margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1);
+    padding: 2px var(--gutter); scroll-snap-type: x proximity;
+    scrollbar-width: none; -ms-overflow-style: none; }
+  .roles::-webkit-scrollbar { display: none; }
+  .role { flex: none; scroll-snap-align: start; min-height: 42px; padding: 0 14px; gap: 8px; }
+  .by-role__prompt { font-size: clamp(1.45rem, 6.6vw, 1.9rem); margin-bottom: var(--space-s); }
+  .role-panel__body { font-size: .95rem; line-height: 1.45; }
+  .by-role__cta { width: 100%; justify-content: center; }
+  .by-role__closer { margin-top: var(--space-s); padding-top: var(--space-xs); gap: 12px; }
+  .by-role__closer p { font-size: 1.05rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1196,6 +1267,7 @@ p { text-wrap: pretty; }
         <button class="customer-filter" type="button" data-filter="Engineering" aria-pressed="false">Engineering</button>
         <button class="customer-filter" type="button" data-filter="Education" aria-pressed="false">Education</button>
         <button class="customer-filter" type="button" data-filter="Health" aria-pressed="false">Health</button>
+        <a class="customer-filters__cases" href="#case-index"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>Selected case studies</a>
       </div>
       <div class="customer-list" id="customerList">
         <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samworth"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/starbucks-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><div class="customer-name" data-sector="Consumer"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
@@ -1237,32 +1309,90 @@ p { text-wrap: pretty; }
       </div>
     </section>
 
-    <section class="customers customers--cases">
-      <div class="case-studies">
-        <p class="eyebrow">Selected case studies</p>
-        <div class="case-studies__grid">
-          <a class="case-card" href="#case-arla">
-            <span class="case-card__media"><img data-src="images/arla-hero.webp" alt="Dairy cattle grazing on open farmland at sunset" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/arla-logo-colour.png" alt="Arla Foods" loading="lazy" decoding="async"></span></span>
-            <span class="case-card__title">20 days to hours, across 16 markets</span>
-            <span class="case-card__meta">Arla Foods &rarr;</span>
-          </a>
-          <a class="case-card" href="#case-samworth">
-            <span class="case-card__media"><img data-src="images/baker-shaping-pastry-dough-by-hand.jpg" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/samworth-brothers-logo-colour.png" alt="Samworth Brothers" loading="lazy" decoding="async"></span></span>
-            <span class="case-card__title">One board-ready view across six categories</span>
-            <span class="case-card__meta">Samworth Brothers &rarr;</span>
-          </a>
-          <a class="case-card" href="#case-qts">
-            <span class="case-card__media"><img data-src="images/qts-hero.webp" alt="Two engineers in hard hats and hi-vis inspecting rooftop cooling plant at a data centre" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/qts-data-centres-logo-colour.png" alt="QTS Data Centres" loading="lazy" decoding="async"></span></span>
-            <span class="case-card__title">Twelve months of maintenance, compressed into nine and a half</span>
-            <span class="case-card__meta">QTS Data Centres &rarr;</span>
-          </a>
-          <a class="case-card" href="#case-campari">
-            <span class="case-card__media"><img data-src="images/campari-hero.webp" alt="Archive photograph of the Campari bar in the Galleria Vittorio Emanuele II, Milan" loading="lazy" decoding="async"><span class="case-card__badge"><img data-src="images/campari-logo-colour.png" alt="Campari" loading="lazy" decoding="async"></span></span>
-            <span class="case-card__title">One Total Trade view that refuses to average unlike things</span>
-            <span class="case-card__meta">Campari &rarr;</span>
-          </a>
+    <section class="customers by-role" id="by-role">
+      <div class="by-role__shell">
+        <p class="eyebrow">By role</p>
+        <p class="by-role__prompt">Pick the week that looks like yours.</p>
+
+        <div class="roles" role="tablist" aria-label="Choose your role">
+          <button class="role" type="button" role="tab" id="tab-1" aria-controls="p-1" aria-selected="true" tabindex="0">
+            <span class="role__num" aria-hidden="true">01</span><span class="role__name">Insight Managers</span>
+          </button>
+          <button class="role" type="button" role="tab" id="tab-2" aria-controls="p-2" aria-selected="false" tabindex="-1">
+            <span class="role__num" aria-hidden="true">02</span><span class="role__name">Category Development</span>
+          </button>
+          <button class="role" type="button" role="tab" id="tab-3" aria-controls="p-3" aria-selected="false" tabindex="-1">
+            <span class="role__num" aria-hidden="true">03</span><span class="role__name">Brand Managers</span>
+          </button>
+          <button class="role" type="button" role="tab" id="tab-4" aria-controls="p-4" aria-selected="false" tabindex="-1">
+            <span class="role__num" aria-hidden="true">04</span><span class="role__name">Commercial Directors</span>
+          </button>
         </div>
-        <a class="case-studies__more" href="#case-index">See all 15 case studies &rarr;</a>
+
+        <div class="role-panel" role="tabpanel" id="p-1" aria-labelledby="tab-1" tabindex="0">
+          <div class="role-panel__grid">
+            <div>
+              <p class="role-panel__label">The week</p>
+              <h3 class="role-panel__nightmare">Four days wrangling. One day thinking.</h3>
+              <p class="role-panel__body">Your most expensive analysts spend the week copying EPOS, Circana, NielsenIQ and Kantar exports into Excel. The commercial thinking gets whatever Friday is left.</p>
+            </div>
+            <div>
+              <p class="role-panel__label">What changes</p>
+              <p class="role-panel__hook">Get the four days back.</p>
+              <p class="role-panel__body">Optia builds the pipeline once, so the harmonised baseline lands ready to interrogate. Your team starts at the question, not the clean-up.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="role-panel" role="tabpanel" id="p-2" aria-labelledby="tab-2" tabindex="0" hidden>
+          <div class="role-panel__grid">
+            <div>
+              <p class="role-panel__label">The week</p>
+              <h3 class="role-panel__nightmare">You find out in the range review.</h3>
+              <p class="role-panel__body">One misattributed barcode or baseline mismatch, and your category forecast is out by a margin you cannot explain. The buyer notices before you do.</p>
+            </div>
+            <div>
+              <p class="role-panel__label">What changes</p>
+              <p class="role-panel__hook">Walk in with one number.</p>
+              <p class="role-panel__body">Optia reconciles retailer EPOS against Circana and Kantar on a single governed baseline, with lineage behind every figure. When the buyer's data disagrees with yours, you can show why.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="role-panel" role="tabpanel" id="p-3" aria-labelledby="tab-3" tabindex="0" hidden>
+          <div class="role-panel__grid">
+            <div>
+              <p class="role-panel__label">The week</p>
+              <h3 class="role-panel__nightmare">Fifteen versions of one master sheet.</h3>
+              <p class="role-panel__body">Trade spend is tracked in whichever copy of the file was open last. Three weeks after the promotion closes, you still cannot say whether it paid.</p>
+            </div>
+            <div>
+              <p class="role-panel__label">What changes</p>
+              <p class="role-panel__hook">See what the promotion actually returned, by SKU.</p>
+              <p class="role-panel__body">Optia harmonises promotional spend, price and volume uplift into one audited view. Margin leakage surfaces while you can still act on it, not at year end.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="role-panel" role="tabpanel" id="p-4" aria-labelledby="tab-4" tabindex="0" hidden>
+          <div class="role-panel__grid">
+            <div>
+              <p class="role-panel__label">The week</p>
+              <h3 class="role-panel__nightmare">Confident answers that turn out to be wrong.</h3>
+              <p class="role-panel__body">When 10 to 15 people edit core reporting files by hand, version control collapses quietly. The number you take to the board does not match the number in finance.</p>
+            </div>
+            <div>
+              <p class="role-panel__label">What changes</p>
+              <p class="role-panel__hook">One version, governed and traceable.</p>
+              <p class="role-panel__body">Optia sits between source data and every deck that leaves the business. Finance, category and the board work from the same figure, and you can see where it came from.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="by-role__closer">
+          <p>Same data. One baseline. Every team working from it.</p>
+          <a class="by-role__cta" href="#contact">See how the baseline is built &rarr;</a>
+        </div>
       </div>
     </section>
 
@@ -2816,6 +2946,54 @@ p { text-wrap: pretty; }
       });
 
       render();
+    })();
+  </script>
+
+
+  <script>
+    (function () {
+      var tablist = document.querySelector('.by-role [role="tablist"]');
+      if (!tablist) { return; }
+      var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function select(tab, focus) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+          t.tabIndex = on ? 0 : -1;
+          var panel = document.getElementById(t.getAttribute('aria-controls'));
+          if (!panel) { return; }
+          panel.hidden = !on;
+          // The attribute only drives the entry animation, so it is never set
+          // under reduced motion - otherwise animationend never fires and it
+          // would sit on the element for good.
+          if (on && !reduced) {
+            panel.setAttribute('data-anim', '');
+            panel.addEventListener('animationend', function handler() {
+              panel.removeAttribute('data-anim');
+              panel.removeEventListener('animationend', handler);
+            });
+          }
+        });
+        if (focus) { tab.focus(); }
+      }
+
+      tablist.addEventListener('click', function (event) {
+        var tab = event.target.closest('[role="tab"]');
+        if (tab) { select(tab, false); }
+      });
+
+      tablist.addEventListener('keydown', function (event) {
+        var i = tabs.indexOf(document.activeElement);
+        if (i < 0) { return; }
+        var next = null;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { next = tabs[(i + 1) % tabs.length]; }
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') { next = tabs[(i - 1 + tabs.length) % tabs.length]; }
+        else if (event.key === 'Home') { next = tabs[0]; }
+        else if (event.key === 'End') { next = tabs[tabs.length - 1]; }
+        if (next) { event.preventDefault(); select(next, true); }
+      });
     })();
   </script>
 
