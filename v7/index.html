@@ -644,7 +644,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 .submit-btn { min-height: 48px; padding: 0 17px; border: 1px solid white; border-radius: 0; background: white; color: var(--blue); font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
 .submit-btn:hover { background: transparent; color: white; }
 .submit-note { min-height: 20px; margin: 18px 0 0; font-size: 12px; line-height: 1.4; }
-.direct { margin: 0; padding-top: 14px; display: flex; justify-content: space-between; border-top: 1px solid var(--line-light); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.direct { margin: 0; padding-top: 34px; display: flex; justify-content: space-between; border-top: 1px solid var(--line-light); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
 .direct a { position: relative; display: inline-flex; align-items: center; }
 .direct a::before { content: ''; position: absolute; inset: -15px -8px; }
 
@@ -1197,6 +1197,57 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 .direct__copyright { margin: 10px 0 0; font-size: 10px; line-height: 1.55; letter-spacing: .06em; text-transform: uppercase; opacity: .68; }
 .legal-identity { margin-top: var(--space-s); padding-top: var(--space-xs); border-top: 1px solid var(--line-dark); font-size: .84rem; line-height: 1.55; opacity: .72; }
 
+
+/* ============================================================
+   CERTIFICATIONS (Core section)
+   Replaces the scale stat row. The supplied marks are already
+   fill="white", so they sit on the ink ground untouched.
+   ============================================================ */
+.core__certs { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 48px); align-items: end; padding: var(--space-l) 0 var(--space-m); }
+.core__cert { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.core__cert img { height: clamp(44px, 5.4vw, 68px); width: auto; max-width: 100%; object-fit: contain; object-position: left bottom; display: block; }
+.core__cert span { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+
+/* ============================================================
+   PARTNER NETWORK MARQUEE
+   Same mechanic as the hero logo marquee: one track holding two
+   identical runs, translated -50% so the loop is seamless.
+   ============================================================ */
+.partner-marquee { margin-top: var(--space-l); padding-top: var(--space-s); border-top: 1px solid var(--line-light); }
+.partner-marquee__label { color: var(--ice); margin: 0 0 var(--space-xs); }
+.partner-marquee__viewport { position: relative; overflow: hidden; }
+/* The gutter is the section's own padding, so the fades are keyed to the
+   Ultraviolet ground rather than to a panel colour. */
+.partner-marquee__viewport::before, .partner-marquee__viewport::after { content: ''; position: absolute; top: 0; bottom: 0; width: clamp(40px, 7vw, 110px); z-index: 2; pointer-events: none; }
+.partner-marquee__viewport::before { left: 0; background: linear-gradient(to right, var(--blue), rgba(72,40,229,0)); }
+.partner-marquee__viewport::after { right: 0; background: linear-gradient(to left, var(--blue), rgba(72,40,229,0)); }
+.partner-marquee__track { display: flex; align-items: center; gap: clamp(46px, 6vw, 88px); width: max-content; animation: partner-marquee-scroll 42s linear infinite; }
+.partner-marquee:hover .partner-marquee__track { animation-play-state: paused; }
+/* One filter for the whole set: brightness(0) flattens any colour to black,
+   invert(1) lifts it to white. Already-white marks pass through unchanged,
+   so the row reads as one family whatever the source asset was. */
+.partner-marquee__logo { display: block; height: clamp(26px, 3.1vw, 40px); width: auto; max-width: none; object-fit: contain; flex: 0 0 auto; filter: brightness(0) invert(1); opacity: .92; }
+@keyframes partner-marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .partner-marquee__track { animation: none; flex-wrap: wrap; width: auto; justify-content: flex-start; gap: 34px; }
+  .partner-marquee__viewport::before, .partner-marquee__viewport::after { display: none; }
+}
+
+@media (max-width: 900px) {
+  .core__certs { grid-template-columns: repeat(2, 1fr); gap: 30px 24px; }
+}
+@media (max-width: 560px) {
+  .core__certs { gap: 24px 18px; padding: var(--space-m) 0 var(--space-s); }
+  .core__cert img { height: 40px; }
+  .partner-marquee__logo { height: 24px; }
+  .partner-marquee__track { gap: 38px; }
+}
+
+
+.direct__credit { margin: 4px 0 0; font-size: 10px; line-height: 1.55; letter-spacing: .06em; text-transform: uppercase; opacity: .6; }
+.direct__credit a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.4); }
+.direct__credit a:hover { border-bottom-color: currentColor; }
+
 </style>
 </head>
 <body>
@@ -1349,6 +1400,16 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Health" href="#case-oracare"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
       </div>
       <a class="customers__cta" href="#contact"><strong>Don't have that secure data environment?</strong><span class="cta-link">Start a conversation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+
+      <div class="partner-marquee">
+        <p class="eyebrow partner-marquee__label">Partner network</p>
+        <div class="partner-marquee__viewport">
+          <div class="partner-marquee__track">
+            <img class="partner-marquee__logo" data-src="images/partners/nielseniq-partner-network.png" alt="NielsenIQ Partner Network" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/kantar.png" alt="Kantar" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/gfk.svg" alt="GfK" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/snowflake.webp" alt="Snowflake" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/microsoft.svg" alt="Microsoft" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/google.svg" alt="Google" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/nvidia.svg" alt="NVIDIA" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/infosum.png" alt="InfoSum" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/commsol.png" alt="CommSol" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/anextere.png" alt="Anextere" loading="lazy" decoding="async">
+            <img class="partner-marquee__logo" data-src="images/partners/nielseniq-partner-network.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/kantar.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/gfk.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/snowflake.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/microsoft.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/google.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/nvidia.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/infosum.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/commsol.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/anextere.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="proved-cases proved-cases--light" id="proved-cases">
@@ -1383,14 +1444,14 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
     <section class="customers by-role" id="by-role">
       <div class="by-role__shell">
-        <p class="by-role__prompt">How bad is your week?</p>
+        <p class="by-role__prompt">Pick the week that looks like yours.</p>
 
         <div class="roles" role="tablist" aria-label="Choose your role">
           <button class="role" type="button" role="tab" id="tab-1" aria-controls="p-1" aria-selected="true" tabindex="0">
             <span class="role__num" aria-hidden="true">01</span><span class="role__name">Insight Managers</span>
           </button>
           <button class="role" type="button" role="tab" id="tab-2" aria-controls="p-2" aria-selected="false" tabindex="-1">
-            <span class="role__num" aria-hidden="true">02</span><span class="role__name">Category Development</span>
+            <span class="role__num" aria-hidden="true">02</span><span class="role__name">Category Development Managers</span>
           </button>
           <button class="role" type="button" role="tab" id="tab-3" aria-controls="p-3" aria-selected="false" tabindex="-1">
             <span class="role__num" aria-hidden="true">03</span><span class="role__name">Brand Managers</span>
@@ -1404,13 +1465,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
           <div class="role-panel__grid">
             <div>
               <p class="role-panel__label">The week</p>
-              <h3 class="role-panel__nightmare">Four days wrangling. One day thinking.</h3>
-              <p class="role-panel__body">Your most expensive analysts spend the week copying EPOS, Circana, NielsenIQ and Kantar exports into Excel. The commercial thinking gets whatever Friday is left.</p>
+              <h3 class="role-panel__nightmare">Monday&rsquo;s question gets Friday&rsquo;s answer.</h3>
+              <p class="role-panel__body">Your analysts spend the week assembling exports, reconciling definitions and rebuilding the baseline. By the time they can investigate the question, the commercial conversation has already moved on.</p>
             </div>
             <div>
               <p class="role-panel__label">What changes</p>
-              <p class="role-panel__hook">Get the four days back.</p>
-              <p class="role-panel__body">Optia builds the pipeline once, so the harmonised baseline lands ready to interrogate. Your team starts at the question, not the clean-up.</p>
+              <p class="role-panel__hook">Start with the question.</p>
+              <p class="role-panel__body">Optia delivers one harmonised, analysis-ready baseline across retailer, syndicated and internal data. Your team investigates what changed, why it changed and what to do next, without rebuilding the data first.</p>
             </div>
           </div>
         </div>
@@ -1419,13 +1480,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
           <div class="role-panel__grid">
             <div>
               <p class="role-panel__label">The week</p>
-              <h3 class="role-panel__nightmare">You find out in the range review.</h3>
-              <p class="role-panel__body">One misattributed barcode or baseline mismatch, and your category forecast is out by a margin you cannot explain. The buyer notices before you do.</p>
+              <h3 class="role-panel__nightmare">You know performance changed. You cannot explain why.</h3>
+              <p class="role-panel__body">Was it distribution, availability, range, price or promotion? When the buyer asks, your team is still reconciling the evidence instead of presenting the opportunity.</p>
             </div>
             <div>
               <p class="role-panel__label">What changes</p>
-              <p class="role-panel__hook">Walk in with one number.</p>
-              <p class="role-panel__body">Optia reconciles retailer EPOS against Circana and Kantar on a single governed baseline, with lineage behind every figure. When the buyer's data disagrees with yours, you can show why.</p>
+              <p class="role-panel__hook">Walk in knowing what changed and why.</p>
+              <p class="role-panel__body">Optia connects retailer performance, market context and your own, bespoke category definitions on one governed baseline. Every recommendation is supported by evidence you can trace, explain and defend.</p>
             </div>
           </div>
         </div>
@@ -1461,7 +1522,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
 
         <div class="by-role__closer">
-          <p>Same data. One baseline. Every team working from it.</p>
+          <p>One trusted baseline. Every team aligned. Better decisions, made faster.</p>
           <a class="by-role__cta" href="#contact">See how the baseline is built &rarr;</a>
         </div>
       </div>
@@ -1500,8 +1561,11 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <article class="core-item"><div class="eyebrow core-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3.2"></circle><path d="M5 20c0-4 3.5-6.5 7-6.5s7 2.5 7 6.5"></path></svg></div><h3>Attended agents</h3><p>We are big fans of conventional, top notch software. While AI Agents help us write logic and processes in an attended setup, we do not deploy them to take any autonomous un-attended decisions on your data. Every data exception is human understood, corrected and validated. Our experience has taught us where the efficiencies of AI are but equally what the risks are. Rest assured, your data is in safe hands.</p></article>
       </div>
       <p class="core__closing">Our experience has taught us where the efficiencies of AI are, but equally what the risks are. Your data is in safe hands.</p>
-      <div class="core__scale" aria-label="Prototype scale proof">
-        <div><strong data-count="500">+500</strong><span>Processes</span></div><div><strong data-count="200">&gt;200K</strong><span>SKUs</span></div><div><strong data-count="80">&gt;80 Bn</strong><span>Rows</span></div>
+      <div class="core__certs" aria-label="Certifications and compliance">
+        <div class="core__cert"><img data-src="images/certifications/soc2-type-ii.svg" alt="AICPA SOC 2 Type II certified" loading="lazy" decoding="async"><span>SOC 2 Type II</span></div>
+        <div class="core__cert"><img data-src="images/certifications/iso-27001.svg" alt="ISO 27001 information security certified" loading="lazy" decoding="async"><span>ISO 27001</span></div>
+        <div class="core__cert"><img data-src="images/certifications/gdpr.svg" alt="GDPR compliant" loading="lazy" decoding="async"><span>GDPR</span></div>
+        <div class="core__cert"><img data-src="images/certifications/hipaa.svg" alt="HIPAA compliant" loading="lazy" decoding="async"><span>HIPAA</span></div>
       </div>
     </section>
 
@@ -2868,6 +2932,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </form>
       <p class="direct"><a href="mailto:hello@optiadata.com">hello@optiadata.com</a><a class="direct__legal" href="#privacy-policy">Privacy Policy</a></p>
       <p class="direct__copyright">&copy; 2026 Optia Data Limited. All rights reserved. Company Registration No: 15884308</p>
+      <p class="direct__credit">Image rights: <a href="https://nicksmithphotography.com" target="_blank" rel="noopener noreferrer">nicksmithphotography.com</a></p>
     </div>
   </footer>
 
