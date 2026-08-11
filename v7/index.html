@@ -1265,7 +1265,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 /* Every face shares one cell, so the column is as tall as its tallest face. */
 .pattern-col { display: grid; }
 .pattern-card { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 8px; padding: clamp(18px, 2vw, 28px) clamp(16px, 1.7vw, 24px); border-radius: 10px; color: #fff;
-  background: linear-gradient(155deg, #5b3cff 0%, #4828e5 44%, #2c19ad 100%);
   opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(10px);
   transition: opacity .32s cubic-bezier(.4,0,1,1), transform .32s cubic-bezier(.4,0,1,1), visibility 0s .32s; }
 .pattern-card.is-active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
@@ -1323,6 +1322,44 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     transition: opacity .12s linear, visibility 0s !important;
   }
   .pattern-card:not(.is-active), .pattern-theme:not(.is-active) { transition: opacity .12s linear, visibility 0s .12s !important; }
+}
+
+
+/* ---------- reading pacer ----------------------------------------------
+   Two tints, both fully legible. The highlight is a pacing cue only: no
+   information lives in it, and no text is dimmed or hidden, which is what
+   lets the cards stay non-focusable with no keyboard equivalent.
+
+   background-image does not interpolate, so a gradient-to-gradient
+   transition snaps. The card carries the muted gradient and the full
+   gradient rides on ::after, so only opacity ever animates.
+
+   ::after defaults to opacity 1, so with no JS every card is full
+   Ultraviolet. JS adds .is-paced to mute them, and never adds it under
+   reduced motion or after auto-stop. */
+:root { --uv: #4828E5; --uv-muted: #6D53EA; }
+@supports (color: color-mix(in srgb, red 50%, white)) {
+  :root { --uv-muted: color-mix(in srgb, var(--uv) 80%, white); }
+}
+/* The light stop is mixed at 12%, not 20%: at 20% it is #7c63ff, which puts
+   white body copy at 4.13:1 and fails AA. The base is the specified
+   --uv-muted and the dark stop is mixed at 20%, which only raises contrast. */
+/* position:relative is load-bearing: ::after uses inset:0, and without a
+   positioned card it resolves against .proved-cases and covers the whole
+   section. grid-area alone does not establish a containing block. */
+.pattern-card { position: relative; overflow: hidden;
+  background: linear-gradient(155deg, #6f53ff 0%, var(--uv-muted) 44%, #5647bd 100%); }
+.pattern-card > * { position: relative; z-index: 1; }
+.pattern-card::after { content: ''; position: absolute; z-index: 0; inset: 0; border-radius: inherit;
+  background: linear-gradient(155deg, #5b3cff 0%, var(--uv) 44%, #2c19ad 100%); opacity: 1; }
+.pattern-carousel.is-paced .pattern-card::after { opacity: 0; transition: opacity .42s ease-out; }
+.pattern-carousel.is-paced .pattern-card.is-lit::after { opacity: 1; transition: opacity .26s cubic-bezier(.16,1,.3,1); }
+/* Direct response to a pointer should outrun the automatic cue. */
+.pattern-carousel.is-paced .pattern-card.is-lit--fast::after { transition: opacity .12s ease-out; }
+/* Cards are still not interactive and must not imply they are. */
+.pattern-card { cursor: default; }
+@media (prefers-reduced-motion: reduce) {
+  .pattern-card::after { transition: none !important; opacity: 1 !important; }
 }
 
 </style>
@@ -3482,9 +3519,9 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       var root = document.getElementById('patternCarousel');
       if (!root) { return; }
 
-      /* Canonical copy record. The static markup above is generated from this,
-         so the twelve statements are real crawlable text AND have one source.
-         Edit here and regenerate rather than editing the markup directly. */
+      /* Canonical copy record. The static markup is generated from this, so the
+         twelve statements are real crawlable text AND have one source. Add an
+         optional readMs to any card to override the derived reading time. */
       var patternSets = [
               {
                       "id": "working-day",
@@ -3566,46 +3603,72 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
               }
       ];
 
-      var grid    = document.getElementById('patternGrid');
-      var toggle  = document.getElementById('patternToggle');
-      var dots    = Array.prototype.slice.call(root.querySelectorAll('.pattern-dot'));
-      var themes  = Array.prototype.slice.call(root.querySelectorAll('.pattern-theme'));
-      var cols    = Array.prototype.slice.call(root.querySelectorAll('.pattern-col'));
-      var faces   = cols.map(function (col) {
+      var grid   = document.getElementById('patternGrid');
+      var toggle = document.getElementById('patternToggle');
+      var dots   = Array.prototype.slice.call(root.querySelectorAll('.pattern-dot'));
+      var themes = Array.prototype.slice.call(root.querySelectorAll('.pattern-theme'));
+      var cols   = Array.prototype.slice.call(root.querySelectorAll('.pattern-col'));
+      var faces  = cols.map(function (col) {
         return Array.prototype.slice.call(col.querySelectorAll('.pattern-card'));
       });
 
-      var DWELL = 9000, OUT_MS = 320, IN_MS = 460;
-      var TOTAL_SHOWINGS = patternSets.length * 2;   // each set twice, then stop
+      var UP_MS = 260, DOWN_MS = 420, SET_GAP = 700, FIRST_BEAT = 500;
+      var TAP_RESUME = 6000, HOVER_GRACE = 300;
+      var SETS_TO_PACE = patternSets.length;      // one complete pass, then stop
 
       var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       var narrowQuery = window.matchMedia('(max-width: 640px)');
+      var hoverQuery  = window.matchMedia('(hover: hover) and (pointer: fine)');
       var stagger = function () { return narrowQuery.matches ? 100 : 150; };
 
-      var index = 0;
-      var shown = 1;              // set 1 is already on screen at first paint
-      /* Two families, deliberately separate. waitTimer is the dwell and is
-         cancelled freely on pause. animTimers drive an in-flight cascade and
-         must NOT be cancellable: killing them mid-sweep strands half the
-         columns on the old set and leaves a face stuck in is-leaving. */
-      var waitTimer = null;
-      var animTimers = [];
-      var paused = false;         // pause/play toggle
-      var hovering = false, focused = false, visible = true, inView = true;
-      var autoCancelled = motionQuery.matches;   // dot click or reduced motion kills auto
-
-      function clearWait() {
-        if (waitTimer) { clearTimeout(waitTimer); waitTimer = null; }
+      /* Derived from the card's own word count so copy can change without
+         anyone re-timing by hand. 1.8s recognition plus ~460wpm scan. */
+      function readMs(card) {
+        if (card.readMs) { return card.readMs; }
+        var words = [card.figure, card.lead, card.support]
+          .filter(Boolean).join(' ').trim().split(/\s+/).length;
+        var raw = 1800 + words * 130;
+        return Math.round(Math.min(5400, Math.max(3400, raw)) / 100) * 100;
       }
-      function wait(fn, ms) { clearWait(); waitTimer = setTimeout(fn, ms); }
+
+      var index = 0, pacerCard = -1, setsPaced = 0;
+      var started = false, paused = false, stopped = false;
+      var hovering = false, focused = false, visible = true, inView = false;
+      var autoCancelled = motionQuery.matches;
+      var lastTouched = -1;
+
+      var paceTimer = null, graceTimer = null, tapTimer = null;
+      var animTimers = [];
+
+      function clearPace()  { if (paceTimer)  { clearTimeout(paceTimer);  paceTimer = null; } }
+      function clearGrace() { if (graceTimer) { clearTimeout(graceTimer); graceTimer = null; } }
+      function clearTap()   { if (tapTimer)   { clearTimeout(tapTimer);   tapTimer = null; } }
       function anim(fn, ms) { animTimers.push(setTimeout(fn, ms)); }
       function teardown() {
-        clearWait();
-        animTimers.forEach(clearTimeout);
-        animTimers = [];
+        clearPace(); clearGrace(); clearTap();
+        animTimers.forEach(clearTimeout); animTimers = [];
       }
 
       function setLive(mode) { grid.setAttribute('aria-live', mode); }
+
+      /* Exactly one card lit, always. Passing -1 lights none. */
+      function lightCard(i, fast) {
+        pacerCard = i;
+        faces.forEach(function (col, c) {
+          var card = col[index];
+          card.classList.toggle('is-lit', c === i);
+          card.classList.toggle('is-lit--fast', c === i && !!fast);
+        });
+      }
+      function litAll(on) {
+        faces.forEach(function (col) {
+          col.forEach(function (card) {
+            card.classList.remove('is-lit', 'is-lit--fast');
+          });
+        });
+        root.classList.toggle('is-paced', !on);
+        if (on) { pacerCard = -1; }
+      }
 
       function showFace(face, on) {
         if (on) {
@@ -3613,7 +3676,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
           face.removeAttribute('aria-hidden');
           face.removeAttribute('inert');
         } else {
-          face.classList.remove('is-active');
+          face.classList.remove('is-active', 'is-lit', 'is-lit--fast');
           face.setAttribute('aria-hidden', 'true');
           face.setAttribute('inert', '');
         }
@@ -3623,15 +3686,17 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         dots.forEach(function (d, i) {
           var on = i === index;
           d.classList.toggle('is-active', on);
-          if (on) { d.setAttribute('aria-current', 'true'); }
-          else { d.removeAttribute('aria-current'); }
+          if (on) { d.setAttribute('aria-current', 'true'); } else { d.removeAttribute('aria-current'); }
         });
       }
+
+      function cascadeMs() { return (faces.length - 1) * stagger() + 460; }
 
       function goTo(next, immediate) {
         if (next === index) { return; }
         var prev = index;
         index = next;
+        lightCard(-1);
 
         themes.forEach(function (t, i) {
           var on = i === index;
@@ -3642,61 +3707,125 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         var step = immediate ? 0 : stagger();
         faces.forEach(function (col, c) {
           var out = col[prev], into = col[index];
+          /* A started cascade must always complete: cancelling it mid-sweep
+             strands columns on the old set. These timers are never cleared
+             by a pause, only by teardown. */
           anim(function () {
             out.classList.add('is-leaving');
             showFace(out, false);
             showFace(into, true);
-            anim(function () { out.classList.remove('is-leaving'); }, OUT_MS + 20);
+            anim(function () { out.classList.remove('is-leaving'); }, 340);
           }, c * step);
         });
-
         paintDots();
       }
 
-      /* Dwell is measured from the moment the LAST card has finished entering,
-         not from the start of the cascade, so every set gets the same read time. */
-      function cascadeMs() { return (faces.length - 1) * stagger() + IN_MS; }
-
       function blocked() {
-        return paused || hovering || focused || !visible || !inView || autoCancelled;
+        return paused || hovering || focused || !visible || !inView || autoCancelled || stopped;
       }
 
-      function schedule() {
-        clearWait();
-        if (blocked() || shown >= TOTAL_SHOWINGS) { return; }
-        wait(function () {
-          if (blocked() || shown >= TOTAL_SHOWINGS) { return; }
-          goTo((index + 1) % patternSets.length, false);
-          shown++;
-          if (shown >= TOTAL_SHOWINGS) {
-            // Two full loops done. Stop where we are and flip the toggle to play.
-            paused = true;
-            setToggle();
-            setLive('polite');
-            clearWait();
+      function stopPacer(reason) {
+        stopped = true;
+        paused = true;
+        clearPace();
+        litAll(true);            // resting state: every card at full Ultraviolet
+        setToggle();
+        setLive('polite');
+      }
+
+      /* Hold is measured from the moment the incoming tint has finished. */
+      function step(i) {
+        clearPace();
+        if (blocked()) { return; }
+        lightCard(i);
+        var hold = readMs(patternSets[index].cards[i]);
+        paceTimer = setTimeout(function () {
+          if (blocked()) { return; }
+          if (i < faces.length - 1) {
+            step(i + 1);
             return;
           }
-          wait(schedule, cascadeMs());
-        }, DWELL);
+          setsPaced++;
+          if (setsPaced >= SETS_TO_PACE) { stopPacer('one full pass'); return; }
+          paceTimer = setTimeout(function () {
+            if (blocked()) { return; }
+            goTo((index + 1) % patternSets.length, false);
+            paceTimer = setTimeout(function () { step(0); }, cascadeMs());
+          }, SET_GAP);
+        }, UP_MS + hold);
       }
 
-      function setToggle() {
-        toggle.textContent = paused ? 'Play' : 'Pause';
-        toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
-        toggle.setAttribute('aria-label', paused ? 'Play automatic rotation' : 'Pause automatic rotation');
+      function begin() {
+        if (started || blocked()) { return; }
+        started = true;
+        paceTimer = setTimeout(function () { step(0); }, FIRST_BEAT);
       }
+      function resume() {
+        if (blocked()) { return; }
+        if (!started) { begin(); return; }
+        step(pacerCard < 0 ? 0 : pacerCard);
+      }
+      function halt() { clearPace(); }
 
-      /* Every resume restarts the full dwell rather than resuming a part-spent
-         timer, so a card is never yanked away moments after you look back. */
-      function resume() { if (!blocked()) { schedule(); } }
-      function halt() { clearWait(); }
+      /* Resuming after a manual highlight picks up AFTER the card the reader
+         stopped on. They have told you where they got to. */
+      function resumeAfter(cardIndex) {
+        if (blocked()) { return; }
+        started = true;
+        if (cardIndex >= faces.length - 1) {
+          setsPaced++;
+          if (setsPaced >= SETS_TO_PACE) { stopPacer('one full pass'); return; }
+          goTo((index + 1) % patternSets.length, false);
+          paceTimer = setTimeout(function () { step(0); }, cascadeMs());
+        } else {
+          step(cardIndex + 1);
+        }
+      }
 
       root.addEventListener('mouseenter', function () { hovering = true; halt(); });
-      root.addEventListener('mouseleave', function () { hovering = false; resume(); });
-      /* Only keyboard focus pauses. The intent is not to yank content away from
-         someone navigating it, and that is a keyboard concern. Counting mouse
-         focus too created a trap: clicking Play focuses the Play button, which
-         then blocked the very resume the click asked for. */
+      root.addEventListener('mouseleave', function () {
+        hovering = false;
+        clearGrace();
+        var from = pacerCard;
+        lightCard(-1);
+        graceTimer = setTimeout(function () { resumeAfter(from < 0 ? -1 : from); }, HOVER_GRACE);
+      });
+
+      if (hoverQuery.matches) {
+        faces.forEach(function (col, c) {
+          col.forEach(function (card) {
+            card.addEventListener('mouseenter', function () {
+              if (!card.classList.contains('is-active')) { return; }
+              halt();
+              lightCard(c, true);
+            });
+          });
+        });
+      }
+
+      /* Coarse pointers get the same job from a tap. No CSS :hover is used
+         anywhere, so a tap cannot leave a sticky hover state behind. */
+      if (!hoverQuery.matches) {
+        faces.forEach(function (col, c) {
+          col.forEach(function (card) {
+            card.addEventListener('click', function () {
+              if (!card.classList.contains('is-active')) { return; }
+              halt(); clearTap();
+              lastTouched = c;
+              lightCard(c, true);
+              tapTimer = setTimeout(function () { resumeAfter(c); }, TAP_RESUME);
+            });
+          });
+        });
+        document.addEventListener('click', function (event) {
+          if (root.contains(event.target) || lastTouched < 0) { return; }
+          clearTap();
+          var from = lastTouched;
+          lastTouched = -1;
+          resumeAfter(from);
+        });
+      }
+
       root.addEventListener('focusin', function (event) {
         var el = event.target;
         if (el && el.matches && el.matches(':focus-visible')) {
@@ -3710,6 +3839,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         if (visible) { resume(); } else { halt(); }
       });
 
+      /* The pacer waits for the reader. A sweep that already reached card 3
+         before anyone scrolled here is worse than no sweep. */
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
@@ -3717,43 +3848,71 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             if (inView) { resume(); } else { halt(); }
           });
         }, { threshold: [0, 0.4, 1] }).observe(root);
+      } else {
+        inView = true;
       }
 
       dots.forEach(function (dot, i) {
         dot.addEventListener('click', function () {
-          autoCancelled = true;          // a deliberate choice ends auto for the session
+          autoCancelled = true;
           paused = true;
+          clearPace(); clearGrace(); clearTap();
           setToggle();
           setLive('polite');
-          clearWait();
           goTo(i, motionQuery.matches);
+          litAll(true);       // manual choice: show the whole set at full strength
         });
       });
+
+      function setToggle() {
+        toggle.textContent = paused ? 'Play' : 'Pause';
+        toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+        toggle.setAttribute('aria-label', paused ? 'Play automatic rotation' : 'Pause automatic rotation');
+      }
 
       toggle.addEventListener('click', function () {
         paused = !paused;
         setToggle();
         if (paused) {
           setLive('polite');
-          clearWait();
+          clearPace();
+          litAll(true);
         } else {
+          stopped = false;
+          setsPaced = 0;
           autoCancelled = motionQuery.matches;
-          shown = Math.min(shown, TOTAL_SHOWINGS - 1);
           setLive('off');
-          resume();
+          if (!motionQuery.matches) {
+            litAll(false);
+            started = false;
+            begin();
+          }
         }
+      });
+
+      /* Optional: arrows move the pacer while the toggle has focus. */
+      toggle.addEventListener('keydown', function (event) {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') { return; }
+        if (motionQuery.matches || !root.classList.contains('is-paced')) { return; }
+        event.preventDefault();
+        var n = faces.length;
+        var next = pacerCard < 0 ? 0 : (pacerCard + (event.key === 'ArrowRight' ? 1 : n - 1)) % n;
+        halt();
+        lightCard(next, true);
       });
 
       function applyMotion() {
         if (motionQuery.matches) {
-          autoCancelled = true;
-          paused = true;
-          clearWait();
+          autoCancelled = true; paused = true;
+          clearPace(); clearGrace(); clearTap();
+          litAll(true);
           setLive('polite');
-        } else if (!paused) {
+        } else if (!paused && !stopped) {
           autoCancelled = false;
           setLive('off');
-          resume();
+          litAll(false);
+          started = false;
+          begin();
         }
         setToggle();
       }
@@ -3764,7 +3923,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
       setToggle();
       paintDots();
-      if (!motionQuery.matches) { schedule(); }
+      if (motionQuery.matches) { litAll(true); } else { litAll(false); }
     })();
   </script>
 
