@@ -1,0 +1,181 @@
+<!--
+  Optia Data: cookie consent + Google Consent Mode v2 + GTM.
+
+  Two blocks. Order matters: PASTE 1 must run before GTM loads, or Google
+  will fire analytics before the visitor has been asked, which is the whole
+  thing UK PECR prohibits.
+
+  Replace GTM-XXXXXXX with your container ID (Google Tag Manager, top right,
+  next to the workspace name). GA4 stays inside GTM as a tag; it is not
+  loaded directly here, so there is one place to change it later.
+
+  Compliance choices baked in, per ICO guidance on PECR regulation 6:
+    - analytics defaults to DENIED and nothing fires until a choice is made
+    - Reject sits at the same level, same size and same prominence as Accept
+    - nothing is pre-ticked
+    - the choice is recorded first-party with a timestamp
+    - consent lapses after 12 months and the banner returns
+    - a "Cookie settings" link lets the visitor change their mind, which is
+      what makes withdrawal "as easy as giving", also required
+-->
+
+
+<!-- ==================================================================== -->
+<!-- PASTE 1 of 2. In <head>, as early as possible. Nothing before it.    -->
+<!-- ==================================================================== -->
+
+<script>
+/* Consent Mode v2 defaults. Denied until the visitor says otherwise.
+   functionality_storage and security_storage are strictly necessary, so
+   they are granted: they carry no tracking and need no consent. */
+window.dataLayer = window.dataLayer || [];
+function gtag(){ dataLayer.push(arguments); }
+
+(function () {
+  var stored = null;
+  try {
+    var m = document.cookie.match(/(?:^|;\s*)optia_consent=([^;]+)/);
+    if (m) stored = JSON.parse(decodeURIComponent(m[1]));
+    /* A choice older than 12 months is treated as no choice. */
+    if (stored && (Date.now() - stored.ts > 31557600000)) stored = null;
+  } catch (e) { stored = null; }
+
+  var granted = !!(stored && stored.analytics);
+
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: granted ? 'granted' : 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500
+  });
+
+  /* Expose the stored decision so the banner below knows whether to show. */
+  window.__optiaConsent = stored;
+})();
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+<!-- End Google Tag Manager -->
+
+
+<!-- ==================================================================== -->
+<!-- PASTE 2 of 2. Immediately before </body>.                            -->
+<!-- ==================================================================== -->
+
+<style>
+/* Uses the site's own tokens only. No new colour, font or spacing value. */
+.cc {
+  position: fixed; z-index: 9999; left: var(--gutter); right: var(--gutter);
+  bottom: var(--gutter); max-width: 46rem;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line-dark); border-radius: 4px;
+  padding: var(--space-s);
+  font-family: 'Switzer', system-ui, sans-serif; font-size: 15px; line-height: 1.5;
+  box-shadow: 0 18px 48px rgba(5,7,13,.22);
+}
+.cc[hidden] { display: none; }
+.cc__title { font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: 1.35rem; line-height: 1.15; margin: 0 0 var(--space-2xs); letter-spacing: -.015em; }
+.cc__body { margin: 0 0 var(--space-xs); }
+.cc__body a { color: var(--blue); }
+.cc__row { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+/* Equal prominence. Same element, same padding, same font, same border.
+   Only the fill differs, and neither reads as the safer option. */
+.cc__btn {
+  flex: 1 1 11rem; appearance: none; cursor: pointer;
+  font: inherit; font-weight: 600; letter-spacing: .01em;
+  padding: .74em 1.1em; border-radius: 3px; border: 1px solid var(--blue);
+  background: var(--blue); color: var(--white);
+}
+.cc__btn--alt { background: transparent; color: var(--blue); }
+.cc__btn:hover { background: var(--signal); border-color: var(--signal); color: var(--white); }
+.cc__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (max-width: 480px) { .cc__btn { flex: 1 1 100%; } }
+</style>
+
+<div class="cc" id="cookie-banner" role="dialog" aria-modal="false"
+     aria-labelledby="cc-title" aria-describedby="cc-body" hidden>
+  <h2 class="cc__title" id="cc-title">Cookies</h2>
+  <p class="cc__body" id="cc-body">
+    We need a few cookies to make this site work. We would also like to use
+    Google Analytics to see which pages are read, which sets cookies that are
+    not essential. That is entirely your call, and you can change it whenever
+    you like. <a href="#privacy-policy">Privacy Policy</a>.
+  </p>
+  <div class="cc__row">
+    <button type="button" class="cc__btn" data-cc="accept">Accept analytics</button>
+    <button type="button" class="cc__btn cc__btn--alt" data-cc="reject">Reject analytics</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var BANNER = document.getElementById('cookie-banner');
+  if (!BANNER) return;
+
+  function save(analytics) {
+    var v = { analytics: !!analytics, ts: Date.now(), v: 1 };
+    /* First-party, no subdomain, SameSite=Lax. Twelve months, matching the
+       point at which we ask again. */
+    document.cookie = 'optia_consent=' + encodeURIComponent(JSON.stringify(v))
+      + ';path=/;max-age=31557600;SameSite=Lax'
+      + (location.protocol === 'https:' ? ';Secure' : '');
+    return v;
+  }
+
+  function apply(analytics) {
+    gtag('consent', 'update', { analytics_storage: analytics ? 'granted' : 'denied' });
+    dataLayer.push({ event: 'optia_consent_update', optia_analytics_consent: analytics ? 'granted' : 'denied' });
+  }
+
+  function close() { BANNER.hidden = true; }
+
+  function open() {
+    BANNER.hidden = false;
+    var b = BANNER.querySelector('[data-cc="accept"]');
+    if (b) b.focus({ preventScroll: true });
+  }
+
+  BANNER.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-cc]');
+    if (!t) return;
+    var yes = t.getAttribute('data-cc') === 'accept';
+    save(yes);
+    apply(yes);
+    close();
+  });
+
+  /* No stored decision, or one that has lapsed, means ask. */
+  if (!window.__optiaConsent) open();
+
+  /* Withdrawal path. Give the footer a link with this href and the banner
+     reopens, so changing your mind is exactly as easy as the first choice. */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('a[href="#cookie-settings"], [data-cookie-settings]');
+    if (!t) return;
+    e.preventDefault();
+    open();
+  });
+
+  /* v7 routes with hash fragments, and GA4 will not count those as page
+     views on its own. Push one explicitly so route changes are measured.
+     Delete this block once v7 serves real URLs. */
+  var last = location.hash;
+  window.addEventListener('hashchange', function () {
+    if (location.hash === last) return;
+    last = location.hash;
+    dataLayer.push({
+      event: 'optia_virtual_pageview',
+      page_path: location.pathname + location.hash,
+      page_title: document.title
+    });
+  });
+})();
+</script>

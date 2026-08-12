@@ -1,0 +1,43 @@
+# optiadata.com
+# Policy: allow everything, including AI crawlers. Optia Data wants to be
+# found and cited. Google-Extended governs Gemini grounding rather than Search
+# indexing, so blocking it would cost visibility and protect nothing.
+
+User-agent: *
+Allow: /
+
+# Named explicitly so the intent survives anyone later tightening the wildcard.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://optiadata.com/sitemap.xml
