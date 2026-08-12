@@ -35,7 +35,7 @@ const json = (status, body) =>
    not by a regex, and every clever pattern rejects somebody's real address. */
 const looksLikeEmail = (v) => /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(v);
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   let form;
   try {
     const ct = request.headers.get('content-type') || '';
@@ -71,10 +71,14 @@ export async function onRequestPost({ request, env }) {
     country: request.headers.get('cf-ipcountry') || null,
     userAgent: clean(request.headers.get('user-agent'), 300),
   };
-  const record = { ...lead, ...meta };
   const id = `lead:${meta.receivedAt}:${crypto.randomUUID().slice(0, 8)}`;
+  /* The reference travels with the lead so a row in the destination can be
+     matched back to a log line when someone says they never got a reply. */
+  const record = { ...lead, ...meta, reference: id };
 
-  /* Store first, deliver second, so a CRM outage cannot lose the enquiry. */
+  /* Store before responding, so the enquiry is durable even if everything
+     downstream fails. A KV write is tens of milliseconds; the delivery that
+     follows is not, which is why only this part is awaited. */
   if (env.LEADS) {
     try {
       await env.LEADS.put(id, JSON.stringify({ ...record, delivered: false }), {
@@ -83,6 +87,13 @@ export async function onRequestPost({ request, env }) {
     } catch { /* storage is a safety net, never the reason a lead is rejected */ }
   }
 
+  /* Delivery runs after the response. Google Apps Script took 38 seconds to
+     answer in testing, and blocking on it meant the visitor watched "Sending."
+     for most of a minute, long enough to give up or submit again. Nothing in
+     the reply depends on the outcome: the lead is already stored, and whether
+     the spreadsheet accepted it is our problem to reconcile, not theirs to
+     wait for. */
+  async function deliver() {
   let delivered = false;
   let failure = null;
 
@@ -144,7 +155,7 @@ export async function onRequestPost({ request, env }) {
           text:
             `${lead.name} at ${lead.company}\n${lead.email}\n\n` +
             `${lead.message}\n\n---\nReceived ${meta.receivedAt}\n` +
-            `Not delivered to Day AI: ${failure}\nReference ${id}`,
+            `Not delivered to the lead store: ${failure}\nReference ${id}`,
         }),
       });
     } catch { /* the KV record is still the backstop */ }
@@ -158,7 +169,15 @@ export async function onRequestPost({ request, env }) {
     } catch { /* nothing actionable */ }
   }
 
-  if (!delivered) console.error('contact form not delivered to CRM', { id, failure });
+  if (!delivered) console.error('contact form lead not delivered', { id, failure });
+  }
+
+  /* waitUntil keeps the worker alive for delivery after the response is sent.
+     Without it, awaiting would put the endpoint's latency in front of the
+     visitor; falling back to await keeps the function correct anywhere the
+     runtime does not provide it. */
+  if (typeof waitUntil === 'function') waitUntil(deliver());
+  else await deliver();
 
   /* Always 200 on a valid submission. The visitor did their part. */
   return json(200, { ok: true, reference: id });
