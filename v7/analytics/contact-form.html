@@ -1,0 +1,97 @@
+<!--
+  Contact form: replaces the prototype handler in v7/index.html.
+
+  The existing block ends with:
+      note.textContent = 'This is a design prototype, no message has been sent. ...'
+  which must not reach production. Swap the whole IIFE for the script below.
+
+  Also add the two hidden fields to the <form>, just before the submit button.
+  They are what the spam screening in functions/api/contact.js reads, and
+  without them every genuine submission is silently discarded as a bot.
+-->
+
+
+<!-- ---- 1. add inside <form id="contactForm">, before the submit button ---- -->
+
+<!-- Honeypot. Hidden from people, offered to bots. Not type="hidden", which
+     bots skip; a real field moved out of view, which they fill in. -->
+<div class="hp" aria-hidden="true">
+  <label for="website">Website</label>
+  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+</div>
+<input type="hidden" name="t" id="formLoadedAt">
+
+<style>
+/* Off-canvas rather than display:none, so bots that check computed style
+   still see a fillable field. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+
+
+<!-- ---- 2. replace the existing contactForm script with this ---- -->
+
+<script>
+(function () {
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  var note   = document.getElementById('submitNote');
+  var button = form.querySelector('button[type="submit"]');
+  var stamp  = document.getElementById('formLoadedAt');
+  var label  = button ? button.textContent : '';
+  var sending = false;
+
+  if (stamp) stamp.value = String(Date.now());
+
+  function say(text, ok) {
+    if (!note) return;
+    note.textContent = text;
+    note.dataset.state = ok ? 'ok' : 'error';
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (sending) return;
+
+    if (!form.checkValidity()) {
+      say('Please complete each field with a valid email address.', false);
+      form.reportValidity();
+      return;
+    }
+
+    sending = true;
+    if (button) { button.disabled = true; button.textContent = 'Sending'; }
+    say('Sending.', true);
+
+    var payload = Object.fromEntries(new FormData(form));
+    payload.page = location.pathname + location.hash;
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { return res.json().catch(function () { return {}; }); })
+      .then(function (data) {
+        if (!data.ok) throw new Error(data.error || 'Something went wrong.');
+        form.reset();
+        if (stamp) stamp.value = String(Date.now());
+        say('Thank you. We have your message and will come back to you shortly.', true);
+        if (window.dataLayer) {
+          window.dataLayer.push({ event: 'contact_form_submit' });
+        }
+      })
+      .catch(function (err) {
+        /* Never leave someone with a dead end. Give them the address. */
+        say(
+          (err && err.message ? err.message + ' ' : '') +
+          'If this keeps happening, email hello@optiadata.com and we will pick it up from there.',
+          false
+        );
+      })
+      .then(function () {
+        sending = false;
+        if (button) { button.disabled = false; button.textContent = label; }
+      });
+  });
+})();
+</script>
