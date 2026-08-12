@@ -120,7 +120,10 @@ html { scroll-behavior: smooth; overflow-x: hidden; scroll-snap-type: y mandator
    plain CSS rule (not something toggled only by the later routing script)
    so it applies before layout, and before the browser decides which lazy
    images are worth fetching immediately. */
-html.routing-case .hero, html.routing-case main { display: none; }
+/* The footer is hidden by the router too, but a pre-rendered page paints
+   before that script runs, so it is stated here as well. Without it a
+   deep-linked case study flashed the whole contact footer on first paint. */
+html.routing-case .hero, html.routing-case main, html.routing-case > body > footer { display: none; }
 /* Every full-page section reserves its own nav clearance with an internal
    padding-top of calc(66px + gutter), so none of them need scroll-margin-top.
    Contact used to carry one because its columns had no such padding, but on
@@ -1489,6 +1492,76 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 }
 
 </style>
+
+<!-- build-routes:jsonld -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://optiadata.com/#organisation",
+      "name": "Optia Data",
+      "url": "https://optiadata.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://optiadata.com/#logo",
+        "url": "https://optiadata.com/images/optia-logo.svg",
+        "contentUrl": "https://optiadata.com/images/optia-logo.svg",
+        "caption": "Optia Data",
+        "width": 221,
+        "height": 89
+      },
+      "legalName": "Optia Data Ltd",
+      "description": "Optia makes complex consumer data dependable enough to act on. We harmonise syndicated market, retailer and internal data into commercial reporting teams can trust.",
+      "email": "hello@optiadata.com",
+      "foundingDate": "2024-08-07",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Oxfordshire",
+        "addressCountry": "GB"
+      },
+      "identifier": [
+        {
+          "@type": "PropertyValue",
+          "propertyID": "GB Companies House company number",
+          "value": "15884308"
+        }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/company/optia-data/",
+        "https://find-and-update.company-information.service.gov.uk/company/15884308",
+        "https://microsites.nielseniq.com/partnernetwork/apps/optia-data/"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://optiadata.com/#website",
+      "url": "https://optiadata.com/",
+      "name": "Optia Data",
+      "publisher": {
+        "@id": "https://optiadata.com/#organisation"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://optiadata.com/#webpage",
+      "url": "https://optiadata.com/",
+      "name": "Optia Data, intelligence practically applied",
+      "description": "Optia makes complex consumer data dependable enough to act on. We harmonise syndicated market, retailer and internal data into commercial reporting teams can trust.",
+      "isPartOf": {
+        "@id": "https://optiadata.com/#website"
+      },
+      "inLanguage": "en-GB",
+      "about": {
+        "@id": "https://optiadata.com/#organisation"
+      }
+    }
+  ]
+}
+</script>
+<!-- /build-routes:jsonld -->
 </head>
 <body>
 <div class="intro" id="intro" role="presentation">
@@ -1503,10 +1576,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     <div class="nav-links" id="navLinks">
       <a href="#solutions">Solutions</a>
       <a href="#customers">Customers</a>
-      <a href="#case-index">Case studies</a>
+      <a href="/case-studies/">Case studies</a>
       <a href="#approach">Approach</a>
       <a href="#core">Core</a>
-      <a href="#about-page">About</a>
+      <a href="/about/">About</a>
       <a href="#contact">Contact</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open navigation"><span></span><span></span></button>
@@ -1531,7 +1604,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
   </script>
 
   <header class="hero" id="top">
-    <div class="hero__image"><img src="images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.webp" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager"></div>
+    <div class="hero__image"><img src="/images/close-up-of-illuminated-blue-architectural-slats-seen-at-an-.webp" alt="Close-up of illuminated blue architectural slats, seen at an angle" loading="eager"></div>
     <!-- Deliberately a plain eager src, not the data-src pattern used below.
          A src assigned by JS after the fact loses the browser's preload
          scanner entirely, which measurably hurt home's own LCP when tried.
@@ -1577,7 +1650,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h2 class="layer__title">Get the data <em>right.</em></h2>
         <p class="layer__body">We bring together your data: syndicated market, sales and marketing or your own internal numbers, creating one governed, audited and secure environment. Your data, reconciled and reliable, with a clear trail from which every figure originates. The result? Numbers that match and reporting that runs itself. Most people undervalue this, which is why any AI will give confident, wrong answers</p>
       </div>
-      <div class="layer__image"><img data-src="images/minimal-blue-architectural-panels-meeting-at-a-seam.webp" alt="Minimal blue architectural panels meeting at a seam" loading="lazy" decoding="async"></div>
+      <div class="layer__image"><img data-src="/images/minimal-blue-architectural-panels-meeting-at-a-seam.webp" alt="Minimal blue architectural panels meeting at a seam" loading="lazy" decoding="async"></div>
     </section>
 
     <section class="layer layer--reverse">
@@ -1586,7 +1659,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h2 class="layer__title layer__title--fit">Give your data <em>meaning.</em></h2>
         <p class="layer__body">Data on its own doesn't know your categories, your definitions, your hierarchies or your quirks. We codify that meaning in a managed layer: the business rules, definitions and relationships that let your people - and any AI - read your data correctly.</p>
       </div>
-      <div class="layer__image"><img data-src="images/close-up-of-illuminated-blue-perforated-panels.webp" alt="Close-up of illuminated blue perforated panels" loading="lazy" decoding="async"></div>
+      <div class="layer__image"><img data-src="/images/close-up-of-illuminated-blue-perforated-panels.webp" alt="Close-up of illuminated blue perforated panels" loading="lazy" decoding="async"></div>
     </section>
 
     <section class="layer layer--ink">
@@ -1595,7 +1668,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h2 class="layer__title layer__title--fit">Know what <em>to do next.</em></h2>
         <p class="layer__body">Dashboards, ad-hoc answers and enhanced analysis. Every insight identifies real value and how to unlock it. Every recommendation is provided to improve your business, based on your governed data. All verified by a human analyst. Decisions made with confidence. Actionable insights not vanity metrics.</p>
       </div>
-      <div class="layer__image"><img data-src="images/blue-architectural-panels-violet-toned.webp" alt="Blue architectural panels, violet-toned" loading="lazy" decoding="async"></div>
+      <div class="layer__image"><img data-src="/images/blue-architectural-panels-violet-toned.webp" alt="Blue architectural panels, violet-toned" loading="lazy" decoding="async"></div>
     </section>
 
     <section class="layers-cta reveal" aria-label="Which layer fits you">
@@ -1629,14 +1702,14 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <button class="customer-filter" type="button" data-filter="Engineering" aria-pressed="false">Engineering</button>
         <button class="customer-filter" type="button" data-filter="Education" aria-pressed="false">Education</button>
         <button class="customer-filter" type="button" data-filter="Health" aria-pressed="false">Health</button>
-        <a class="customer-filters__cases" href="#case-index"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>Selected case studies</a>
+        <a class="customer-filters__cases" href="/case-studies/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>Selected case studies</a>
       </div>
       <div class="customer-list" id="customerList">
-        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samworth"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-starbucks"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/starbucks-logo-colour.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-arla"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
-        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-international-beverage"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-bacardi"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-campari"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-golden-acre"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
-        <a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-samyang"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-henkel"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="#case-vithit"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/vithit-logo-white.png" alt="VitHit" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/mufg-logo-white.png" alt="MUFG" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/mufg-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
-        <div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/clear-one-advantage-logo-white.png" alt="Clear One Advantage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/clear-one-advantage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Engineering" href="#case-qts"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Education" href="#case-ilg"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
-        <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Health" href="#case-oracare"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/samworth-brothers/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/starbucks-emea/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/starbucks-logo-white.png" alt="Starbucks" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/starbucks-logo-colour.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/arla-foods/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/arla-logo-white.png" alt="Arla" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/international-beverage/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/bacardi/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/campari/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/golden-acre-foods/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/samyang-foods/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/henkel/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Consumer" href="/case-studies/vit-hit/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/vithit-logo-white.png" alt="VitHit" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/mufg-logo-white.png" alt="MUFG" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/mufg-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div>
+        <div class="customer-name" data-sector="Financial"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/clear-one-advantage-logo-white.png" alt="Clear One Advantage" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/clear-one-advantage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Engineering" href="/case-studies/qts-data-centres/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a><a class="customer-name customer-name--linked" data-sector="Education" href="/case-studies/inspired-learning-group/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
+        <div class="customer-name" data-sector="Health"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/rethink-first-logo-white.png" alt="Rethink First" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/rethink-first-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></div><a class="customer-name customer-name--linked" data-sector="Health" href="/case-studies/oracare-group/"><span class="customer-logo-swap"><img class="customer-logo customer-logo--white" data-src="/images/oracare-logo-white.png" alt="Oracare" loading="lazy" decoding="async"><img class="customer-logo customer-logo--colour" data-src="/images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></a>
       </div>
       <a class="customers__cta" href="#contact"><strong>Don't have that secure data environment?</strong><span class="cta-link">Start a conversation<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
 
@@ -1644,8 +1717,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p class="eyebrow partner-marquee__label">Partner network</p>
         <div class="partner-marquee__viewport">
           <div class="partner-marquee__track">
-            <img class="partner-marquee__logo" data-src="images/partners/nielseniq-partner-network.png" alt="NielsenIQ Partner Network" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/kantar.png" alt="Kantar" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/gfk.svg" alt="GfK" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/snowflake.webp" alt="Snowflake" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/microsoft.svg" alt="Microsoft" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/google.svg" alt="Google" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/nvidia.svg" alt="NVIDIA" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/infosum.png" alt="InfoSum" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/commsol.png" alt="CommSol" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/anextere.png" alt="Anextere" loading="lazy" decoding="async">
-            <img class="partner-marquee__logo" data-src="images/partners/nielseniq-partner-network.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/kantar.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/gfk.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/snowflake.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/microsoft.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/google.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/nvidia.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/infosum.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/commsol.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="images/partners/anextere.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+            <img class="partner-marquee__logo" data-src="/images/partners/nielseniq-partner-network.png" alt="NielsenIQ Partner Network" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/kantar.png" alt="Kantar" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/gfk.svg" alt="GfK" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/snowflake.webp" alt="Snowflake" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/microsoft.svg" alt="Microsoft" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/google.svg" alt="Google" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/nvidia.svg" alt="NVIDIA" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/infosum.png" alt="InfoSum" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/commsol.png" alt="CommSol" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/anextere.png" alt="Anextere" loading="lazy" decoding="async">
+            <img class="partner-marquee__logo" data-src="/images/partners/nielseniq-partner-network.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/kantar.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/gfk.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/snowflake.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/microsoft.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/google.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/nvidia.svg" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/infosum.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/commsol.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="partner-marquee__logo" data-src="/images/partners/anextere.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
           </div>
         </div>
       </div>
@@ -1839,7 +1912,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </article>
 
       <div class="visual-pause">
-        <img data-src="images/waves-of-repeated-blue-light.webp" alt="Waves of repeated blue light" loading="lazy">
+        <img data-src="/images/waves-of-repeated-blue-light.webp" alt="Waves of repeated blue light" loading="lazy">
         <h2 class="visual-pause__line">Technology accelerates the work. <em>People remain accountable.</em></h2>
       </div>
 
@@ -1860,10 +1933,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </div>
       <p class="core__closing">Our experience has taught us where the efficiencies of AI are, but equally what the risks are. Your data is in safe hands.</p>
       <div class="core__certs" aria-label="Certifications and compliance">
-        <div class="core__cert"><img data-src="images/certifications/soc2-type-ii.svg" alt="AICPA SOC 2 Type II certified" loading="lazy" decoding="async"><span>SOC 2 Type II</span></div>
-        <div class="core__cert"><img data-src="images/certifications/iso-27001.svg" alt="ISO 27001 information security certified" loading="lazy" decoding="async"><span>ISO 27001</span></div>
-        <div class="core__cert"><img data-src="images/certifications/gdpr.svg" alt="GDPR compliant" loading="lazy" decoding="async"><span>GDPR</span></div>
-        <div class="core__cert"><img data-src="images/certifications/hipaa.svg" alt="HIPAA compliant" loading="lazy" decoding="async"><span>HIPAA</span></div>
+        <div class="core__cert"><img data-src="/images/certifications/soc2-type-ii.svg" alt="AICPA SOC 2 Type II certified" loading="lazy" decoding="async"><span>SOC 2 Type II</span></div>
+        <div class="core__cert"><img data-src="/images/certifications/iso-27001.svg" alt="ISO 27001 information security certified" loading="lazy" decoding="async"><span>ISO 27001</span></div>
+        <div class="core__cert"><img data-src="/images/certifications/gdpr.svg" alt="GDPR compliant" loading="lazy" decoding="async"><span>GDPR</span></div>
+        <div class="core__cert"><img data-src="/images/certifications/hipaa.svg" alt="HIPAA compliant" loading="lazy" decoding="async"><span>HIPAA</span></div>
       </div>
     </section>
 
@@ -1877,7 +1950,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h1>We think the human is the point.</h1>
         <p class="case-full__sub">The story behind Optia, in our founder's own words.</p>
       </div>
-      <div class="about-page__image"><img data-src="images/detail-of-illuminated-blue-architectural-panels.webp" alt="Detail of illuminated blue architectural panels" loading="lazy" decoding="async"></div>
+      <div class="about-page__image"><img data-src="/images/detail-of-illuminated-blue-architectural-panels.webp" alt="Detail of illuminated blue architectural panels" loading="lazy" decoding="async"></div>
       <div class="case-full__section">
         <h2>Our story</h2>
         <span class="about-page__sub">(unedited from our founder...)</span>
@@ -1895,7 +1968,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>We're a specialist data company with deep expertise and partnerships in consumer, but with a growing reputation in other fields. My team covers all the bases. Data and Software engineering expertise gained over decades from the best technical universities and Fortune 500 companies. Bleeding edge innovation skills honed in the labs of the most forward thinking global management consultancies and CPG behemoths. Analyst skillsets influenced by years working in and for CPGs and digital startups alike. Customer success, empathy and an innate understanding of what someone needs that can only have been honed on the playing fields of England.</p>
         <p>We have spent years in the detail of syndicated datasets, doing the unglamorous work that makes commercial numbers reliable for big household names. We are human, we are diverse, we are located all around the world and have the ability to listen to the needs of our customers and then work out and implement the best possible solution available today. Every project we take on is either slightly different to the previous, or very different. All this coupled with backgrounds building and maintaining data platforms and softwares and natural curiosity that is seeing us test and push the boundaries of the latest technologies, mean that our customers want us not just to solve the problem at hand, but to join them wherever they are on their data journey.</p>
       </div>
-      <div class="about-page__image"><img data-src="images/soft-defocused-blue-light-detail.jpg" alt="Soft, defocused blue light detail" loading="lazy" decoding="async"></div>
+      <div class="about-page__image"><img data-src="/images/soft-defocused-blue-light-detail.jpg" alt="Soft, defocused blue light detail" loading="lazy" decoding="async"></div>
       <div class="case-full__section">
         <h2>Why a name matters</h2>
         <p>We have always known that the data to insights journey is fraught with issues of 'garbage in garbage out'. The challenge conversational AI poses is that it may make even garbage look interesting and correct. Conversational AI must be fed data that is correct by design and also presented in a way that means the LLMs have a miniscule chance of hallucinating or cooking up something random. This requires strong data foundations and data presentation skills. At Optia, we have understood these challenges and are continuously on a mission to improve our capabilities around these emerging challenges.</p>
@@ -1910,7 +1983,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="where-we-work">
         <h3 class="where-we-work__title">Where we work</h3>
         <div class="where-we-work__map">
-          <img data-src="images/world-map-showing-optia-s-locations-in-london-barcelona-nure.webp" alt="World map showing Optia's locations in London, Barcelona, Nuremberg, Abu Dhabi, Bangalore, Chicago and New York" loading="lazy" decoding="async">
+          <img data-src="/images/world-map-showing-optia-s-locations-in-london-barcelona-nure.webp" alt="World map showing Optia's locations in London, Barcelona, Nuremberg, Abu Dhabi, Bangalore, Chicago and New York" loading="lazy" decoding="async">
           <svg class="where-we-work__overlay" viewBox="0 0 1920 975" aria-hidden="true" focusable="false">
             <path class="wwm-line" d="M918,168 Q902.8,184.6 900,207"></path><path class="wwm-line" d="M918,168 Q945.8,174.0 965,195"></path><path class="wwm-line" d="M918,168 Q1065.8,204.5 1165,320"></path><path class="wwm-line" d="M918,168 Q1150.3,218.8 1310,395"></path><path class="wwm-line" d="M918,168 Q654.4,99.6 400,197"></path><path class="wwm-line" d="M918,168 Q676.0,114.8 448,212"></path>
             <g class="wwm-city"><circle class="wwm-ring" cx="918" cy="168" r="6" style="animation-delay:0.00s"></circle><circle class="wwm-dot" cx="918" cy="168" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="900" cy="207" r="6" style="animation-delay:0.35s"></circle><circle class="wwm-dot" cx="900" cy="207" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="965" cy="195" r="6" style="animation-delay:0.70s"></circle><circle class="wwm-dot" cx="965" cy="195" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="1165" cy="320" r="6" style="animation-delay:1.05s"></circle><circle class="wwm-dot" cx="1165" cy="320" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="1310" cy="395" r="6" style="animation-delay:1.40s"></circle><circle class="wwm-dot" cx="1310" cy="395" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="400" cy="197" r="6" style="animation-delay:1.75s"></circle><circle class="wwm-dot" cx="400" cy="197" r="5"></circle></g><g class="wwm-city"><circle class="wwm-ring" cx="448" cy="212" r="6" style="animation-delay:2.10s"></circle><circle class="wwm-dot" cx="448" cy="212" r="5"></circle></g>
@@ -1950,8 +2023,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </div>
       <p class="case-count" id="caseCount" role="status">Showing 15 of 15 case studies</p>
       <div class="case-grid" id="caseGrid">
-        <a class="case-tile" href="#case-arla" data-sector="Consumer" data-name="Arla Foods" data-order="0">
-          <span class="case-tile__media"><img data-src="images/arla-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 52%"><span class="case-tile__badge"><img data-src="images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/arla-foods/" data-sector="Consumer" data-name="Arla Foods" data-order="0">
+          <span class="case-tile__media"><img data-src="/images/arla-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 52%"><span class="case-tile__badge"><img data-src="/images/arla-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Arla Foods</span>
             <span class="case-tile__title">Monthly market reporting, from 20 days to 10 minutes, across 16 markets</span>
@@ -1960,8 +2033,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-campari" data-sector="Consumer" data-name="Campari" data-order="1">
-          <span class="case-tile__media"><img data-src="images/campari-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/campari/" data-sector="Consumer" data-name="Campari" data-order="1">
+          <span class="case-tile__media"><img data-src="/images/campari-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="/images/campari-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Campari</span>
             <span class="case-tile__title">One Total Trade view with no average of averages</span>
@@ -1970,8 +2043,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-starbucks" data-sector="Consumer" data-name="Starbucks EMEA" data-order="2">
-          <span class="case-tile__media case-tile__media--product"><img data-src="images/starbucks-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="images/starbucks-logo-colour.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/starbucks-emea/" data-sector="Consumer" data-name="Starbucks EMEA" data-order="2">
+          <span class="case-tile__media case-tile__media--product"><img data-src="/images/starbucks-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="/images/starbucks-logo-colour.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Starbucks EMEA</span>
             <span class="case-tile__title">33 monthly reports, consolidated into one explorable model</span>
@@ -1980,8 +2053,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-bacardi" data-sector="Consumer" data-name="Bacardi" data-order="3">
-          <span class="case-tile__media"><img data-src="images/bacardi-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 34%"><span class="case-tile__badge"><img data-src="images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/bacardi/" data-sector="Consumer" data-name="Bacardi" data-order="3">
+          <span class="case-tile__media"><img data-src="/images/bacardi-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 34%"><span class="case-tile__badge"><img data-src="/images/bacardi-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Bacardi</span>
             <span class="case-tile__title">40+ hours a month of manual reporting, removed</span>
@@ -1990,8 +2063,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-australian-vintage" data-sector="Consumer" data-name="Australian Vintage" data-order="4">
-          <span class="case-tile__media"><img data-src="images/australian-vintage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/australian-vintage.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/australian-vintage/" data-sector="Consumer" data-name="Australian Vintage" data-order="4">
+          <span class="case-tile__media"><img data-src="/images/australian-vintage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="/images/australian-vintage.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Australian Vintage</span>
             <span class="case-tile__title">&pound;26m of misclassified sales, caught before the board saw it</span>
@@ -2000,8 +2073,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-golden-acre" data-sector="Consumer" data-name="Golden Acre Foods" data-order="5">
-          <span class="case-tile__media"><img data-src="images/golden-acre-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:30% 50%"><span class="case-tile__badge"><img data-src="images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/golden-acre-foods/" data-sector="Consumer" data-name="Golden Acre Foods" data-order="5">
+          <span class="case-tile__media"><img data-src="/images/golden-acre-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:30% 50%"><span class="case-tile__badge"><img data-src="/images/golden-acre-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Golden Acre Foods</span>
             <span class="case-tile__title">One weekly view across Tesco, Sainsbury's, Asda and Morrisons</span>
@@ -2010,8 +2083,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-samworth" data-sector="Consumer" data-name="Samworth Brothers" data-order="6">
-          <span class="case-tile__media"><img data-src="images/baker-shaping-pastry-dough-by-hand.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/samworth-brothers/" data-sector="Consumer" data-name="Samworth Brothers" data-order="6">
+          <span class="case-tile__media"><img data-src="/images/baker-shaping-pastry-dough-by-hand.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="/images/samworth-brothers-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Samworth Brothers</span>
             <span class="case-tile__title">One board-ready view across six categories</span>
@@ -2020,8 +2093,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-vithit" data-sector="Consumer" data-name="Vit Hit" data-order="7">
-          <span class="case-tile__media"><img data-src="images/vithit-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 38%"><span class="case-tile__badge"><img data-src="images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/vit-hit/" data-sector="Consumer" data-name="Vit Hit" data-order="7">
+          <span class="case-tile__media"><img data-src="/images/vithit-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 38%"><span class="case-tile__badge"><img data-src="/images/vithit-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Vit Hit</span>
             <span class="case-tile__title">Distribution and promotion, finally visible next to sales</span>
@@ -2030,8 +2103,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile case-tile--wip" href="#case-international-beverage" data-sector="Consumer" data-name="International Beverage" data-order="8">
-          <span class="case-tile__media"><img data-src="images/international-beverage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile case-tile--wip" href="/case-studies/international-beverage/" data-sector="Consumer" data-name="International Beverage" data-order="8">
+          <span class="case-tile__media"><img data-src="/images/international-beverage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="/images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">International Beverage</span>
             <span class="case-tile__title">Monthly leadership reporting, no longer built by hand by one person</span>
@@ -2040,8 +2113,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Watch this space &rarr;</span>
           </span>
         </a>
-        <a class="case-tile case-tile--wip" href="#case-samyang" data-sector="Consumer" data-name="Samyang Foods" data-order="9">
-          <span class="case-tile__media case-tile__media--product"><img data-src="images/samyang-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
+        <a class="case-tile case-tile--wip" href="/case-studies/samyang-foods/" data-sector="Consumer" data-name="Samyang Foods" data-order="9">
+          <span class="case-tile__media case-tile__media--product"><img data-src="/images/samyang-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="/images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Samyang Foods</span>
             <span class="case-tile__title">Sell-out, sell-through and sell-in, side by side</span>
@@ -2050,8 +2123,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Watch this space &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-qts" data-sector="Engineering" data-name="QTS Data Centres" data-order="10">
-          <span class="case-tile__media"><img data-src="images/qts-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 44%"><span class="case-tile__badge"><img data-src="images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/qts-data-centres/" data-sector="Engineering" data-name="QTS Data Centres" data-order="10">
+          <span class="case-tile__media"><img data-src="/images/qts-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 44%"><span class="case-tile__badge"><img data-src="/images/qts-data-centres-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">QTS Data Centres</span>
             <span class="case-tile__title">Twelve months of maintenance, compressed into nine and a half</span>
@@ -2060,8 +2133,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-ilg" data-sector="Education" data-name="Inspired Learning Group" data-order="11">
-          <span class="case-tile__media"><img data-src="images/ilg-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/inspired-learning-group/" data-sector="Education" data-name="Inspired Learning Group" data-order="11">
+          <span class="case-tile__media"><img data-src="/images/ilg-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 46%"><span class="case-tile__badge"><img data-src="/images/inspired-learning-group-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Inspired Learning Group</span>
             <span class="case-tile__title">Reporting built around the decisions heads can actually make</span>
@@ -2070,8 +2143,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-henkel" data-sector="Consumer" data-name="Henkel" data-order="12">
-          <span class="case-tile__media"><img data-src="images/henkel-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:42% 50%"><span class="case-tile__badge"><img data-src="images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/henkel/" data-sector="Consumer" data-name="Henkel" data-order="12">
+          <span class="case-tile__media"><img data-src="/images/henkel-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:42% 50%"><span class="case-tile__badge"><img data-src="/images/henkel-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Henkel</span>
             <span class="case-tile__title">Eleven categories, down to individual SKU and retailer</span>
@@ -2080,7 +2153,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-tier-one-bank" data-sector="Financial" data-name="A Tier-One Global Bank" data-order="13">
+        <a class="case-tile" href="/case-studies/tier-one-global-bank/" data-sector="Financial" data-name="A Tier-One Global Bank" data-order="13">
           <span class="case-tile__media case-tile__media--confidential"><span class="case-tile__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path></svg></span><span class="case-tag case-tag--confidential">Confidential engagement</span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">A Tier-One Global Bank</span>
@@ -2090,8 +2163,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-oracare" data-sector="Health" data-name="Oracare Group" data-order="14">
-          <span class="case-tile__media"><img data-src="images/oracare-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 42%"><span class="case-tile__badge"><img data-src="images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
+        <a class="case-tile" href="/case-studies/oracare-group/" data-sector="Health" data-name="Oracare Group" data-order="14">
+          <span class="case-tile__media"><img data-src="/images/oracare-hero.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 42%"><span class="case-tile__badge"><img data-src="/images/oracare-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Oracare Group</span>
             <span class="case-tile__title">Three dental brands and multiple countries, reported as one group</span>
@@ -2107,13 +2180,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-arla">
     <div class="case-hero" style="--shade:.42">
-      <img class="case-hero__img" data-src="images/arla-hero.webp" alt="Dairy cattle grazing on open farmland at sunset" loading="lazy" decoding="async" style="object-position:50% 52%">
+      <img class="case-hero__img" data-src="/images/arla-hero.webp" alt="Dairy cattle grazing on open farmland at sunset" loading="lazy" decoding="async" style="object-position:50% 52%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/arla-logo-white.png" alt="Arla Foods" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/arla-logo-white.png" alt="Arla Foods" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Dairy</span>
         </div>
         <h1 class="case-hero__title">One trusted view of brand and category performance across 16 markets</h1>
@@ -2162,7 +2235,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2171,10 +2244,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-australian-vintage">
     <div class="case-hero" style="--shade:.52">
-      <img class="case-hero__img" data-src="images/australian-vintage-hero.webp" alt="Winemaker marking oak barrels in a barrel store" loading="lazy" decoding="async" style="object-position:50% 50%">
+      <img class="case-hero__img" data-src="/images/australian-vintage-hero.webp" alt="Winemaker marking oak barrels in a barrel store" loading="lazy" decoding="async" style="object-position:50% 50%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
           <span class="case-hero__client">Australian Vintage</span>
@@ -2225,7 +2298,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2234,13 +2307,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-golden-acre">
     <div class="case-hero" style="--shade:.54">
-      <img class="case-hero__img" data-src="images/golden-acre-hero.jpg" alt="Bowl of fresh salad vegetables and grains on a dark slate surface" loading="lazy" decoding="async" style="object-position:30% 50%">
+      <img class="case-hero__img" data-src="/images/golden-acre-hero.jpg" alt="Bowl of fresh salad vegetables and grains on a dark slate surface" loading="lazy" decoding="async" style="object-position:30% 50%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Food and drink</span>
         </div>
         <h1 class="case-hero__title">One trusted weekly view across four major retailers</h1>
@@ -2283,7 +2356,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2292,13 +2365,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-samworth">
     <div class="case-hero" style="--shade:.56">
-      <img class="case-hero__img" data-src="images/baker-shaping-pastry-dough-by-hand.webp" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async" style="object-position:50% 46%">
+      <img class="case-hero__img" data-src="/images/baker-shaping-pastry-dough-by-hand.webp" alt="Baker shaping pastry dough by hand" loading="lazy" decoding="async" style="object-position:50% 46%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Food manufacturing</span>
         </div>
         <h1 class="case-hero__title">One board-ready view across six categories and sixteen competitors</h1>
@@ -2340,7 +2413,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2349,13 +2422,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-vithit">
     <div class="case-hero" style="--shade:.56">
-      <img class="case-hero__img" data-src="images/vithit-hero.webp" alt="Hand holding a Vit Hit can above a meadow of wild flowers" loading="lazy" decoding="async" style="object-position:50% 38%">
+      <img class="case-hero__img" data-src="/images/vithit-hero.webp" alt="Hand holding a Vit Hit can above a meadow of wild flowers" loading="lazy" decoding="async" style="object-position:50% 38%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/vithit-logo-white.png" alt="Vit Hit" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/vithit-logo-white.png" alt="Vit Hit" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Soft drinks</span>
         </div>
         <h1 class="case-hero__title">A self-serve view of sales, promotion, pricing and distribution</h1>
@@ -2389,7 +2462,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2398,13 +2471,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-international-beverage">
     <div class="case-hero" style="--shade:.44">
-      <img class="case-hero__img" data-src="images/international-beverage-hero.webp" alt="Old Pulteney single malt whisky being poured into tasting glasses" loading="lazy" decoding="async" style="object-position:50% 50%">
+      <img class="case-hero__img" data-src="/images/international-beverage-hero.webp" alt="Old Pulteney single malt whisky being poured into tasting glasses" loading="lazy" decoding="async" style="object-position:50% 50%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Spirits</span>
         </div>
         <h1 class="case-hero__title">International Beverage is rebuilding monthly leadership reporting so it no longer depends on one person</h1>
@@ -2451,7 +2524,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2460,14 +2533,14 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-samyang">
     <div class="case-hero case-hero--product">
-      <img class="case-hero__img" data-src="images/samyang-hero.webp" alt="Samyang Ramyeon product photography" loading="lazy" decoding="async">
+      <img class="case-hero__img" data-src="/images/samyang-hero.webp" alt="Samyang Ramyeon product photography" loading="lazy" decoding="async">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
           <span class="case-tag">In progress</span>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Food and drink</span>
         </div>
         <h1 class="case-hero__title">Connecting market demand, distributor sales and supply across five European markets</h1>
@@ -2518,7 +2591,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2527,13 +2600,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-bacardi">
     <div class="case-hero" style="--shade:.68">
-      <img class="case-hero__img" data-src="images/bacardi-hero.webp" alt="Friends laughing together holding Bacardi mojitos at an outdoor festival" loading="lazy" decoding="async" style="object-position:50% 34%">
+      <img class="case-hero__img" data-src="/images/bacardi-hero.webp" alt="Friends laughing together holding Bacardi mojitos at an outdoor festival" loading="lazy" decoding="async" style="object-position:50% 34%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Spirits</span>
         </div>
         <h1 class="case-hero__title">From total trade reporting to connected management insight</h1>
@@ -2592,7 +2665,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2601,13 +2674,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-qts">
     <div class="case-hero" style="--shade:.66">
-      <img class="case-hero__img" data-src="images/qts-hero.webp" alt="Two engineers in hard hats and hi-vis inspecting rooftop cooling plant at a data centre" loading="lazy" decoding="async" style="object-position:50% 44%">
+      <img class="case-hero__img" data-src="/images/qts-hero.webp" alt="Two engineers in hard hats and hi-vis inspecting rooftop cooling plant at a data centre" loading="lazy" decoding="async" style="object-position:50% 44%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Data centres</span>
         </div>
         <h1 class="case-hero__title">Turning a complex maintenance plan into a schedule the operator could trust</h1>
@@ -2649,7 +2722,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2658,13 +2731,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-ilg">
     <div class="case-hero" style="--shade:.58">
-      <img class="case-hero__img" data-src="images/ilg-hero.jpg" alt="Archive photograph of a school orchestra rehearsing" loading="lazy" decoding="async" style="object-position:50% 46%">
+      <img class="case-hero__img" data-src="/images/ilg-hero.jpg" alt="Archive photograph of a school orchestra rehearsing" loading="lazy" decoding="async" style="object-position:50% 46%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Education</span>
         </div>
         <h1 class="case-hero__title">Giving every school head the numbers they can actually influence</h1>
@@ -2705,7 +2778,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2714,13 +2787,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-campari">
     <div class="case-hero" style="--shade:.50">
-      <img class="case-hero__img" data-src="images/campari-hero.webp" alt="Archive photograph of the Campari bar in the Galleria Vittorio Emanuele II, Milan" loading="lazy" decoding="async" style="object-position:50% 46%">
+      <img class="case-hero__img" data-src="/images/campari-hero.webp" alt="Archive photograph of the Campari bar in the Galleria Vittorio Emanuele II, Milan" loading="lazy" decoding="async" style="object-position:50% 46%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Spirits</span>
         </div>
         <h1 class="case-hero__title">Campari UK brings on-trade and off-trade into one view without average of averages that would never match</h1>
@@ -2762,7 +2835,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2771,13 +2844,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-starbucks">
     <div class="case-hero case-hero--product">
-      <img class="case-hero__img" data-src="images/starbucks-hero.webp" alt="Starbucks at-home coffee range packaging" loading="lazy" decoding="async">
+      <img class="case-hero__img" data-src="/images/starbucks-hero.webp" alt="Starbucks at-home coffee range packaging" loading="lazy" decoding="async">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/starbucks-logo-white.png" alt="Starbucks EMEA" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/starbucks-logo-white.png" alt="Starbucks EMEA" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Retail and food service</span>
         </div>
         <h1 class="case-hero__title">From static market reporting to an intelligence layer for commercial teams</h1>
@@ -2842,7 +2915,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2851,13 +2924,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-henkel">
     <div class="case-hero" style="--shade:.64">
-      <img class="case-hero__img" data-src="images/henkel-hero.webp" alt="Technician in gloves and safety glasses applying Loctite thread lock to a bolt" loading="lazy" decoding="async" style="object-position:42% 50%">
+      <img class="case-hero__img" data-src="/images/henkel-hero.webp" alt="Technician in gloves and safety glasses applying Loctite thread lock to a bolt" loading="lazy" decoding="async" style="object-position:42% 50%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Consumer goods</span>
         </div>
         <h1 class="case-hero__title">Seeing category performance at the level where share is actually won and lost</h1>
@@ -2891,7 +2964,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2902,7 +2975,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     <div class="case-hero case-hero--confidential">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
           <span class="case-tag case-tag--confidential">Confidential engagement</span>
         </div>
         <div class="case-hero__brand">
@@ -2941,7 +3014,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -2950,13 +3023,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <section class="case-page case-study" id="case-oracare">
     <div class="case-hero" style="--shade:.60">
-      <img class="case-hero__img" data-src="images/oracare-hero.jpg" alt="Wooden figurines in a row with one picked out in blue" loading="lazy" decoding="async" style="object-position:50% 42%">
+      <img class="case-hero__img" data-src="/images/oracare-hero.jpg" alt="Wooden figurines in a row with one picked out in blue" loading="lazy" decoding="async" style="object-position:50% 42%">
       <div class="case-hero__inner">
         <div class="case-hero__top">
-          <a class="case-hero__back" href="#case-index">&larr; All case studies</a>
+          <a class="case-hero__back" href="/case-studies/">&larr; All case studies</a>
         </div>
         <div class="case-hero__brand">
-          <img class="case-hero__logo" data-src="images/oracare-logo-white.png" alt="Oracare Group" loading="lazy" decoding="async">
+          <img class="case-hero__logo" data-src="/images/oracare-logo-white.png" alt="Oracare Group" loading="lazy" decoding="async">
           <span class="case-hero__eyebrow">Healthcare and dental</span>
         </div>
         <h1 class="case-hero__title">Three dental brands, one set of numbers</h1>
@@ -2989,7 +3062,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
         <div class="case-cta__actions">
           <a class="is-primary" href="#contact">Start a conversation &rarr;</a>
-          <a href="#case-index">All case studies</a>
+          <a href="/case-studies/">All case studies</a>
           <button type="button" class="print-btn" data-print-case>Print / save as PDF</button>
         </div>
       </div>
@@ -3200,7 +3273,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
   <footer class="contact" id="contact">
     <div class="contact__visual">
-      <img data-src="images/blue-light-with-soft-luminous-points.webp" alt="Blue light with soft luminous points" loading="lazy">
+      <img data-src="/images/blue-light-with-soft-luminous-points.webp" alt="Blue light with soft luminous points" loading="lazy">
       <p class="eyebrow eyebrow--section">Start here</p>
       <h2 class="contact__title">Start somewhere <em>real.</em></h2>
       <p class="contact__body">No pitch and no jargon. Tell us what's slowing your commercial decisions down and we'll show you how we'd approach it, including a free assessment.</p>
@@ -3217,7 +3290,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <button class="submit-btn" type="submit">Start a conversation</button>
         <p class="submit-note" id="submitNote" role="status"></p>
       </form>
-      <p class="direct"><a href="mailto:hello@optiadata.com">hello@optiadata.com</a><a class="direct__legal" href="#privacy-policy">Privacy Policy</a><button type="button" class="direct__legal cc-link" data-cookie-settings>Cookie settings</button></p>
+      <p class="direct"><a href="mailto:hello@optiadata.com">hello@optiadata.com</a><a class="direct__legal" href="/privacy/">Privacy Policy</a><button type="button" class="direct__legal cc-link" data-cookie-settings>Cookie settings</button></p>
       <p class="direct__copyright">&copy; 2026 Optia Data Limited. All rights reserved. Company Registration No: 15884308</p>
       <p class="direct__credit">Image rights: <a href="https://nicksmithphotography.com" target="_blank" rel="noopener noreferrer">nicksmithphotography.com</a></p>
     </div>
@@ -3404,19 +3477,59 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         });
       }
 
+      // Every routed view now has a path of its own instead of a fragment.
+      // A fragment never reaches the server, so crawlers and social scrapers
+      // only ever saw the homepage: fifteen case studies were invisible to
+      // search and could not be shared with a preview. This map is the single
+      // source of truth for that, read by tools/build-routes.py, which
+      // pre-renders one real file per path so a direct hit serves finished
+      // HTML rather than depending on this script to assemble it.
+      var ROUTES = {
+        '/about/':                                  'about-page',
+        '/privacy/':                                'privacy-policy',
+        '/case-studies/':                           'case-index',
+        '/case-studies/arla-foods/':                'case-arla',
+        '/case-studies/campari/':                   'case-campari',
+        '/case-studies/starbucks-emea/':            'case-starbucks',
+        '/case-studies/bacardi/':                   'case-bacardi',
+        '/case-studies/australian-vintage/':        'case-australian-vintage',
+        '/case-studies/golden-acre-foods/':         'case-golden-acre',
+        '/case-studies/samworth-brothers/':         'case-samworth',
+        '/case-studies/vit-hit/':                   'case-vithit',
+        '/case-studies/international-beverage/':    'case-international-beverage',
+        '/case-studies/samyang-foods/':             'case-samyang',
+        '/case-studies/qts-data-centres/':          'case-qts',
+        '/case-studies/inspired-learning-group/':   'case-ilg',
+        '/case-studies/henkel/':                    'case-henkel',
+        '/case-studies/tier-one-global-bank/':      'case-tier-one-bank',
+        '/case-studies/oracare-group/':             'case-oracare'
+      };
+      var PATH_FOR = {};
+      for (var routePath in ROUTES) { PATH_FOR[ROUTES[routePath]] = routePath; }
+
+      function normalisePath(p) {
+        return p && p.charAt(p.length - 1) !== '/' ? p + '/' : p;
+      }
+
       // Every route shared one document title, so all fifteen case studies
       // produced identically named tabs, bookmarks and history entries, a
       // screen reader announced no change on navigation, and analytics
       // recorded one title for the whole site. The client names are already
       // in the case index, so the map is read from the DOM rather than
       // duplicated by hand where it could drift.
-      var BASE_TITLE = document.title;
+      //
+      // Read as a literal rather than from document.title, because on a
+      // pre-rendered page document.title is already that page's title: taking
+      // it as the base would have made the homepage inherit whichever case
+      // study the visitor happened to arrive on. build-routes.py fails the
+      // build if this string and the <title> above ever disagree.
+      var BASE_TITLE = 'Optia Data, intelligence practically applied';
       var routeTitles = { 'case-index': 'Case studies', 'about-page': 'About', 'privacy-policy': 'Privacy Policy' };
       document.querySelectorAll('.case-tile').forEach(function (tile) {
-        var href = tile.getAttribute('href') || '';
+        var id = ROUTES[normalisePath(tile.getAttribute('href') || '')];
         var client = tile.querySelector('.case-tile__client');
-        if (href.charAt(0) === '#' && client) {
-          routeTitles[href.slice(1)] = client.textContent.trim() + ' case study';
+        if (id && client) {
+          routeTitles[id] = client.textContent.trim() + ' case study';
         }
       });
 
@@ -3425,8 +3538,14 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         document.title = name ? name + ', Optia Data' : BASE_TITLE;
       }
 
+      // The path decides the view. The hash is left to do the one job it is
+      // still good at: scrolling to a section of the homepage.
+      function routeIdFromLocation() {
+        return ROUTES[normalisePath(location.pathname)] || location.hash.slice(1);
+      }
+
       function applyRoute(targetHash) {
-        var hash = targetHash !== undefined ? targetHash : location.hash.slice(1);
+        var hash = targetHash !== undefined ? targetHash : routeIdFromLocation();
         setRouteTitle(isCaseId(hash) ? hash : '');
         if (isCaseId(hash)) {
           var activePage = document.getElementById(hash);
@@ -3477,22 +3596,51 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         }
       }
 
-      window.addEventListener('hashchange', function () { applyRoute(); });
-      applyRoute();
+      function go(url, id) {
+        if (location.pathname + location.hash !== url) {
+          history.pushState(null, '', url);
+        }
+        applyRoute(id);
+      }
 
-      // Intercept in-page hash links ourselves rather than letting the browser's
-      // native jump-to-anchor race our show/hide logic - this is what caused
+      // Old #case-... links are still out there in bookmarks, emails and
+      // LinkedIn posts, and they must not break. They are honoured, then
+      // rewritten in place to the canonical path, so what gets copied out of
+      // the address bar and recorded by analytics is the real URL. replaceState
+      // rather than a redirect: no extra request, and no junk history entry.
+      var legacyId = location.hash.slice(1);
+      if (PATH_FOR[legacyId] && normalisePath(location.pathname) === '/') {
+        history.replaceState(null, '', PATH_FOR[legacyId]);
+      }
+
+      applyRoute();
+      // popstate is what carries Back and Forward now that navigation changes
+      // the path rather than the fragment. hashchange stays for the case the
+      // visitor edits the fragment in the address bar by hand; applyRoute is
+      // idempotent, so the two firing together costs nothing.
+      window.addEventListener('popstate', function () { applyRoute(); });
+      window.addEventListener('hashchange', function () { applyRoute(); });
+
+      // Intercept in-page links ourselves rather than letting the browser's
+      // native navigation race our show/hide logic - this is what caused
       // "About" (and any other link) to sometimes land back on the still-visible
       // home page when clicked while scrolled down.
-      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      document.querySelectorAll('a[href]').forEach(function (link) {
+        var href = link.getAttribute('href') || '';
+        var routeId = ROUTES[normalisePath(href)];
+        var isHash = href.charAt(0) === '#';
+        if (!routeId && !isHash) { return; }
         link.addEventListener('click', function (event) {
-          var hash = link.getAttribute('href').slice(1);
-          if (!hash) { return; }
+          // Modified clicks belong to the browser. Now that these are real
+          // URLs, "open in new tab" on a case study opens that case study
+          // instead of dumping the visitor on the homepage.
+          if (event.button !== 0 || event.metaKey || event.ctrlKey ||
+              event.shiftKey || event.altKey) { return; }
           event.preventDefault();
-          if (location.hash.slice(1) !== hash) {
-            history.pushState(null, '', '#' + hash);
-          }
-          applyRoute(hash);
+          if (routeId) { go(href, routeId); return; }
+          // A bare href="#" is the Back control, and Back means home.
+          var id = href.slice(1);
+          go(id ? '/#' + id : '/', id);
         });
       });
 
@@ -3525,7 +3673,18 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         }
       }
 
-      if (reduced) {
+      // Landing straight on a case study is not an arrival at the homepage,
+      // and the branded loader has nothing to introduce there. It used to play
+      // in full over the case content, which barely mattered when the only way
+      // in was a click from home, and matters a great deal now these are real
+      // URLs people reach cold from search. Jumped to the finished state
+      // rather than routed through finishIntro, which would still spend 650ms
+      // fading out something the visitor never asked to see.
+      if (document.documentElement.classList.contains('routing-case')) {
+        done = true;
+        if (title) title.classList.add('resolved');
+        intro.classList.add('is-done');
+      } else if (reduced) {
         finishIntro();
       } else {
         var WORD = 'OPTIA', N = 8, R = 6.1;
@@ -4033,7 +4192,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       Some cookies are needed to make this site work. We would also like to
       measure which pages get read, and to recognise the organisations visiting
       us. Neither is essential, so both are entirely your call and you can
-      change your mind at any time. <a href="#privacy-policy">Privacy Policy</a>.
+      change your mind at any time. <a href="/privacy/">Privacy Policy</a>.
     </p>
 
     <div class="cc__row">

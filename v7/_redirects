@@ -3,34 +3,41 @@
 # Every path below was taken from the live Yoast sitemap on 2026-08-12, so this
 # is the complete set of indexed URLs, not a guess.
 #
-# WARNING on the case study block. Sending a real URL to a hash fragment tells
-# Google the destination is "/", so all eight case study pages consolidate into
-# the homepage and their individual rankings are lost. These eight lines are the
-# ones to revisit if v7 gets real case study routes before cutover.
+# The earlier version of this file sent the eight indexed case study URLs to
+# fragments, which tells Google the destination is "/" and consolidates all
+# eight into the homepage. That is now fixed: every case study has a real URL,
+# so each old URL redirects to its own page and keeps whatever ranking it had.
+#
+# NOTE: there is deliberately no rule for /case-studies/. That path is now a
+# real page in this site. A redirect here would shadow it and the case index
+# would be unreachable.
 
 # ---- top level -------------------------------------------------------------
-/about-us/                              /#about-page          301
-/case-studies/                          /#case-index          301
+/about-us/                              /about/               301
 /the-solution/                          /#solutions           301
 /how-we-solve/                          /#approach            301
 /who-you-are/                           /#by-role             301
 /data-challenges/                       /#proved-cases        301
 /service/                               /#solutions           301
 /contact/                               /#contact             301
-/privacy-policy/                        /#privacy-policy      301
+/privacy-policy/                        /privacy/             301
 
 # ---- case studies ----------------------------------------------------------
-/case-study/arla/                       /#case-arla                  301
-/arla-cs/                               /#case-arla                  301
-/case-study/starbucks/                  /#case-starbucks             301
-/case-study/bacardi/                    /#case-bacardi               301
-/case-study/bacardi-2/                  /#case-bacardi               301
-/case-study/av/                         /#case-australian-vintage    301
-/case-study/golden-acre-foods/          /#case-golden-acre           301
-/case-study/vit-hit/                    /#case-vithit                301
+/case-study/arla/                       /case-studies/arla-foods/           301
+/arla-cs/                               /case-studies/arla-foods/           301
+/case-study/starbucks/                  /case-studies/starbucks-emea/       301
+/case-study/bacardi/                    /case-studies/bacardi/              301
+/case-study/bacardi-2/                  /case-studies/bacardi/              301
+/case-study/av/                         /case-studies/australian-vintage/   301
+/case-study/golden-acre-foods/          /case-studies/golden-acre-foods/    301
+/case-study/vit-hit/                    /case-studies/vit-hit/              301
 # BAT is deliberately not published in v7, so this one goes to the index
 # rather than to a page that does not exist.
-/case-study/british-american-tobacco-bat/  /#case-index              301
+/case-study/british-american-tobacco-bat/  /case-studies/                   301
+
+# Anything else under the old /case-study/ prefix lands on the index rather
+# than a 404. Kept last in this block so the named rules above win.
+/case-study/*                           /case-studies/        301
 
 # ---- sales collateral, no v7 equivalent -----------------------------------
 /optia-offer-3/                         /                     301
