@@ -1359,6 +1359,70 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
    the surface never responds to a pointer. */
 .pattern-card { overflow: hidden; cursor: default; }
 
+
+/* ---------- work in progress -------------------------------------------
+   Two engagements are live with nothing delivered to show yet. Rather
+   than publish a thin page or drop the client, the substance sits behind
+   a blur: the shape of the work stays visible, the numbers do not, and a
+   plate says why.
+
+   The blur is a visual treatment, not a way of withholding text. The copy
+   stays in the DOM and stays available to a screen reader, so this holds
+   back a casual scan without hiding published words from anyone reading
+   the page another way. The plate sits first in source order so it is
+   announced before the copy it covers.
+
+   The rule across the top of the plate is a progress bar that never
+   arrives. It is the only moving thing on these pages and it carries the
+   whole idea, so nothing else in the treatment has to. */
+/* Capped, not because the copy is a secret but because a full case study
+   at six pixels of blur is a very long stretch of grey. Clipped rather
+   than cut: every word is still in the document, and print puts it back. */
+.wip { position: relative; isolation: isolate; max-height: clamp(360px, 54vh, 620px); overflow: hidden; }
+.wip__veil { filter: blur(6px); opacity: .55; }
+/* Dissolving as it descends reads as unfinished. A flat blur held all the
+   way to a hard bottom edge reads as a rendering fault. */
+.wip::after { content: ''; position: absolute; z-index: 1; inset: 26% 0 0; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(246,246,241,0) 0%, var(--paper) 82%); }
+
+.wip__plate { position: absolute; z-index: 2; top: clamp(24px, 6vw, 76px); left: 50%; transform: translateX(-50%);
+  width: min(31rem, calc(100% - 2 * var(--gutter))); padding: 30px clamp(22px, 3vw, 32px) 26px;
+  overflow: hidden; background: var(--white); border: 1px solid var(--line-dark);
+  box-shadow: 0 22px 50px -30px rgba(5,7,13,.45); }
+.wip__bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; overflow: hidden; background: rgba(72,40,229,.13); }
+.wip__bar::after { content: ''; position: absolute; top: 0; bottom: 0; left: -36%; width: 36%;
+  background: var(--blue); animation: wip-run 3.2s cubic-bezier(.62,.02,.34,1) infinite; }
+@keyframes wip-run { to { left: 100%; } }
+.wip__eyebrow { margin: 0 0 10px; font-size: 11px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase; color: var(--blue); }
+.wip__line { margin: 0; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(1.5rem, 2.7vw, 2.05rem); line-height: 1.08; letter-spacing: -.03em; }
+.wip__note { margin: 12px 0 0; font-size: .92rem; line-height: 1.45; opacity: .72; }
+
+/* Index tiles for the same two: enough shape to see a story is coming,
+   not enough to read. The client name and the invitation stay sharp. */
+.case-tile--wip .case-tile__title,
+.case-tile--wip .case-tile__stats,
+.case-tile--wip .case-tile__excerpt { filter: blur(4px); opacity: .52; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Parked short of the end, which says the same thing without moving. */
+  .wip__bar::after { animation: none; left: 0; width: 58%; }
+}
+@media (max-width: 640px) {
+  .wip__veil { filter: blur(4px); }
+  .wip__plate { top: 16px; padding: 24px 20px 22px; }
+  .case-tile--wip .case-tile__title,
+  .case-tile--wip .case-tile__stats,
+  .case-tile--wip .case-tile__excerpt { filter: blur(3px); }
+}
+/* Print resolves it: a saved PDF is a deliberate act, and a page of blur
+   is not what anyone means to file. */
+@media print {
+  .wip { max-height: none; overflow: visible; }
+  .wip__veil { filter: none; opacity: 1; }
+  .wip::after { display: none; }
+  .wip__plate { position: static; transform: none; width: auto; margin: 0 0 var(--space-s); box-shadow: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1901,24 +1965,24 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
             <span class="case-tile__meta">Read the case study &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-international-beverage" data-sector="Consumer" data-name="International Beverage" data-order="8">
+        <a class="case-tile case-tile--wip" href="#case-international-beverage" data-sector="Consumer" data-name="International Beverage" data-order="8">
           <span class="case-tile__media"><img data-src="images/international-beverage-hero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" style="object-position:50% 50%"><span class="case-tile__badge"><img data-src="images/international-beverage-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">International Beverage</span>
             <span class="case-tile__title">Monthly leadership reporting, no longer built by hand by one person</span>
             <span class="case-tile__stats"><b>6 data sources</b><b>156 weeks loaded</b></span>
             <span class="case-tile__excerpt">The monthly leadership pack was built by hand by a single insight manager, across seven sources on different calendars. Optia is building one governed model to feed both the Power BI environment and the existing PowerPoint, with history extended from 13 weeks to 156.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
+            <span class="case-tile__meta">Watch this space &rarr;</span>
           </span>
         </a>
-        <a class="case-tile" href="#case-samyang" data-sector="Consumer" data-name="Samyang Foods" data-order="9">
+        <a class="case-tile case-tile--wip" href="#case-samyang" data-sector="Consumer" data-name="Samyang Foods" data-order="9">
           <span class="case-tile__media case-tile__media--product"><img data-src="images/samyang-hero.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><span class="case-tile__badge"><img data-src="images/samyang-foods-logo-colour.png" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="case-tag">In progress</span></span>
           <span class="case-tile__body">
             <span class="case-tile__client">Samyang Foods</span>
             <span class="case-tile__title">Sell-out, sell-through and sell-in, side by side</span>
             <span class="case-tile__stats"><b>5 European markets</b><b>3 data layers</b></span>
             <span class="case-tile__excerpt">Buldak's rapid European growth left three views of the business being managed separately, with no simple way to explain why they disagreed. Optia is building one model across five markets so demand, distributor sales and supply can be compared directly.</span>
-            <span class="case-tile__meta">Read the case study &rarr;</span>
+            <span class="case-tile__meta">Watch this space &rarr;</span>
           </span>
         </a>
         <a class="case-tile" href="#case-qts" data-sector="Engineering" data-name="QTS Data Centres" data-order="10">
@@ -2066,12 +2130,12 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="case-section">
         <h2>The challenge</h2>
         <p>The UK and Ireland represent Australian Vintage's largest market region, making accurate category reporting essential for leadership updates, customer conversations and brand planning. Each month, the category team had to consolidate and validate market data manually before it could be used.</p>
-        <p>Two issues demonstrated the commercial risk. A recurring classification problem within the no and low alcohol category placed a significant volume of sales under an unidentified varietal, misstating approximately &pound;26 million of category performance. This was a restatement of how sales were reported, not revenue recovered. In a separate delivery, around 793 SKUs disappeared from the reported market following changes to product classifications. The products had not stopped selling; the reported view simply no longer included them correctly.</p>
+        <p>Two issues demonstrated the commercial risk. A recurring classification problem within the no and low alcohol category placed a significant volume of sales under an unidentified varietal and private label, misstating approximately &pound;26 million of category performance. This was a restatement of how sales were reported, not revenue recovered. In a separate delivery, around 793 SKUs disappeared from the reported market following changes to product classifications. The products had not stopped selling; the reported view simply no longer included them correctly.</p>
         <p>Without detailed checks, these issues could have affected board reporting, category conclusions and the interpretation of brand and competitor performance.</p>
       </div>
       <div class="case-section">
         <h2>What we changed</h2>
-        <p>Optia built an 11-page reporting environment covering total category performance, top brands and manufacturers, no and low alcohol, country of origin, brand and sub-brand, varietal, wine colour, retailer performance, and value and volume market share across four-week, twelve-week, financial year-to-date and moving annual total views. Ireland is reported separately in local currency for the regional team.</p>
+        <p>Optia built a reporting environment covering total category performance, top brands and manufacturers, no and low alcohol, country of origin, brand and sub-brand, varietal, wine colour, retailer performance, and value and volume market share across four-week, twelve-week, financial year-to-date and moving annual total views. Ireland is reported separately in local currency for the regional team.</p>
         <p>Optia introduced validation controls that compare each new delivery against expected product counts, category totals, classifications and historical patterns. When something changes unexpectedly, the system flags it for investigation before publication. This process identified both the varietal classification issue and the disappearance of around 793 SKUs. Optia documented the evidence, worked with the source provider to establish what had happened, and secured corrected historical data.</p>
         <p>The environment was also designed to be visual, intuitive and easy to navigate, so colleagues who don't work with market data every day could move from a high-level category view into the detail behind a particular brand, SKU, retailer or varietal without help. Training and rollout support helped the wider team use the dashboard confidently.</p>
       </div>
@@ -2135,7 +2199,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h2>What we changed</h2>
         <p>Optia took responsibility for processing and harmonising Golden Acre's weekly data across Tesco, Sainsbury's, Asda and Morrisons, delivered every Wednesday through a repeatable process designed around the commercial team's reporting timetable.</p>
         <p>Working with Golden Acre, Optia built and maintained a practical classification structure separating Halal, Polish and other international food products, and resolved around 2,700 incomplete SKU records. Optia also processed, standardised and loaded 104 weeks of historical data, giving Golden Acre two complete years of comparable performance for the first time.</p>
-        <p>When a five-week gap appeared in the Asda data, Optia identified the missing periods, documented the issue, and coordinated the correction and reload with the source provider rather than leaving an unexplained break in the reporting. In 2026, Optia migrated the complete data process to Snowflake, creating a scalable foundation for additional data, reporting and analysis.</p>
+        <p>When a five-week gap appeared in the Asda data, Optia identified the missing periods, documented the issue, and coordinated the correction and reload with the source provider rather than leaving an unexplained break in the reporting.</p>
       </div>
       <div class="case-section">
         <h2>The results</h2>
@@ -2193,7 +2257,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h2>What we changed</h2>
         <p>Following a competitive tender, Optia brought together five external sources (NielsenIQ EPOS, Kantar, Dunnhumby, Sakana and Nectar) with internal category submissions to create a single, maintained view of the GB market. The model standardises definitions and calculations across all six categories, allowing like-for-like comparison. During the transition, users could switch between the new standardised calculations and the previous methodology to build confidence in the new approach.</p>
         <p>The resulting Power BI dashboard covers total GB market performance, individual category analysis, retailer performance, and competitor benchmarking against 16 strategically relevant names including Greencore, Cranswick, Pilgrim's, Compleat Food Group, Pukka Pies and Finnebrogue. It is delivered into Samworth's own Power BI tenant with SharePoint ingestion, so the group keeps control of access, governance and distribution.</p>
-        <p>As part of implementation, Optia carried out a structured data quality review across source files, calculations and outputs, identifying several previously undetected reporting errors, which were investigated, corrected and incorporated into the new standardised process. The number of errors and their materiality are not recorded.</p>
+        <p>As part of implementation, Optia carried out a structured data quality review across source files, calculations and outputs, identifying several previously undetected reporting errors, which were investigated, corrected and incorporated into the new standardised process.</p>
       </div>
       <div class="case-section">
         <h2>The results</h2>
@@ -2254,7 +2318,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="case-section">
         <h2>The results</h2>
         <p>Vit Hit gained a consistent view of its performance across three categories and three market levels, with sales, promotion, pricing and distribution visible together: three years of comparable weekly history, visibility of distribution alongside sales and promotion, and a self-serve dashboard the sales team could use to investigate its own commercial questions. The monthly refresh became a regular source of insight, giving users a clearer view of what had changed and where further action might be required.</p>
-        <p>The evidenced outcome is a change in analytical capability. No distribution gain, sales change or decision is recorded.</p>
       </div>
       <div class="case-cta">
         <h2>Is this your problem too?</h2>
@@ -2285,34 +2348,38 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </div>
     </div>
     <div class="case-study__inner">
-      <p class="case-note">This engagement is live. The figures below are current scope and targets, not delivered results.</p>
-      <div class="case-stats">
-        <div class="case-stat"><b>6</b><span>data sources brought together in one reporting model</span></div>
-        <div class="case-stat"><b>20</b><span>markets covered in the leadership reporting framework</span></div>
-        <div class="case-stat"><b>156</b><span>weeks of history loaded for long-term market analysis</span></div>
-        <div class="case-stat"><b>3</b><span>priority countries: the UK, the US and China</span></div>
-      </div>
-      <div class="case-section">
-        <h2>The challenge</h2>
-        <p>International Beverage, the spirits business behind Old Pulteney, Balblair, Speyburn and Caorunn, relied on one insight manager to build its monthly leadership reporting by hand. Each cycle involved collecting data from multiple sources, refreshing Excel templates and pasting static outputs into PowerPoint.</p>
-        <p>The process depended heavily on his knowledge of where the data came from and how the final report needed to be assembled. Market data, internal shipments, distributor depletions, brand health information and annual market measures all arrived at different frequencies and followed different reporting calendars, meaning much of the consolidation still happened manually behind the scenes.</p>
-      </div>
-      <div class="case-section">
-        <h2>What we're changing</h2>
-        <p>Optia is creating a single reporting model bringing together six external and internal data feeds, with initial scope covering market data for the UK and US, distributor depletion information from China, internal shipment data, and IWSR and Kantar sources. The underlying model also resolves differences in reporting calendars, since market data may follow a 13-period structure while International Beverage reports monthly against an October financial year. The leadership reporting framework covers 20 markets in total; the UK, the US and China are the initial scope being built first, not the whole framework.</p>
-        <p>Rather than replacing the existing leadership pack, the same governed model will serve two outputs: an interactive Power BI environment and the existing monthly PowerPoint, both generated from the same numbers. Optia has also loaded 156 weeks of historical data, up from the 13 weeks previously available, giving the insight team a much stronger basis for interpreting seasonality and momentum.</p>
-      </div>
-      <div class="case-section">
-        <h2>Expected results</h2>
-        <p>The first live reporting cycle is targeted for September 2026. Once operational, one governed model will feed both the interactive dashboard and the leadership PowerPoint, market, shipment and depletion data will be reconciled in one place, and less of the insight manager's time will be spent preparing the report rather than explaining it.</p>
-        <p>The only change delivered so far is the market history, from 13 weeks to 156.</p>
-      </div>
-      <div class="case-quotes">
-        <h2>In their words</h2>
-        <blockquote class="case-quote">
-          <p>&ldquo;I am basically the power user and I am essentially the person who is doing all this manual work. Really my time should be spent doing more insight work rather than data analysis.&rdquo;</p>
-          <cite><b>Category and Consumer Insight Manager, International Beverage</b></cite>
-        </blockquote>
+      <div class="wip">
+        <div class="wip__plate">
+          <span class="wip__bar" aria-hidden="true"></span>
+          <p class="wip__eyebrow">Work in progress</p>
+          <p class="wip__line">Watch this space.</p>
+          <p class="wip__note">First live reporting cycle targeted for September 2026.</p>
+        </div>
+        <div class="wip__veil">
+          <div class="case-stats">
+            <div class="case-stat"><b>6</b><span>data sources brought together in one reporting model</span></div>
+            <div class="case-stat"><b>20</b><span>markets covered in the leadership reporting framework</span></div>
+            <div class="case-stat"><b>156</b><span>weeks of history loaded for long-term market analysis</span></div>
+            <div class="case-stat"><b>3</b><span>priority countries: the UK, the US and China</span></div>
+          </div>
+          <div class="case-section">
+            <h2>The challenge</h2>
+            <p>International Beverage, the spirits business behind Old Pulteney, Balblair, Speyburn and Caorunn, relied on one insight manager to build its monthly leadership reporting by hand. Each cycle involved collecting data from multiple sources, refreshing Excel templates and pasting static outputs into PowerPoint.</p>
+            <p>The process depended heavily on his knowledge of where the data came from and how the final report needed to be assembled. Market data, internal shipments, distributor depletions, brand health information and annual market measures all arrived at different frequencies and followed different reporting calendars, meaning much of the consolidation still happened manually behind the scenes.</p>
+          </div>
+          <div class="case-section">
+            <h2>What we're changing</h2>
+            <p>Optia is creating a single reporting model bringing together six external and internal data feeds, with initial scope covering market data for the UK and US, distributor depletion information from China, internal shipment data, and IWSR and Kantar sources. The underlying model also resolves differences in reporting calendars, since market data may follow a 13-period structure while International Beverage reports monthly against an October financial year. The leadership reporting framework covers 20 markets in total; the UK, the US and China are the initial scope being built first, not the whole framework.</p>
+            <p>Rather than replacing the existing leadership pack, the same governed model will serve two outputs: an interactive Power BI environment and the existing monthly PowerPoint, both generated from the same numbers. Optia has also loaded 156 weeks of historical data, up from the 13 weeks previously available, giving the insight team a much stronger basis for interpreting seasonality and momentum.</p>
+          </div>
+          <div class="case-quotes">
+            <h2>In their words</h2>
+            <blockquote class="case-quote">
+              <p>&ldquo;I am basically the power user and I am essentially the person who is doing all this manual work. Really my time should be spent doing more insight work rather than data analysis.&rdquo;</p>
+              <cite><b>Category and Consumer Insight Manager, International Beverage</b></cite>
+            </blockquote>
+          </div>
+        </div>
       </div>
       <div class="case-cta">
         <h2>Is this your problem too?</h2>
@@ -2344,33 +2411,42 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </div>
     </div>
     <div class="case-study__inner">
-      <p class="case-note">This engagement is live. The figures below are current scope and targets, not delivered results.</p>
-      <div class="case-stats">
-        <div class="case-stat"><b>5</b><span>European markets brought into one consistent commercial model</span></div>
-        <div class="case-stat"><b>3</b><span>data layers connected: sell-out, sell-through and sell-in</span></div>
-        <div class="case-stat"><b>2 days</b><span>per market of manual Excel preparation targeted for removal</span></div>
-        <div class="case-stat"><b>6 weeks</b><span>from sign-off to the first dashboards</span></div>
-      </div>
-      <div class="case-section">
-        <h2>The challenge</h2>
-        <p>Samyang Foods has expanded rapidly across Europe, driven by the growth of the Buldak brand, managed from Amsterdam across the UK, Germany, France, the Netherlands and Poland. Each market came with different data structures, retailer definitions and product classifications, and three different views of the business (retail market data, distributor files, and internal SAP shipments) were being managed separately.</p>
-        <p>When those numbers disagreed, the team had no simple way to explain why, which mattered commercially: rapid growth had already created reported stock pressure, while major retail relationships in the Netherlands and Germany were reported as becoming harder to manage. The insight team was spending roughly two days per market preparing data before analysis could begin.</p>
-      </div>
-      <div class="case-section">
-        <h2>What we're changing</h2>
-        <p>Optia is creating a common data model across all five countries, bringing together sell-out, sell-through and sell-in, combining retail audit data with internal SAP shipments and distributor reporting under a consistent product structure so a product can be compared the same way from Warsaw to Manchester. QA complaints and trade marketing activity are also in scope. The model is delivered through Power BI.</p>
-        <p>The most important change is the ability to compare the three layers side by side, giving insight and supply chain teams a shared evidence base to investigate whether a gap is caused by inventory build, distributor reporting, retail coverage, supply constraints, or a genuine change in demand. The new model will also allow distributor-declared performance to be compared with independently measured retail coverage. It is designed to make the difference between the three layers explainable, not to make distributor-reported and retail-measured numbers agree: syndicated retail data covers only the measured part of the market.</p>
-      </div>
-      <div class="case-section">
-        <h2>Expected results</h2>
-        <p>The first dashboards are targeted within six weeks of sign-off. Once operational, the model is designed to give Samyang one consistent view across five European markets, sell-out, sell-through and sell-in visible together, manual preparation time returned to the insight team, and a stronger basis for range, supply and market planning as the Buldak business continues to expand.</p>
-      </div>
-      <div class="case-quotes">
-        <h2>In their words</h2>
-        <blockquote class="case-quote">
-          <p>&ldquo;You have some great charts about companies spending 80% of the time cleaning the data and 20% using the actual numbers. Actually you can change this to 95 to 5. Probably our case. And I am not joking.&rdquo;</p>
-          <cite><b>Team Leader, Strategic Planning, Samyang</b></cite>
-        </blockquote>
+      <div class="wip">
+        <div class="wip__plate">
+          <span class="wip__bar" aria-hidden="true"></span>
+          <p class="wip__eyebrow">Work in progress</p>
+          <p class="wip__line">Watch this space.</p>
+          <p class="wip__note">First dashboards targeted within six weeks of sign-off.</p>
+        </div>
+        <div class="wip__veil">
+          <div class="case-stats">
+            <div class="case-stat"><b>5</b><span>European markets brought into one consistent commercial model</span></div>
+            <div class="case-stat"><b>3</b><span>data layers connected: sell-out, sell-through and sell-in</span></div>
+            <div class="case-stat"><b>2 days</b><span>per market of manual Excel preparation targeted for removal</span></div>
+            <div class="case-stat"><b>6 weeks</b><span>from sign-off to the first dashboards</span></div>
+          </div>
+          <div class="case-section">
+            <h2>The challenge</h2>
+            <p>Samyang Foods has expanded rapidly across Europe, driven by the growth of the Buldak brand, managed from Amsterdam across the UK, Germany, France, the Netherlands and Poland. Each market came with different data structures, retailer definitions and product classifications, and three different views of the business (retail market data, distributor files, and internal SAP shipments) were being managed separately.</p>
+            <p>When those numbers disagreed, the team had no simple way to explain why, which mattered commercially: rapid growth had already created reported stock pressure, while major retail relationships in the Netherlands and Germany were reported as becoming harder to manage. The insight team was spending roughly two days per market preparing data before analysis could begin.</p>
+          </div>
+          <div class="case-section">
+            <h2>What we're changing</h2>
+            <p>Optia is creating a common data model across all five countries, bringing together sell-out, sell-through and sell-in, combining retail audit data with internal SAP shipments and distributor reporting under a consistent product structure so a product can be compared the same way from Warsaw to Manchester. QA complaints and trade marketing activity are also in scope. The model is delivered through Power BI.</p>
+            <p>The most important change is the ability to compare the three layers side by side, giving insight and supply chain teams a shared evidence base to investigate whether a gap is caused by inventory build, distributor reporting, retail coverage, supply constraints, or a genuine change in demand. The new model will also allow distributor-declared performance to be compared with independently measured retail coverage. It is designed to make the difference between the three layers explainable, not to make distributor-reported and retail-measured numbers agree: syndicated retail data covers only the measured part of the market.</p>
+          </div>
+          <div class="case-section">
+            <h2>Expected results</h2>
+            <p>The first dashboards are targeted within six weeks of sign-off. Once operational, the model is designed to give Samyang one consistent view across five European markets, sell-out, sell-through and sell-in visible together, manual preparation time returned to the insight team, and a stronger basis for range, supply and market planning as the Buldak business continues to expand.</p>
+          </div>
+          <div class="case-quotes">
+            <h2>In their words</h2>
+            <blockquote class="case-quote">
+              <p>&ldquo;You have some great charts about companies spending 80% of the time cleaning the data and 20% using the actual numbers. Actually you can change this to 95 to 5. Probably our case. And I am not joking.&rdquo;</p>
+              <cite><b>Team Leader, Strategic Planning, Samyang</b></cite>
+            </blockquote>
+          </div>
+        </div>
       </div>
       <div class="case-cta">
         <h2>Is this your problem too?</h2>
@@ -2438,7 +2514,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
           </div>
           <div class="case-phase__block">
             <span class="case-phase__label">The results</span>
-            <p>One dashboard replacing the previous spreadsheet process, automated KPI reporting across commercial and operational sources, and manual preparation removed from the recurring reporting cycle. No measured outcome is yet recorded for this project: the 40 hours and the $40,000 belong to project 1 only.</p>
+            <p>One dashboard replacing the previous spreadsheet process, automated KPI reporting across commercial and operational sources, and manual preparation removed from the recurring reporting cycle.</p>
           </div>
         </div>
       </div>
@@ -2484,7 +2560,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="case-section">
         <h2>The challenge</h2>
         <p>QTS needed to build the planned preventive maintenance schedule for a new 45MW hyperscale data centre containing thousands of assets across twelve equipment classes and three separate construction handover phases. Every maintenance date depended on a network of operational constraints: redundant systems couldn't be taken offline together, cooling equipment had seasonal restrictions, and some assets shared physical spaces or needed maintenance in a defined sequence.</p>
-        <p>The existing plan, built manually in SmartSheets and supported by the detailed knowledge of the Operational Readiness Director, was around 90% complete. The problem was the final 10%: with thousands of interconnected decisions, there was no simple way to demonstrate every rule had been respected. The plan depended on the sustained concentration of one experienced individual who also had a new site to bring into operation.</p>
+        <p>The existing plan, built manually by experienced, time-poor in-house individuals, was inconsistent and flawed. The problem was the thousands of interconnected decisions adding pressure and mismatches in scheduling: there was no simple way to demonstrate every rule had been respected. The plan depended on the sustained concentration of one experienced individual who also had a new site to bring into operation.</p>
       </div>
       <div class="case-section">
         <h2>What we changed</h2>
@@ -2494,8 +2570,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </div>
       <div class="case-section">
         <h2>The results</h2>
-        <p>QTS received a fully deconflicted annual maintenance calendar covering the 45MW site, giving a controlled basis for committing dates to engineers and vendors. When the construction programme changed, the same approach compressed twelve months into nine and a half and produced the revised schedule within five days. The European implementation has since become a reference point for the wider organisation, with interest from the US team in applying the same model. That is interest, not a completed second deployment.</p>
-        <p>The duration of the equivalent manual replan is not recorded, so the five-day turnaround cannot be stated as a saving.</p>
+        <p>QTS received a fully deconflicted annual maintenance calendar covering the 45MW site, giving a controlled basis for committing dates to engineers and vendors. When the construction programme changed, the same approach compressed twelve months into nine and a half and produced the revised schedule within five days. The European implementation has since become a reference point for the wider organisation, with interest from the US team in applying the same model.</p>
       </div>
       <div class="case-quotes">
         <h2>In their words</h2>
@@ -2552,7 +2627,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="case-section">
         <h2>The results</h2>
         <p>The former Finance Director reports that the dashboards now form the basis of monthly school-by-school discussions. Heads and nursery managers receive information focused on the parts of the business they can influence, while the group can compare occupancy, admissions conversion, revenue and payroll performance across settings using consistent definitions, allowing leadership to see which settings are performing well and investigate what others can learn from them.</p>
-        <p>No claim is made that occupancy, admissions conversion or staff cost improved as a result.</p>
       </div>
       <div class="case-quotes">
         <h2>In their words</h2>
@@ -2604,7 +2678,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="case-section">
         <h2>What we changed</h2>
         <p>Optia built the Total Trade model in the reporting layer rather than assuming the sources could simply be joined together, aligning category definitions and normalising naming while preserving genuine differences. Selecting off-trade distribution returns the appropriate weighted distribution measure, while selecting on-trade returns the physical outlet count, so the dashboard never averages or combines measures that don't mean the same thing.</p>
-        <p>Optia also built controls around period alignment: if the underlying periods didn't match, a Total Trade figure simply wasn't published, prioritising a correct answer over an apparently complete one. The finished 14-page reporting environment spans Total Trade market and supplier views, brand scorecards for Campari, Aperol, Courvoisier and Wray &amp; Nephew, and consumer funnel measures.</p>
+        <p>Optia also built controls around period alignment: if the underlying periods didn't match, a Total Trade figure simply wasn't published, prioritising a correct answer over an apparently complete one. The finished reporting environment spans Total Trade market and supplier views, brand scorecards for Campari, Aperol, Courvoisier and Wray &amp; Nephew, and consumer funnel measures.</p>
         <p>In November 2025, Optia completed a full knowledge transfer to Campari's application support team, and the monthly refresh is now run internally.</p>
       </div>
       <div class="case-section">
@@ -2745,7 +2819,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       </div>
       <div class="case-section">
         <h2>The results</h2>
-        <p>The project created one consolidated source of UK market data across eleven categories, with a consistent view from total category down to individual SKU, competitor and private label performance alongside Henkel's own brands, and two years of weekly history for understanding trends. The environment shows where share is moving, what is driving it, and where the next commercial action might be required. No share, revenue or efficiency gain is attributed to it.</p>
+        <p>The project created one consolidated source of UK market data across eleven categories, with a consistent view from total category down to individual SKU, competitor and private label performance alongside Henkel's own brands, and two years of weekly history for understanding trends. The environment shows where share is moving, what is driving it, and where the next commercial action might be required.</p>
       </div>
       <div class="case-cta">
         <h2>Is this your problem too?</h2>
@@ -2797,12 +2871,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <h2>The results</h2>
         <p>The programme has created a more centralised approach to managing client information across the regional KYC operation: a consistent client data management process across multiple jurisdictions, automated daily user activity monitoring, stable support through high-volume regulatory windows, and platform migration delivered without disrupting the regulatory cycle. Success here is measured by what doesn't happen: no critical outage, no broken regulatory cycle, no Priority 1 incident during the peak window.</p>
       </div>
-      <div class="case-quotes">
-        <h2>In their words</h2>
-        <blockquote class="case-quote case-quote--none">
-          <p>Client quotes withheld under confidentiality agreement.</p>
-        </blockquote>
-      </div>
       <div class="case-cta">
         <h2>Is this your problem too?</h2>
         <p>Tell us what is slowing your commercial decisions down and we will show you how we would approach it, including a free assessment.</p>
@@ -2850,7 +2918,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="case-section">
         <h2>The results</h2>
         <p>Individual practices could continue operating locally, while the group gained a common view across brands and countries: a consolidated source of practice data across three brands and multiple countries, existing management reporting replicated and extended within a shared dashboard, and a consistent monthly reporting cycle. That made it easier to compare performance across the estate and understand how individual practices contributed to the group result.</p>
-        <p>There is no baseline, no measured reduction in preparation time, no adoption figure and no financial result. The case rests on a structural change to how the data is prepared.</p>
       </div>
       <div class="case-cta">
         <h2>Is this your problem too?</h2>
