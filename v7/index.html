@@ -3404,8 +3404,30 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         });
       }
 
+      // Every route shared one document title, so all fifteen case studies
+      // produced identically named tabs, bookmarks and history entries, a
+      // screen reader announced no change on navigation, and analytics
+      // recorded one title for the whole site. The client names are already
+      // in the case index, so the map is read from the DOM rather than
+      // duplicated by hand where it could drift.
+      var BASE_TITLE = document.title;
+      var routeTitles = { 'case-index': 'Case studies', 'about-page': 'About', 'privacy-policy': 'Privacy Policy' };
+      document.querySelectorAll('.case-tile').forEach(function (tile) {
+        var href = tile.getAttribute('href') || '';
+        var client = tile.querySelector('.case-tile__client');
+        if (href.charAt(0) === '#' && client) {
+          routeTitles[href.slice(1)] = client.textContent.trim() + ' case study';
+        }
+      });
+
+      function setRouteTitle(hash) {
+        var name = routeTitles[hash];
+        document.title = name ? name + ', Optia Data' : BASE_TITLE;
+      }
+
       function applyRoute(targetHash) {
         var hash = targetHash !== undefined ? targetHash : location.hash.slice(1);
+        setRouteTitle(isCaseId(hash) ? hash : '');
         if (isCaseId(hash)) {
           var activePage = document.getElementById(hash);
           if (activePage) {
