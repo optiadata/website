@@ -1,0 +1,179 @@
+{
+  "_README": "Source of truth for the Optia Data company record. The company information page, its structured data and llms.txt are all generated from this file by tools/build-knowledge-layer.py. The site has no build step, so that script is run by hand after any change here. Every value carries a public source: either the company register or text published on this site.",
+
+  "site": {
+    "origin": "https://optiadata.com",
+    "trailingSlash": true,
+    "knowledgePagePath": "/company-data/",
+    "caseStudyUrlStyle": "hash",
+    "caseStudyUrlPattern": "{origin}/#{id}"
+  },
+
+  "company": {
+    "name": "Optia Data",
+    "legalName": "Optia Data Ltd",
+    "alternateName": ["Optia"],
+    "companyNumber": "15884308",
+    "description": "Optia Data is a data and AI consultancy that harmonises syndicated market, retailer and internal data into governed commercial reporting for consumer goods, retail, financial services, education, engineering and healthcare organisations.",
+    "founded": "2024-08-07",
+    "email": "hello@optiadata.com",
+    "privacyEmail": "privacy@optiadata.com",
+    "industryClassification": {
+      "scheme": "UK SIC 2007",
+      "code": "62020",
+      "label": "Information technology consultancy activities"
+    },
+    "address": {
+      "_policy": "Structured data publishes locality and country only. The full registered office appears once, in the Company facts table, as a legal disclosure rather than a location signal.",
+      "addressLocality": "Oxfordshire",
+      "addressCountry": "GB",
+      "registeredOfficeFull": "First Floor, 1 Des Roches Square, Witan Way, Witney, Oxfordshire, OX28 4BE, England"
+    },
+    "areaServed": ["GB", "ES", "DE", "AE", "IN", "US"],
+    "locations": [
+      "London", "Barcelona", "Nuremberg", "Abu Dhabi", "Bangalore", "Chicago", "New York"
+    ]
+  },
+
+  "socialProfiles": [
+    "https://www.linkedin.com/company/optia-data/",
+    "https://find-and-update.company-information.service.gov.uk/company/15884308",
+    "https://microsites.nielseniq.com/partnernetwork/apps/optia-data/"
+  ],
+
+  "services": [
+    {
+      "id": "foundation",
+      "name": "Foundation: the right data",
+      "description": "Optia Data brings syndicated market data, retailer data and internal systems into one harmonised, analysis-ready baseline. Discrepancies are caught and resolved before they reach category reporting, a board pack or a buyer meeting."
+    },
+    {
+      "id": "context",
+      "name": "Context: giving the data meaning",
+      "description": "Optia Data applies each client's own category definitions, hierarchies and commercial measures to the harmonised baseline, so market, brand, retailer and internal figures can be compared without averaging across incompatible periods or definitions."
+    },
+    {
+      "id": "intelligence",
+      "name": "Intelligence: knowing what to do next",
+      "description": "Optia Data builds reporting, dashboards and analysis on the governed baseline, and recommends where predictive modelling, workflow automation or AI assistance genuinely fits rather than applying it by default."
+    },
+    {
+      "id": "governance",
+      "name": "Governance and data engineering",
+      "description": "Optia Data runs client data processes in a code-versioned and data-versioned setup with full lineage of every change. Every delivered output has a named analyst behind it who has checked the number."
+    }
+  ],
+
+  "expertise": [
+    "Syndicated market data harmonisation",
+    "Retailer EPOS and sell-out data",
+    "Category and market performance measurement",
+    "Commercial reporting and dashboard delivery",
+    "Promotional evaluation",
+    "Product and category hierarchy mapping",
+    "Data lineage and versioning",
+    "Multi-market and multi-source reconciliation"
+  ],
+
+  "industries": [
+    "Consumer goods and retail",
+    "Financial services",
+    "Education",
+    "Engineering",
+    "Health"
+  ],
+
+  "dataSources": ["NielsenIQ", "Nielsen", "Kantar", "GfK", "Retailer EPOS data", "Client internal systems"],
+  "technologies": ["Power BI", "Snowflake", "Microsoft", "Google", "NVIDIA", "InfoSum"],
+
+  "partners": [
+    "NielsenIQ Partner Network", "Kantar", "GfK", "Google", "Microsoft",
+    "NVIDIA", "Snowflake", "InfoSum", "CommSol", "Anextere"
+  ],
+
+  "certifications": [
+    { "name": "ISO/IEC 27001:2022", "note": "Information security management, stated in the Core section of the site." },
+    { "name": "SOC 2 Type II", "note": "Published as a badge in the certification row." },
+    { "name": "GDPR", "note": "Published as a badge in the certification row." },
+    { "name": "HIPAA", "note": "Published as a badge in the certification row." }
+  ],
+
+  "people": [],
+  "_peopleNote": "No Optia Data employee is named anywhere on the public v7 site; the About page refers to 'our founder' without a name. Person schema is therefore omitted entirely. Personal contact details, dates of birth and non-work email addresses are excluded from all output by rule.",
+
+  "clients": [
+    "Arla Foods", "Campari UK", "Starbucks EMEA", "Bacardi", "Australian Vintage",
+    "Golden Acre Foods", "Samworth Brothers", "Vit Hit", "International Beverage",
+    "Samyang Foods", "QTS Data Centres", "Inspired Learning Group", "Henkel", "Oracare Group"
+  ],
+  "_clientsNote": "Each client listed here has a published case study of its own. The fifteenth case study is a confidential engagement, published only as 'A Tier-One Global Bank' and never named. Only clients with a published case study are listed.",
+
+  "caseStudies": [
+    { "id": "case-arla", "client": "Arla Foods", "sector": "Consumer",
+      "title": "One trusted view of brand and category performance across 16 markets",
+      "summary": "Arla Foods replaced a 20-day monthly reporting process with an always-ready view of market, brand, category and retailer performance across 16 markets, cutting production of monthly market reporting from 20 days to around 10 minutes." },
+    { "id": "case-campari", "client": "Campari UK", "sector": "Consumer",
+      "title": "On-trade and off-trade in one view, without an average of averages",
+      "summary": "Campari UK brought on-trade and off-trade performance into one Total Trade view across four reconciled data sources and 14 dashboard pages, while preserving the differences between the two channels. Campari's own team now runs the monthly refresh." },
+    { "id": "case-starbucks", "client": "Starbucks EMEA", "sector": "Consumer",
+      "title": "From static market reporting to an intelligence layer for commercial teams",
+      "summary": "Starbucks EMEA consolidated 33 monthly reports into one automated model covering 16 markets, reconstructed 13 missing periods to restore trend history, and designed three intelligence perspectives around different commercial questions." },
+    { "id": "case-bacardi", "client": "Bacardi", "sector": "Consumer",
+      "title": "From total trade reporting to connected management insight",
+      "summary": "Bacardi connected eight source systems into automated management reporting and combined two trade channels into one total trade view, removing more than 40 hours a month of manual reporting and taking key processes from days to minutes." },
+    { "id": "case-australian-vintage", "client": "Australian Vintage", "sector": "Consumer",
+      "title": "Trusted category insight, protected before it reaches the board",
+      "summary": "Australian Vintage identified and corrected GBP 26 million of misclassified category sales, recovered around 793 SKUs missing from a data delivery, and reduced monthly validation and publication from days to hours across 11 pages of analysis." },
+    { "id": "case-golden-acre", "client": "Golden Acre Foods", "sector": "Consumer",
+      "title": "One trusted weekly view across four major retailers",
+      "summary": "Golden Acre Foods brought four major retailers into one consistent weekly view, rebuilt 104 weeks of category and retailer history, completed and matched around 2,700 records, and cut time spent preparing commercial reports by 30 per cent." },
+    { "id": "case-samworth", "client": "Samworth Brothers", "sector": "Consumer",
+      "title": "One board-ready view across six categories and sixteen competitors",
+      "summary": "Samworth Brothers replaced a fragmented monthly reporting process with one commercial model spanning six categories, 16 benchmarked competitors and five external data sources harmonised with internal reporting, reclaiming around a week from every monthly cycle." },
+    { "id": "case-vithit", "client": "Vit Hit", "sector": "Consumer",
+      "title": "A self-serve view of sales, promotion, pricing and distribution",
+      "summary": "Vit Hit turned complex market data into a self-serve commercial view covering three categories, three market levels from total grocery to impulse and discounters, five performance measures and three years of weekly history." },
+    { "id": "case-international-beverage", "client": "International Beverage", "sector": "Consumer",
+      "title": "Monthly leadership reporting that no longer depends on one person",
+      "summary": "International Beverage is turning a manually assembled monthly leadership pack into an automated process spanning six data sources, 20 markets and 156 weeks of history, with the UK, the US and China as priority countries." },
+    { "id": "case-samyang", "client": "Samyang Foods", "sector": "Consumer",
+      "title": "Connecting market demand, distributor sales and supply across five European markets",
+      "summary": "Samyang is replacing fragmented monthly reporting with one commercial model connecting sell-out, sell-through and sell-in across five European markets, targeting the removal of two days per market of manual Excel preparation, with first dashboards six weeks from sign-off." },
+    { "id": "case-qts", "client": "QTS Data Centres", "sector": "Engineering",
+      "title": "A complex maintenance plan turned into a schedule the operator could trust",
+      "summary": "QTS replaced an expert-built spreadsheet process with a constraint-based maintenance plan for a 45MW hyperscale data centre, coordinating three build phases and 12 equipment classes, then compressed twelve months of work into nine and a half when the build programme changed." },
+    { "id": "case-ilg", "client": "Inspired Learning Group", "sector": "Education",
+      "title": "Every school head given the numbers they can actually influence",
+      "summary": "Inspired Learning Group turned fragmented finance, occupancy, admissions and payroll data from five source systems into role-specific reporting across around 25 schools and nurseries, at five reporting levels from individual setting to group." },
+    { "id": "case-henkel", "client": "Henkel", "sector": "Consumer",
+      "title": "Category performance at the level where share is won and lost",
+      "summary": "Eleven adhesives and stationery categories were brought into one commercial view covering six brands down to individual SKU, three major UK grocers and two years of weekly history. Delivered by the team now operating as Optia." },
+    { "id": "case-tier-one-bank", "client": null, "clientLabel": "A Tier-One Global Bank", "confidential": true, "sector": "Financial",
+      "title": "Making KYC data traceable across a complex APAC regulatory environment",
+      "summary": "Optia Data supports the client data management and risk assessment processes behind a major bank's KYC operation, covering 30,000 records processed, 20 countries within the wider programme scope, a daily activity feed for continuous access auditability, and zero Priority 1 incidents during peak processing windows. The client is not named." },
+    { "id": "case-oracare", "client": "Oracare Group", "sector": "Health",
+      "title": "Three dental brands, one set of numbers",
+      "summary": "Oracare Group created a consistent monthly view across a multi-country practice estate, bringing three practice brands into one reporting model delivered from a consolidated source, without changing how individual practices operated." }
+  ],
+
+  "faq": [
+    { "q": "What does Optia Data do?",
+      "a": "Optia Data brings syndicated market data, retailer data and internal systems into one harmonised baseline, applies the client's own category definitions to it, and builds the reporting and analysis that runs on top. The work is aimed at commercial decisions that depend on numbers reconciling." },
+    { "q": "Which data sources does Optia Data work with?",
+      "a": "NielsenIQ and Nielsen, Kantar and GfK syndicated data, retailer EPOS and sell-out data, and clients' own internal sales, finance and operational systems. Case studies on the site describe engagements harmonising up to eight source systems at once." },
+    { "q": "Which industries does Optia Data work in?",
+      "a": "Consumer goods and retail is where most published work sits. The site also publishes engagements in financial services, education, engineering and health." },
+    { "q": "Where is Optia Data based?",
+      "a": "Optia Data is registered in England, company number 15884308, and works from London, Barcelona, Nuremberg, Abu Dhabi, Bangalore, Chicago and New York." },
+    { "q": "Is Optia Data certified for information security?",
+      "a": "Optia Data's processes are certified to ISO/IEC 27001:2022. The site also displays SOC 2 Type II, GDPR and HIPAA badges." },
+    { "q": "Does Optia Data deploy autonomous AI agents on client data?",
+      "a": "No. Optia Data uses AI agents in an attended setup to help write logic and processes, and does not deploy them to take autonomous unattended action." },
+    { "q": "Who is accountable for the numbers Optia Data delivers?",
+      "a": "Every output has a named analyst behind it who has checked the number and will stand by it. Clients have a named person to talk to rather than a support queue." },
+    { "q": "How does Optia Data deliver reporting?",
+      "a": "Primarily as Power BI dashboards and models built on a governed, version-controlled data baseline, with full lineage of every change." }
+  ],
+
+  "lastUpdated": "2026-08-12"
+}
