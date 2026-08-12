@@ -1,22 +1,39 @@
 <!--
   Optia Data: cookie consent + Google Consent Mode v2 + GTM.
 
+  Container GTM-M7V9QGH8.
+
   Two blocks. Order matters: PASTE 1 must run before GTM loads, or Google
-  will fire analytics before the visitor has been asked, which is the whole
-  thing UK PECR prohibits.
+  fires tags before the visitor has been asked, which is the thing UK PECR
+  prohibits.
 
-  Replace GTM-XXXXXXX with your container ID (Google Tag Manager, top right,
-  next to the workspace name). GA4 stays inside GTM as a tag; it is not
-  loaded directly here, so there is one place to change it later.
+  On the noscript snippet Google gives you: it is deliberately NOT included.
+  It loads the container with no way to obtain or honour consent, and v7 is
+  entirely JavaScript-routed, so a visitor without JavaScript has no working
+  site to measure. Adding it would fire tags on exactly the visits we cannot
+  ask. Nothing is lost by leaving it out.
 
-  Compliance choices baked in, per ICO guidance on PECR regulation 6:
-    - analytics defaults to DENIED and nothing fires until a choice is made
-    - Reject sits at the same level, same size and same prominence as Accept
+  Categories:
+    necessary   always on, no cookies that track
+    analytics   GA4                        -> analytics_storage
+    marketing   Apollo, Vector, LinkedIn   -> ad_storage, ad_user_data,
+                                              ad_personalization
+
+  Gate the tags in GTM itself, not here. Each tag gets Consent Settings ->
+  "Require additional consent for tag to fire": GA4 on analytics_storage,
+  Apollo and Vector on ad_storage. This block only reports the visitor's
+  choice; GTM decides what may run on it. That way a new tag added later is
+  gated by configuration rather than by remembering to edit this file.
+
+  Compliance choices, per ICO guidance on PECR regulation 6:
+    - everything non-essential defaults to denied, nothing fires until asked
+    - Reject all sits at the same level, size and prominence as Accept all
     - nothing is pre-ticked
+    - granular control per category
     - the choice is recorded first-party with a timestamp
     - consent lapses after 12 months and the banner returns
-    - a "Cookie settings" link lets the visitor change their mind, which is
-      what makes withdrawal "as easy as giving", also required
+    - a Cookie settings link reopens it, which is what makes withdrawal
+      as easy as giving
 -->
 
 
@@ -25,9 +42,6 @@
 <!-- ==================================================================== -->
 
 <script>
-/* Consent Mode v2 defaults. Denied until the visitor says otherwise.
-   functionality_storage and security_storage are strictly necessary, so
-   they are granted: they carry no tracking and need no consent. */
 window.dataLayer = window.dataLayer || [];
 function gtag(){ dataLayer.push(arguments); }
 
@@ -36,23 +50,24 @@ function gtag(){ dataLayer.push(arguments); }
   try {
     var m = document.cookie.match(/(?:^|;\s*)optia_consent=([^;]+)/);
     if (m) stored = JSON.parse(decodeURIComponent(m[1]));
-    /* A choice older than 12 months is treated as no choice. */
-    if (stored && (Date.now() - stored.ts > 31557600000)) stored = null;
+    /* Anything older than 12 months, or written by an earlier version of
+       this banner, counts as no choice rather than a stale one. */
+    if (stored && (stored.v !== 2 || Date.now() - stored.ts > 31557600000)) stored = null;
   } catch (e) { stored = null; }
 
-  var granted = !!(stored && stored.analytics);
+  var analytics = !!(stored && stored.analytics);
+  var marketing = !!(stored && stored.marketing);
 
   gtag('consent', 'default', {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    analytics_storage: granted ? 'granted' : 'denied',
+    analytics_storage:   analytics ? 'granted' : 'denied',
+    ad_storage:          marketing ? 'granted' : 'denied',
+    ad_user_data:        marketing ? 'granted' : 'denied',
+    ad_personalization:  marketing ? 'granted' : 'denied',
     functionality_storage: 'granted',
-    security_storage: 'granted',
+    security_storage:      'granted',
     wait_for_update: 500
   });
 
-  /* Expose the stored decision so the banner below knows whether to show. */
   window.__optiaConsent = stored;
 })();
 </script>
@@ -62,7 +77,7 @@ function gtag(){ dataLayer.push(arguments); }
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+})(window,document,'script','dataLayer','GTM-M7V9QGH8');</script>
 <!-- End Google Tag Manager -->
 
 
@@ -71,7 +86,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- ==================================================================== -->
 
 <style>
-/* Uses the site's own tokens only. No new colour, font or spacing value. */
+/* Site tokens only. No new colour, font or spacing value. */
 .cc {
   position: fixed; z-index: 9999; left: var(--gutter); right: var(--gutter);
   bottom: var(--gutter); max-width: 46rem;
@@ -86,8 +101,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .cc__body { margin: 0 0 var(--space-xs); }
 .cc__body a { color: var(--blue); }
 .cc__row { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
-/* Equal prominence. Same element, same padding, same font, same border.
-   Only the fill differs, and neither reads as the safer option. */
 .cc__btn {
   flex: 1 1 11rem; appearance: none; cursor: pointer;
   font: inherit; font-weight: 600; letter-spacing: .01em;
@@ -97,6 +110,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .cc__btn--alt { background: transparent; color: var(--blue); }
 .cc__btn:hover { background: var(--signal); border-color: var(--signal); color: var(--white); }
 .cc__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* The third control is a plain text button, deliberately quieter than the two
+   above it: it opens a choice rather than making one. */
+.cc__more {
+  display: inline-block; margin-top: var(--space-2xs);
+  appearance: none; background: none; border: 0; padding: 0;
+  font: inherit; color: var(--blue); text-decoration: underline;
+  text-underline-offset: .18em; cursor: pointer;
+}
+.cc__more:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.cc__panel { margin-top: var(--space-xs); border-top: 1px solid var(--line-dark); padding-top: var(--space-xs); }
+.cc__panel[hidden] { display: none; }
+.cc__opt { display: flex; gap: var(--space-2xs); align-items: flex-start; margin-bottom: var(--space-2xs); }
+.cc__opt input { margin: .25em 0 0; width: 1.05em; height: 1.05em; accent-color: var(--blue); flex: none; }
+.cc__opt label { font-weight: 600; }
+.cc__opt p { margin: .1em 0 0; font-size: .92em; }
+.cc__opt--fixed { opacity: .72; }
 @media (max-width: 480px) { .cc__btn { flex: 1 1 100%; } }
 </style>
 
@@ -104,14 +133,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      aria-labelledby="cc-title" aria-describedby="cc-body" hidden>
   <h2 class="cc__title" id="cc-title">Cookies</h2>
   <p class="cc__body" id="cc-body">
-    We need a few cookies to make this site work. We would also like to use
-    Google Analytics to see which pages are read, which sets cookies that are
-    not essential. That is entirely your call, and you can change it whenever
-    you like. <a href="#privacy-policy">Privacy Policy</a>.
+    Some cookies are needed to make this site work. We would also like to
+    measure which pages get read, and to recognise the organisations visiting
+    us. Neither is essential, so both are entirely your call and you can
+    change your mind at any time. <a href="#privacy-policy">Privacy Policy</a>.
   </p>
+
   <div class="cc__row">
-    <button type="button" class="cc__btn" data-cc="accept">Accept analytics</button>
-    <button type="button" class="cc__btn cc__btn--alt" data-cc="reject">Reject analytics</button>
+    <button type="button" class="cc__btn" data-cc="accept">Accept all</button>
+    <button type="button" class="cc__btn cc__btn--alt" data-cc="reject">Reject all</button>
+  </div>
+  <button type="button" class="cc__more" data-cc="toggle"
+          aria-expanded="false" aria-controls="cc-panel">Choose what to allow</button>
+
+  <div class="cc__panel" id="cc-panel" hidden>
+    <div class="cc__opt cc__opt--fixed">
+      <input type="checkbox" id="cc-necessary" checked disabled>
+      <div>
+        <label for="cc-necessary">Necessary</label>
+        <p>Remembers this choice and keeps the site working. No tracking.</p>
+      </div>
+    </div>
+    <div class="cc__opt">
+      <input type="checkbox" id="cc-analytics" data-cat="analytics">
+      <div>
+        <label for="cc-analytics">Analytics</label>
+        <p>Google Analytics, so we can see which pages are actually read.</p>
+      </div>
+    </div>
+    <div class="cc__opt">
+      <input type="checkbox" id="cc-marketing" data-cat="marketing">
+      <div>
+        <label for="cc-marketing">Marketing</label>
+        <p>Tools that identify the organisations visiting the site, and measure
+           whether our LinkedIn activity brought you here.</p>
+      </div>
+    </div>
+    <div class="cc__row">
+      <button type="button" class="cc__btn cc__btn--alt" data-cc="save">Save my choices</button>
+    </div>
   </div>
 </div>
 
@@ -119,44 +179,75 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 (function () {
   var BANNER = document.getElementById('cookie-banner');
   if (!BANNER) return;
+  var PANEL  = document.getElementById('cc-panel');
+  var TOGGLE = BANNER.querySelector('[data-cc="toggle"]');
+  var BOXES  = BANNER.querySelectorAll('[data-cat]');
 
-  function save(analytics) {
-    var v = { analytics: !!analytics, ts: Date.now(), v: 1 };
-    /* First-party, no subdomain, SameSite=Lax. Twelve months, matching the
-       point at which we ask again. */
+  function save(analytics, marketing) {
+    var v = { analytics: !!analytics, marketing: !!marketing, ts: Date.now(), v: 2 };
     document.cookie = 'optia_consent=' + encodeURIComponent(JSON.stringify(v))
       + ';path=/;max-age=31557600;SameSite=Lax'
       + (location.protocol === 'https:' ? ';Secure' : '');
     return v;
   }
 
-  function apply(analytics) {
-    gtag('consent', 'update', { analytics_storage: analytics ? 'granted' : 'denied' });
-    dataLayer.push({ event: 'optia_consent_update', optia_analytics_consent: analytics ? 'granted' : 'denied' });
+  function apply(analytics, marketing) {
+    gtag('consent', 'update', {
+      analytics_storage:  analytics ? 'granted' : 'denied',
+      ad_storage:         marketing ? 'granted' : 'denied',
+      ad_user_data:       marketing ? 'granted' : 'denied',
+      ad_personalization: marketing ? 'granted' : 'denied'
+    });
+    dataLayer.push({
+      event: 'optia_consent_update',
+      optia_analytics_consent: analytics ? 'granted' : 'denied',
+      optia_marketing_consent: marketing ? 'granted' : 'denied'
+    });
   }
 
-  function close() { BANNER.hidden = true; }
+  function decide(analytics, marketing) {
+    save(analytics, marketing);
+    apply(analytics, marketing);
+    BANNER.hidden = true;
+  }
 
   function open() {
     BANNER.hidden = false;
-    var b = BANNER.querySelector('[data-cc="accept"]');
-    if (b) b.focus({ preventScroll: true });
+    /* Reopening always starts from the stored choice, never from the last
+       state of the checkboxes. */
+    var s = window.__optiaConsent || {};
+    BANNER.querySelector('[data-cat="analytics"]').checked = !!s.analytics;
+    BANNER.querySelector('[data-cat="marketing"]').checked = !!s.marketing;
+    PANEL.hidden = true;
+    TOGGLE.setAttribute('aria-expanded', 'false');
+    BANNER.querySelector('[data-cc="accept"]').focus({ preventScroll: true });
   }
 
   BANNER.addEventListener('click', function (e) {
     var t = e.target.closest('[data-cc]');
     if (!t) return;
-    var yes = t.getAttribute('data-cc') === 'accept';
-    save(yes);
-    apply(yes);
-    close();
+    var what = t.getAttribute('data-cc');
+
+    if (what === 'toggle') {
+      var openNow = PANEL.hidden;
+      PANEL.hidden = !openNow;
+      TOGGLE.setAttribute('aria-expanded', String(openNow));
+      if (openNow) BOXES[0].focus({ preventScroll: true });
+      return;
+    }
+    if (what === 'accept') return decide(true, true);
+    if (what === 'reject') return decide(false, false);
+    if (what === 'save') {
+      return decide(
+        BANNER.querySelector('[data-cat="analytics"]').checked,
+        BANNER.querySelector('[data-cat="marketing"]').checked
+      );
+    }
   });
 
-  /* No stored decision, or one that has lapsed, means ask. */
   if (!window.__optiaConsent) open();
 
-  /* Withdrawal path. Give the footer a link with this href and the banner
-     reopens, so changing your mind is exactly as easy as the first choice. */
+  /* Withdrawal path. Give the footer a link with this href. */
   document.addEventListener('click', function (e) {
     var t = e.target.closest('a[href="#cookie-settings"], [data-cookie-settings]');
     if (!t) return;
@@ -164,9 +255,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     open();
   });
 
-  /* v7 routes with hash fragments, and GA4 will not count those as page
-     views on its own. Push one explicitly so route changes are measured.
-     Delete this block once v7 serves real URLs. */
+  /* v7 routes with hash fragments, which GA4 does not count as page views on
+     its own. Delete this once v7 serves real URLs. */
   var last = location.hash;
   window.addEventListener('hashchange', function () {
     if (location.hash === last) return;
