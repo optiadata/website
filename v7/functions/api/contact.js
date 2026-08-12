@@ -86,22 +86,44 @@ export async function onRequestPost({ request, env }) {
   let delivered = false;
   let failure = null;
 
-  if (env.DAY_WEBHOOK_URL) {
+  const endpoint = env.LEAD_WEBHOOK_URL || env.DAY_WEBHOOK_URL;
+
+  if (endpoint) {
     try {
       const headers = { 'content-type': 'application/json' };
-      if (env.DAY_API_KEY) headers.authorization = `Bearer ${env.DAY_API_KEY}`;
-      const res = await fetch(env.DAY_WEBHOOK_URL, {
+      const key = env.LEAD_API_KEY || env.DAY_API_KEY;
+      if (key) headers.authorization = `Bearer ${key}`;
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify(record),
       });
-      delivered = res.ok;
-      if (!res.ok) failure = `Day AI responded ${res.status}`;
+
+      /* A 200 is not proof of delivery. Google Apps Script answers 200 to
+         everything, including its own rejection path and the sign-in page it
+         serves when a web app is not shared publicly. Trusting the status
+         alone made two different failures look identical to success and left
+         the sheet silently empty. So: read the body, and require the endpoint
+         to say so. Anything that cannot be parsed as an acknowledgement is
+         treated as a failure, which is the safe direction to be wrong in. */
+      const text = (await res.text()).slice(0, 500);
+      let ack = null;
+      try { ack = JSON.parse(text); } catch { /* not JSON, handled below */ }
+
+      if (!res.ok) {
+        failure = `endpoint responded ${res.status}: ${text.slice(0, 120)}`;
+      } else if (ack && ack.ok === true) {
+        delivered = true;
+      } else if (ack && ack.ok === false) {
+        failure = `endpoint rejected the lead: ${text.slice(0, 120)}`;
+      } else {
+        failure = `endpoint returned 200 but no {"ok":true}: ${text.slice(0, 120)}`;
+      }
     } catch (e) {
-      failure = `Day AI unreachable: ${e.message}`;
+      failure = `endpoint unreachable: ${e.message}`;
     }
   } else {
-    failure = 'DAY_WEBHOOK_URL is not configured';
+    failure = 'no LEAD_WEBHOOK_URL or DAY_WEBHOOK_URL configured';
   }
 
   /* Email fallback, only when the CRM did not take it. */
