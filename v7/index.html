@@ -964,15 +964,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     --m-visual-h: clamp(180px, 26vh, 250px);
   }
 
-  /* Hero. The photo was the section's entire background; it becomes a band
-     pinned to the top edge and the copy is padded clear of it. z-index lifts
-     it above the two tint overlays (which stay on the ink ground behind the
-     copy, so the Ultraviolet cast is preserved) rather than being washed out
-     by the 180deg darkening gradient. */
-  .hero { padding-top: calc(66px + var(--m-visual-h) + var(--space-s)); }
-  .hero__image { inset: 0 0 auto 0; height: var(--m-visual-h); z-index: 0; }
-  /* Holds the slat pattern in frame instead of the blown-out top edge. */
-  .hero__image img { object-fit: cover; object-position: 58% 64%; }
+  /* Hero deliberately excluded from the capped-band treatment below: the
+     homepage hero keeps the full-bleed photo behind the copy on mobile too,
+     matching desktop, per explicit direction. The other full-bleed visuals
+     (pillars, approach pause) keep the band. */
 
   /* Pillars: Foundation, Context, Intelligence. The image panel sat at a full
      100svh directly under each copy panel, which is what made every pillar two
@@ -1533,9 +1528,9 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="pattern-carousel" id="patternCarousel" role="group" aria-roledescription="carousel" aria-label="What we hear from commercial teams">
         <p class="eyebrow pattern-carousel__eyebrow">What we hear</p>
         <div class="pattern-themes">
-          <p class="pattern-theme is-active" data-set="working-day">I need time to do my actual job.</p>
-          <p class="pattern-theme" data-set="cost" aria-hidden="true">Sunday night spreadsheets</p>
-          <p class="pattern-theme" data-set="credibility" aria-hidden="true">Which numbers should I trust</p>
+          <p class="pattern-theme is-active" data-set="working-day">&ldquo;I need time to do my actual job.&rdquo;</p>
+          <p class="pattern-theme" data-set="cost" aria-hidden="true">&ldquo;Sunday night spreadsheets.&rdquo;</p>
+          <p class="pattern-theme" data-set="credibility" aria-hidden="true">&ldquo;Which numbers should I trust&rdquo;</p>
         </div>
         <ul class="pattern-grid" id="patternGrid" aria-live="off">
           <li class="pattern-col">
