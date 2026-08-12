@@ -456,7 +456,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
   pointer-events: none;
 }
 .customer-name--linked:hover::after { opacity: .85; transform: translateY(0); color: var(--blue); }
-.customers__cta { display: block; padding-top: 18px; border-top: 1px solid var(--line-light); font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
+.customers__cta { display: block; padding-top: 18px; font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
 .customers__cta strong { display: block; max-width: 30rem; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(1.6rem, 2.7vw, 2.5rem); line-height: 1.18; letter-spacing: -.025em; }
 .customers__cta span { display: block; margin-top: 22px; }
 
@@ -508,7 +508,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 .icon-chip svg { width: 18px; height: 18px; }
 .icon-chip--muted { background: rgba(5, 7, 13, .06); color: rgba(5, 7, 13, .62); }
 .proof-grid--strip .proof-grid__item { border: 1px solid var(--line-dark); border-radius: 10px; padding: 22px 20px; }
-.customers__examples-lead { margin-top: 1.5rem; opacity: .85; }
 .proved-cases__narrative { max-width: 56rem; margin-top: var(--space-xs); }
 .proved-cases__narrative p:not(.case-full__section-lede) { font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.25; letter-spacing: -.03em; }
 .proved-cases__narrative .case-full__section-lede { margin-top: 1rem; }
@@ -1111,13 +1110,10 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
    Both sit on the Ultraviolet ground, so the colours carry over unchanged.
    White on Ultraviolet measures 7.8:1 either way round, so the selected
    button inverts without dropping below AA. */
-/* Centred, not baseline-aligned: the number and the name are now the same
-   12px, so a shared baseline bought nothing and pinned the pair to the top of
-   the 44px box. */
-.role { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 0 15px; border: 1px solid rgba(255,255,255,.5); border-radius: 0; background: transparent; color: #fff; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
-.role__num { opacity: .6; }
+/* Centred, not baseline-aligned: the label is the only child, so it sits in
+   the middle of the 44px box rather than pinned to the top. */
+.role { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 15px; border: 1px solid rgba(255,255,255,.5); border-radius: 0; background: transparent; color: #fff; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
 .role:hover, .role[aria-selected="true"] { background: #fff; color: var(--blue); }
-.role[aria-selected="true"] .role__num { opacity: .55; }
 .role:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
 
 .role-panel[hidden] { display: none; }
@@ -1213,8 +1209,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
    Same mechanic as the hero logo marquee: one track holding two
    identical runs, translated -50% so the loop is seamless.
    ============================================================ */
-.partner-marquee { margin-top: var(--space-l); padding-top: var(--space-s); border-top: 1px solid var(--line-light); }
-.partner-marquee__label { color: var(--ice); margin: 0 0 var(--space-xs); }
+.partner-marquee { margin-top: var(--space-l); padding-top: var(--space-s); }
+.partner-marquee__label { color: var(--ice); margin: 0 0 var(--space-xs); font-size: 13px; letter-spacing: .09em; }
 .partner-marquee__viewport { position: relative; overflow: hidden; }
 /* The gutter is the section's own padding, so the fades are keyed to the
    Ultraviolet ground rather than to a panel colour. */
@@ -1467,7 +1463,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <div class="layer__copy">
         <div class="layer__number eyebrow layer__number--icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 18L12 6L18 18"></path><circle cx="12" cy="6" r="2" fill="currentColor" stroke="none"></circle><circle cx="6" cy="18" r="2" fill="currentColor" stroke="none"></circle><circle cx="18" cy="18" r="2" fill="currentColor" stroke="none"></circle></svg><span>Intelligence</span></div>
         <h2 class="layer__title layer__title--fit">Know what <em>to do next.</em></h2>
-        <p class="layer__body">Dashboards, ad-hoc answers and enhanced assisted analysis. Every insight identifies real value and how to unlock it. Every recommendation is provided to improve your business, based on your governed data. All verified by a human analyst. Decisions made with confidence, actionable insights not vanity metrics.</p>
+        <p class="layer__body">Dashboards, ad-hoc answers and enhanced analysis. Every insight identifies real value and how to unlock it. Every recommendation is provided to improve your business, based on your governed data. All verified by a human analyst. Decisions made with confidence. Actionable insights not vanity metrics.</p>
       </div>
       <div class="layer__image"><img data-src="images/blue-architectural-panels-violet-toned.jpg" alt="Blue architectural panels, violet-toned" loading="lazy" decoding="async"></div>
     </section>
@@ -1496,7 +1492,6 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       <h2 class="customers__title">Trusting Optia. <em>Earned, not assumed.</em></h2>
       <p class="customers__lead">We help consumer businesses unlock more value from complex, costly, syndicated data; this is where we have the most experience and our greatest relationships. The same engineering also serves clients in industrial, health, education, financial services consumer electronics verticals.</p>
 
-            <p class="customers__examples-lead">Here are some examples:</p>
       <div class="customer-filters" role="group" aria-label="Filter customers by sector">
         <button class="customer-filter is-active" type="button" data-filter="All" aria-pressed="true">All</button>
         <button class="customer-filter" type="button" data-filter="Consumer" aria-pressed="false">Consumer</button>
@@ -1528,14 +1523,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
     <section class="proved-cases proved-cases--light" id="proved-cases">
       <div class="proved-cases__inner">
-        <p class="eyebrow">Common problems</p>
         <h2 class="proved-cases__title">The Cost of <em>Getting It Wrong.</em></h2>
       <div class="pattern-carousel" id="patternCarousel" role="group" aria-roledescription="carousel" aria-label="What we hear from commercial teams">
         <p class="eyebrow pattern-carousel__eyebrow">What we hear</p>
         <div class="pattern-themes">
-          <p class="pattern-theme is-active" data-set="working-day">&ldquo;This is my working day&rdquo;</p>
-          <p class="pattern-theme" data-set="cost" aria-hidden="true">&ldquo;This could cost us&rdquo;</p>
-          <p class="pattern-theme" data-set="credibility" aria-hidden="true">&ldquo;My credibility is exposed&rdquo;</p>
+          <p class="pattern-theme is-active" data-set="working-day">I need time to do my actual job.</p>
+          <p class="pattern-theme" data-set="cost" aria-hidden="true">Sunday night spreadsheets</p>
+          <p class="pattern-theme" data-set="credibility" aria-hidden="true">Which numbers should I trust</p>
         </div>
         <ul class="pattern-grid" id="patternGrid" aria-live="off">
           <li class="pattern-col">
@@ -1600,9 +1594,9 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </ul>
         <div class="pattern-controls">
           <div class="pattern-dots" role="group" aria-label="Choose a set">
-            <button type="button" class="pattern-dot is-active" data-index="0" aria-current="true"><span class="visually-hidden">Show set 1 of 3, This is my working day</span></button>
-            <button type="button" class="pattern-dot" data-index="1"><span class="visually-hidden">Show set 2 of 3, This could cost us</span></button>
-            <button type="button" class="pattern-dot" data-index="2"><span class="visually-hidden">Show set 3 of 3, My credibility is exposed</span></button>
+            <button type="button" class="pattern-dot is-active" data-index="0" aria-current="true"><span class="visually-hidden">Show set 1 of 3, I need time to do my actual job.</span></button>
+            <button type="button" class="pattern-dot" data-index="1"><span class="visually-hidden">Show set 2 of 3, Sunday night spreadsheets</span></button>
+            <button type="button" class="pattern-dot" data-index="2"><span class="visually-hidden">Show set 3 of 3, Which numbers should I trust</span></button>
           </div>
           <button type="button" class="pattern-toggle" id="patternToggle" aria-pressed="false">Pause</button>
         </div>
@@ -1611,7 +1605,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         <div class="proved-cases__narrative">
           <p class="proved-cases__lede">This is not an analyst problem. It is a commercial risk.</p>
           <p>Capable teams are being asked to make major decisions using brittle, patched up spreadsheets. When syndicated data doesn&rsquo;t reconcile with internal systems, a retailer feed silently drops products, or one incorrect SKU distorts an entire forecast, it is not the data that gets questioned. It is the person presenting it.</p>
-          <p class="proved-cases__close">Optia catches and resolves discrepancies before they reach your category reporting, a board pack or a buyer meeting so your teams have confidence in their numbers.</p>
+          <p class="proved-cases__close">Optia catches and resolves discrepancies before they reach your category reporting, a board pack or a buyer meeting, so your teams have confidence in their numbers.</p>
         </div>
       </div>
     </section>
@@ -1622,16 +1616,16 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
         <div class="roles" role="tablist" aria-label="Choose your role">
           <button class="role" type="button" role="tab" id="tab-1" aria-controls="p-1" aria-selected="true" tabindex="0">
-            <span class="role__num" aria-hidden="true">01</span><span class="role__name">Insight Managers</span>
+            <span class="role__name">Insight Managers</span>
           </button>
           <button class="role" type="button" role="tab" id="tab-2" aria-controls="p-2" aria-selected="false" tabindex="-1">
-            <span class="role__num" aria-hidden="true">02</span><span class="role__name">Category Development Managers</span>
+            <span class="role__name">Category Development Managers</span>
           </button>
           <button class="role" type="button" role="tab" id="tab-3" aria-controls="p-3" aria-selected="false" tabindex="-1">
-            <span class="role__num" aria-hidden="true">03</span><span class="role__name">Brand Managers</span>
+            <span class="role__name">Brand Managers</span>
           </button>
           <button class="role" type="button" role="tab" id="tab-4" aria-controls="p-4" aria-selected="false" tabindex="-1">
-            <span class="role__num" aria-hidden="true">04</span><span class="role__name">Commercial Directors</span>
+            <span class="role__name">Commercial Directors</span>
           </button>
         </div>
 
@@ -1990,7 +1984,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/arla-logo-white.png" alt="Arla Foods" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Dairy &middot; Five years and counting</span>
+          <span class="case-hero__eyebrow">Dairy</span>
         </div>
         <h1 class="case-hero__title">One trusted view of brand and category performance across 16 markets</h1>
         <p class="case-hero__sub">How Arla replaced a 20-day reporting process with an always-ready view of market, brand, category and retailer performance.</p>
@@ -2054,7 +2048,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <span class="case-hero__client">Australian Vintage</span>
-          <span class="case-hero__eyebrow">Wine &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Wine</span>
         </div>
         <h1 class="case-hero__title">Trusted category insight, protected before it reaches the board</h1>
         <p class="case-hero__sub">How Australian Vintage uncovered &pound;26 million of misclassified category sales, recovered hundreds of missing products, and turned a manual reporting process into an accessible source of commercial insight.</p>
@@ -2117,7 +2111,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/golden-acre-foods-logo-white.png" alt="Golden Acre Foods" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Food and drink &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Food and drink</span>
         </div>
         <h1 class="case-hero__title">One trusted weekly view across four major retailers</h1>
         <p class="case-hero__sub">How Golden Acre Foods created a consistent view of retailer and category performance, rebuilt two years of history, and gave its commercial team clearer evidence for range and growth decisions.</p>
@@ -2175,7 +2169,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/samworth-brothers-logo-white.png" alt="Samworth Brothers" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Food manufacturing &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Food manufacturing</span>
         </div>
         <h1 class="case-hero__title">One board-ready view across six categories and sixteen competitors</h1>
         <p class="case-hero__sub">How Samworth Brothers replaced a fragmented monthly reporting process with a consistent view of category, retailer and competitor performance across the group.</p>
@@ -2232,7 +2226,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/vithit-logo-white.png" alt="Vit Hit" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Soft drinks &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Soft drinks</span>
         </div>
         <h1 class="case-hero__title">A clearer view of where the brand was growing, and where distribution was holding it back</h1>
         <p class="case-hero__sub">How Vit Hit turned complex market data into a self-serve view of sales, promotion, distribution and retailer performance.</p>
@@ -2288,7 +2282,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/international-beverage-logo-white.png" alt="International Beverage" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Spirits &middot; In progress, first live cycle targeted September 2026</span>
+          <span class="case-hero__eyebrow">Spirits</span>
         </div>
         <h1 class="case-hero__title">Taking one person out of the critical path of leadership reporting</h1>
         <p class="case-hero__sub">How International Beverage is turning a manually assembled monthly leadership pack into an automated reporting process spanning market, brand and internal sales data.</p>
@@ -2346,7 +2340,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/samyang-foods-logo-white.png" alt="Samyang Foods" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Food and drink &middot; In progress, dashboards targeted within 6 weeks of sign-off</span>
+          <span class="case-hero__eyebrow">Food and drink</span>
         </div>
         <h1 class="case-hero__title">Connecting market demand, distributor sales and supply across five European markets</h1>
         <p class="case-hero__sub">How Samyang is replacing fragmented monthly reporting with one view of sell-out, sell-through and sell-in across Europe.</p>
@@ -2403,7 +2397,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/bacardi-logo-white.png" alt="Bacardi" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Spirits &middot; Two projects</span>
+          <span class="case-hero__eyebrow">Spirits</span>
         </div>
         <h1 class="case-hero__title">From total trade reporting to connected management insight</h1>
         <p class="case-hero__sub">How Bacardi moved from manually combining market channels to automating management reporting across eight business systems.</p>
@@ -2483,7 +2477,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/qts-data-centres-logo-white.png" alt="QTS Data Centres" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Data centres &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Data centres</span>
         </div>
         <h1 class="case-hero__title">Turning a complex maintenance plan into a schedule the operator could trust</h1>
         <p class="case-hero__sub">How QTS replaced an expert-built spreadsheet process with a constraint-based maintenance plan for a 45MW hyperscale data centre, then compressed twelve months of work into nine and a half when the build programme changed.</p>
@@ -2540,7 +2534,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/inspired-learning-group-logo-white.png" alt="Inspired Learning Group" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Education &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Education</span>
         </div>
         <h1 class="case-hero__title">Giving every school head the numbers they can actually influence</h1>
         <p class="case-hero__sub">How Inspired Learning Group turned fragmented finance, occupancy, admissions and payroll data into role-specific reporting across around 25 schools and nurseries.</p>
@@ -2596,7 +2590,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/campari-logo-white.png" alt="Campari" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Spirits &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Spirits</span>
         </div>
         <h1 class="case-hero__title">One Total Trade view, without forcing unlike measures to behave as if they are the same</h1>
         <p class="case-hero__sub">How Campari UK brought on-trade and off-trade performance together in one commercial view while preserving the differences between the two channels.</p>
@@ -2653,7 +2647,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/starbucks-logo-white.png" alt="Starbucks EMEA" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Retail and food service &middot; Two phases</span>
+          <span class="case-hero__eyebrow">Retail and food service</span>
         </div>
         <h1 class="case-hero__title">From static market reporting to an intelligence layer for commercial teams</h1>
         <p class="case-hero__sub">How Starbucks EMEA moved from fragmented monthly reports to a consistent multi-market view, then explored how AI could turn those numbers into commentary, answers and recommendations.</p>
@@ -2733,7 +2727,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/henkel-logo-white.png" alt="Henkel" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Consumer goods &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Consumer goods</span>
         </div>
         <h1 class="case-hero__title">Seeing category performance at the level where share is actually won and lost</h1>
         <p class="case-hero__sub">A project delivered by the team now operating as Optia, bringing eleven adhesives and stationery categories into one commercial view, from total market performance down to individual SKU and retailer.</p>
@@ -2844,7 +2838,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         </div>
         <div class="case-hero__brand">
           <img class="case-hero__logo" data-src="images/oracare-logo-white.png" alt="Oracare Group" loading="lazy" decoding="async">
-          <span class="case-hero__eyebrow">Healthcare and dental &middot; Single engagement</span>
+          <span class="case-hero__eyebrow">Healthcare and dental</span>
         </div>
         <h1 class="case-hero__title">Three dental brands, one set of numbers</h1>
         <p class="case-hero__sub">How Oracare Group created a consistent monthly view across a multi-country practice estate without changing how individual practices operated.</p>
@@ -3522,85 +3516,85 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       /* Canonical copy record. The static markup is generated from this, so the
          twelve statements are real crawlable text AND have one source. Add an
          optional readMs to any card to override the derived reading time. */
-      var patternSets = [
-              {
-                      "id": "working-day",
-                      "theme": "This is my working day",
-                      "cards": [
-                              {
-                                      "figure": "80%",
-                                      "lead": "of analyst time goes on preparing data.",
-                                      "support": "Just 20% remains for the work they were hired to do."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "Retailer EPOS says one thing. Syndicated data says another.",
-                                      "support": "The meeting starts in ten minutes and nobody knows which number is true."
-                              },
-                              {
-                                      "figure": "10 to 15",
-                                      "lead": "people edit the same reporting file every month.",
-                                      "support": "One overwritten formula is all it takes. Nobody notices until the numbers are presented."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "One person knows how it all works.",
-                                      "support": "When they leave, where do you start?"
-                              }
-                      ]
-              },
-              {
-                      "id": "cost",
-                      "theme": "This could cost us",
-                      "cards": [
-                              {
-                                      "figure": "250%",
-                                      "lead": "One wrong SKU skewed a forecast.",
-                                      "support": "The correction took two seconds. Finding the problem took two days."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "Lost distribution is reported as falling consumer demand.",
-                                      "support": "The brand team responds to the wrong problem."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "A promotion is declared successful.",
-                                      "support": "The sales weeks and promotional calendar were never aligned."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "A retailer range review is built on products mapped to the wrong category.",
-                                      "support": "The recommendation is confident. The evidence underneath it is not."
-                              }
-                      ]
-              },
-              {
-                      "id": "credibility",
-                      "theme": "My credibility is exposed",
-                      "cards": [
-                              {
-                                      "figure": null,
-                                      "lead": "A retailer challenges your number.",
-                                      "support": "Nobody in the meeting can explain where it came from."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "Sales, finance, supply chain and marketing report different numbers.",
-                                      "support": "Four versions of the same business but no agreed truth."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "One data-provider update breaks two years of reporting logic.",
-                                      "support": "Yesterday everything worked. Today nothing reconciles."
-                              },
-                              {
-                                      "figure": null,
-                                      "lead": "The board wants an AI strategy.",
-                                      "support": "The data powering it is still not ready."
-                              }
-                      ]
-              }
+      var patternSets = [
+              {
+                      "id": "working-day",
+                      "theme": "I need time to do my actual job.",
+                      "cards": [
+                              {
+                                      "figure": "80%",
+                                      "lead": "of analyst time goes on preparing data.",
+                                      "support": "Just 20% remains for the work they were hired to do."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "Retailer EPOS says one thing. Syndicated data says another.",
+                                      "support": "The meeting starts in ten minutes and nobody knows which number is true."
+                              },
+                              {
+                                      "figure": "10 to 15",
+                                      "lead": "people edit the same reporting file every month.",
+                                      "support": "One overwritten formula is all it takes. Nobody notices until the numbers are presented."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "One person knows how it all works.",
+                                      "support": "When they leave, where do you start?"
+                              }
+                      ]
+              },
+              {
+                      "id": "cost",
+                      "theme": "Sunday night spreadsheets",
+                      "cards": [
+                              {
+                                      "figure": "250%",
+                                      "lead": "One wrong SKU skewed a forecast.",
+                                      "support": "The correction took two seconds. Finding the problem took two days."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "Lost distribution is reported as falling consumer demand.",
+                                      "support": "The brand team responds to the wrong problem."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "A promotion is declared successful.",
+                                      "support": "The sales weeks and promotional calendar were never aligned."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "A retailer range review is built on products mapped to the wrong category.",
+                                      "support": "The recommendation is confident. The evidence underneath it is not."
+                              }
+                      ]
+              },
+              {
+                      "id": "credibility",
+                      "theme": "Which numbers should I trust",
+                      "cards": [
+                              {
+                                      "figure": null,
+                                      "lead": "A retailer challenges your number.",
+                                      "support": "Nobody in the meeting can explain where it came from."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "Sales, finance, supply chain and marketing report different numbers.",
+                                      "support": "Four versions of the same business but no agreed truth."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "One data-provider update breaks two years of reporting logic.",
+                                      "support": "Yesterday everything worked. Today nothing reconciles."
+                              },
+                              {
+                                      "figure": null,
+                                      "lead": "The board wants an AI strategy.",
+                                      "support": "The data powering it is still not ready."
+                              }
+                      ]
+              }
       ];
 
       var grid   = document.getElementById('patternGrid');
