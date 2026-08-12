@@ -15,7 +15,9 @@ colour and no new spacing token.
 """
 import io, json, os, re, sys
 
-ROOT = r"c:\Users\helen\Downloads\websitev8"
+# Derived from this file's location, so the script works in any checkout,
+# including a git worktree.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 V7   = os.path.join(ROOT, "v7")
 SRC  = os.path.join(V7, "index.html")
 DATA = os.path.join(V7, "data", "company.json")
@@ -71,7 +73,17 @@ def build_graph(d):
         "name": c["name"],
         "legalName": c["legalName"],
         "alternateName": c["alternateName"],
-        "url": origin + "/",
+        "url": origin + c["url"],
+        "logo": {
+            "@type": "ImageObject",
+            "@id": origin + "/#logo",
+            "url": origin + c["logo"],
+            "contentUrl": origin + c["logo"],
+            "caption": c["name"],
+            "width": 221,
+            "height": 89,
+        },
+        "image": {"@id": origin + "/#logo"},
         "description": c["description"],
         "foundingDate": c["founded"],
         "email": c["email"],

@@ -12,6 +12,9 @@
   "company": {
     "name": "Optia Data",
     "legalName": "Optia Data Ltd",
+    "url": "/",
+    "logo": "/images/optia-logo.svg",
+    "_logoNote": "Paths are relative to site.origin and made absolute at build time. optia-logo.svg is the brand ink mark for light backgrounds, which is how search engines render a logo. optia-logo-white.svg is the reverse, for dark grounds.",
     "alternateName": ["Optia"],
     "companyNumber": "15884308",
     "description": "Optia Data is a data and AI consultancy that harmonises syndicated market, retailer and internal data into governed commercial reporting for consumer goods, retail, financial services, education, engineering and healthcare organisations.",
