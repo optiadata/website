@@ -481,7 +481,13 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 .capability .capability__body { margin: 0; max-width: 32ch; font-size: .875rem; line-height: 1.48; opacity: .82; }
 
 .customers { min-height: 100svh; padding: calc(66px + var(--gutter)) var(--gutter) var(--gutter); background: var(--blue); color: white; }
-.customers__title { max-width: 15ch; margin: 0 0 var(--space-s); font-size: clamp(3rem, 6.2vw, 6.5rem); font-weight: 400; line-height: .92; letter-spacing: -.03em; }
+/* Leading is looser here than on the other display headings, and it has to be.
+   Those set one typeface against itself; this one drops an italic serif under a
+   sans, so the descenders of "Trusting" meet the ascenders of "Earned". At .92
+   the measured clearance was 7px on 89px type, 8%, which reads as touching even
+   though the glyphs do not strictly overlap. 1.04 puts it at 13% and costs 28px
+   of height. */
+.customers__title { max-width: 15ch; margin: 0 0 var(--space-s); font-size: clamp(3rem, 6.2vw, 6.5rem); font-weight: 400; line-height: 1.04; letter-spacing: -.03em; }
 .customers__title em { display: block; margin-left: 6%; font-family: 'Zodiak', Georgia, serif; font-weight: 400; font-size: clamp(2.5rem, 4.9vw, 5.4rem); letter-spacing: -.015em; }
 .customers__lead { max-width: 44rem; margin: 0 0 var(--space-s) 20%; font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.25; letter-spacing: -.03em; opacity: .92; }
 .customer-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 15px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
@@ -1504,6 +1510,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 }
 
 </style>
+
 
 
 
