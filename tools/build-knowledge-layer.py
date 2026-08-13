@@ -54,8 +54,17 @@ def url_for(site, path):
     return site["origin"].rstrip("/") + path
 
 
-def case_url(site, cid):
-    return site["caseStudyUrlPattern"].replace("{origin}", site["origin"].rstrip("/")).replace("{id}", cid)
+def case_url(site, cs):
+    """Absolute URL for a case study.
+
+    Each case study carries its own path since real URLs shipped. Building the
+    URL from a pattern and a fragment id, as this did, now produces a link to
+    a page that does not exist.
+    """
+    if isinstance(cs, dict) and cs.get("path"):
+        return site["origin"].rstrip("/") + cs["path"]
+    raise SystemExit("case study %r has no path; re-run after updating company.json"
+                     % (cs.get("id") if isinstance(cs, dict) else cs))
 
 
 # --------------------------------------------------------------------------- #
@@ -98,7 +107,7 @@ def build_graph(d):
             "addressCountry": c["address"]["addressCountry"],
         },
         "areaServed": [{"@type": "Country", "name": a} for a in c["areaServed"]],
-        "knowsAbout": d["expertise"] + d["dataSources"],
+        "knowsAbout": d["expertise"] + d["methodologies"] + d["dataSources"],
         "sameAs": d["socialProfiles"],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
@@ -198,7 +207,7 @@ def build_page(d, faces, tokens):
     cases = []
     for cs in d["caseStudies"]:
         label = cs["client"] or cs["clientLabel"]
-        u = case_url(site, cs["id"])
+        u = case_url(site, cs)
         cases.append(
             '<div class="kp-case">\n'
             '<h3><a href="%s">%s</a></h3>\n'
@@ -337,11 +346,16 @@ p { margin: 0 0 var(--space-xs); max-width: 46rem; }
                        "<p>Consumer goods and retail is where most published work sits. Optia Data also publishes engagements in financial services, education, engineering and health.</p>"
                        + ul(d["industries"]), "industries"),
         markets=sec("Markets and geographic coverage",
-                    "<p>Optia Data delivers multi-market reporting for clients operating across Europe, the Americas, the Middle East and Asia. Published engagements cover up to 20 markets in a single reporting framework.</p>"
+                    "<p>Published engagements cover up to 20 markets in a single reporting framework. "
+                    "The markets below are those named in Optia Data's published case studies, as of %s.</p>" % d["asOf"]
+                    + ul(d["markets"])
+                    + "<h3>Optia Data locations</h3>"
+                    + "<p>Where Optia Data itself works from, as distinct from the markets above.</p>"
                     + ul(c["locations"]), "markets"),
         sources=sec("Data sources, methodologies and technologies",
                     "<p>Optia Data works with syndicated market data, retailer data and clients' own systems, and harmonises them into one governed baseline. Processes run in a code-versioned and data-versioned setup with full lineage of every change, and are certified to ISO/IEC 27001:2022.</p>"
                     "<h3>Data sources</h3>" + ul(d["dataSources"]) +
+                    "<h3>Methodologies</h3>" + ul(d["methodologies"]) +
                     "<h3>Technologies</h3>" + ul(d["technologies"]) +
                     "<h3>Partner network</h3>" + ul(d["partners"]), "data-sources"),
         facts=sec("Company facts", facts_html, "company-facts"),
@@ -373,7 +387,7 @@ def build_llms(d):
     L += ["", "## Case studies", "",
           "Fifteen published engagements. Fourteen name the client; one financial services engagement is published without a client name.", ""]
     for cs in d["caseStudies"]:
-        L.append("- [%s](%s): %s" % (cs["client"] or cs["clientLabel"], case_url(site, cs["id"]), cs["summary"]))
+        L.append("- [%s](%s): %s" % (cs["client"] or cs["clientLabel"], case_url(site, cs), cs["summary"]))
     L += ["", "## Insights", "",
           "- [Areas of expertise](%s#expertise): what Optia Data works on." % page,
           "- [Data sources, methodologies and technologies](%s#data-sources): the syndicated, retailer and internal data Optia Data harmonises, and the partner network behind it." % page,
