@@ -1494,6 +1494,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 </style>
 
 
+
 <!-- build-routes:jsonld -->
 <script type="application/ld+json">
 {
@@ -3630,6 +3631,14 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       }
 
       function go(url, id) {
+        // The title is set before the history entry changes, not after.
+        // Tag Manager's History Change trigger reads document.title at the
+        // moment pushState runs, so setting it inside applyRoute afterwards
+        // recorded every client-side page view against the title of the page
+        // the visitor had just left: clicking Home, then Bacardi, logged
+        // Bacardi's URL under "Case studies". The whole report was shifted by
+        // one. applyRoute sets it again, which costs nothing.
+        setRouteTitle(isCaseId(id) ? id : '');
         if (location.pathname + location.hash !== url) {
           history.pushState(null, '', url);
         }
@@ -3643,6 +3652,9 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       // rather than a redirect: no extra request, and no junk history entry.
       var legacyId = location.hash.slice(1);
       if (PATH_FOR[legacyId] && normalisePath(location.pathname) === '/') {
+        // Same ordering as go(): replaceState raises History Change too, so
+        // the title has to be right before it runs.
+        setRouteTitle(legacyId);
         history.replaceState(null, '', PATH_FOR[legacyId]);
       }
 
