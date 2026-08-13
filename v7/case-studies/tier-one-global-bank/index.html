@@ -39,6 +39,30 @@
      that itself from history state. -->
 <script>if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }</script>
 
+<!-- A section fragment is an instruction to scroll on arrival, not a state to
+     keep. Left in the address bar it made every later reload jump back down the
+     page: a tab that once read /#solutions reloaded onto Solutions forever, and
+     the visitor had no idea why, because they had long since scrolled away.
+     Two ways in. Anyone who used the menu before the site stopped writing
+     fragments still has such a URL in a tab, a bookmark or their history. And
+     the redirect map sends the old WordPress paths /the-solution/, /contact/,
+     /how-we-solve/, /who-you-are/ and /data-challenges/ to fragments, so
+     arrivals from old search results land on one too.
+     So it is honoured once and then removed. This runs before the Tag Manager
+     snippet below on purpose: gtm.js has not executed yet, its history listener
+     does not exist, and replaceState here therefore costs no phantom page view.
+     Route fragments are left alone, because the router converts those to real
+     paths itself. -->
+<script>
+(function () {
+  var h = location.hash.slice(1);
+  if (!h) { return; }
+  if (/^case-/.test(h) || h === 'about-page' || h === 'privacy-policy') { return; }
+  window.__optiaAnchor = h;
+  history.replaceState(history.state, '', location.pathname + location.search);
+})();
+</script>
+
 <!-- Consent Mode defaults. Must run before the GTM snippet below, or Google
      fires tags before the visitor has been asked. See
      v7/analytics/consent-and-analytics.html for the full rationale. -->
@@ -1523,6 +1547,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 }
 
 </style>
+
 
 
 
@@ -3700,6 +3725,19 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       }
 
       applyRoute();
+
+      // The fragment stripped in the head still has to do its one job. Instant
+      // rather than smooth: html carries scroll-behavior: smooth, and gliding
+      // the length of the page on arrival looks like the site scrolling itself.
+      if (window.__optiaAnchor) {
+        var anchorEl = document.getElementById(window.__optiaAnchor);
+        window.__optiaAnchor = null;
+        if (anchorEl) {
+          try { anchorEl.scrollIntoView({ behavior: 'instant', block: 'start' }); }
+          catch (e) { anchorEl.scrollIntoView(); }
+        }
+      }
+
       // popstate is what carries Back and Forward now that navigation changes
       // the path rather than the fragment. hashchange stays for the case the
       // visitor edits the fragment in the address bar by hand; applyRoute is
