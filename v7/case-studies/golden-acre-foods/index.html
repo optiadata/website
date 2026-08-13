@@ -1515,6 +1515,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 
 
 
+
 <!-- build-routes:jsonld -->
 <script type="application/ld+json">
 {
@@ -3714,7 +3715,34 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
           if (isHome) { go('/', ''); window.scrollTo(0, 0); return; }
           // A bare href="#" is the Back control, and Back means home.
           var id = href.slice(1);
-          go(id ? '/#' + id : '/', id);
+          if (!id) { go('/', ''); return; }
+
+          // A same-page anchor scrolls, and that is all it does. It used to
+          // write the fragment into the URL as well, which caused two problems.
+          //
+          // The fragment outlived the scroll. Tap Solutions, scroll back up by
+          // hand, and the address bar still read /#solutions, so a refresh
+          // threw the visitor back down the page instead of returning them to
+          // the top. Reported from a phone, where the menu is the only way to
+          // navigate and pull-to-refresh is a normal gesture, so it happened
+          // constantly there and almost never on a desktop.
+          //
+          // And every tap pushed a history entry, which Tag Manager's History
+          // Change trigger read as a navigation: four taps on the menu sent
+          // GA4 four page views of the homepage. Homepage traffic was being
+          // counted once per menu tap.
+          //
+          // Arriving at /#contact from outside still works: applyRoute reads
+          // the fragment on load, which is what the /contact/ redirect relies
+          // on. Nothing needs the fragment to be written on the way past.
+          if (normalisePath(location.pathname) !== '/') {
+            // Coming from a routed page, so the path does have to change.
+            // Only the path: the fragment stays out of it. Title first, for
+            // the same reason as in go().
+            setRouteTitle('');
+            history.pushState(null, '', '/');
+          }
+          applyRoute(id);
         });
       });
 
