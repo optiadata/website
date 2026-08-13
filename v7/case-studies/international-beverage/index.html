@@ -747,6 +747,18 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
     background: var(--paper);
     color: var(--ink);
   }
+  /* No backdrop blur on the bar at this width, and it is not a style choice.
+     backdrop-filter makes an element the containing block for any fixed-position
+     descendant, and the menu panel below is a fixed descendant of the bar. Once
+     the visitor scrolled past 24px the bar gained .is-scrolled, the panel was
+     then measured against a 58px tall bar instead of the screen, and it
+     collapsed to 60px: the links spilled over the hero with no background
+     behind them. Reported from a phone, invisible on a desktop because the
+     panel is only fixed below 760px.
+     The bar's own background is 94% opaque, so nothing is lost by dropping the
+     blur here. If it is ever wanted back, the panel has to move out of the bar
+     in the markup first. */
+  .site-nav.is-scrolled { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .menu-open .nav-links { display: grid; }
   .nav-links a { min-height: 58px; border-bottom: 1px solid var(--line-dark); font-size: 12px; }
   .menu-open .nav-toggle span:first-child { transform: translateY(3.5px) rotate(45deg); }
@@ -1492,6 +1504,7 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 }
 
 </style>
+
 
 
 
