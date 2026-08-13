@@ -26,6 +26,19 @@
 <meta name="twitter:description" content="A project delivered by the team now operating as Optia, bringing eleven adhesives and stationery categories into one commercial view, from total market performance down to individual SKU and retailer.">
 <meta name="twitter:image" content="https://optiadata.com/images/og/henkel.jpg">
 
+<!-- Reloading returned the visitor to wherever they had scrolled to, which on a
+     single long homepage meant the site appeared to open on Solutions, or
+     Customers, or wherever they happened to have stopped. Only the very first
+     visit looked right, because only then was there no saved position. It read
+     as a phone-only fault because pull-to-refresh is a routine gesture there.
+     Restoring mid-document also fights the intro loader, which plays over
+     whatever the browser has just scrolled to.
+     Set in the head rather than with the router at the end of the body,
+     because the browser restores scroll during parsing and would already have
+     moved by then. Back and Forward still restore position; the router handles
+     that itself from history state. -->
+<script>if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }</script>
+
 <!-- Consent Mode defaults. Must run before the GTM snippet below, or Google
      fires tags before the visitor has been asked. See
      v7/analytics/consent-and-analytics.html for the full rationale. -->
@@ -1510,6 +1523,8 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
 }
 
 </style>
+
+
 
 
 
@@ -3661,6 +3676,12 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
         // one. applyRoute sets it again, which costs nothing.
         setRouteTitle(isCaseId(id) ? id : '');
         if (location.pathname + location.hash !== url) {
+          // Stamp where we are onto the entry we are leaving. Scroll
+          // restoration is manual now, so this is what lets Back put the
+          // visitor back where they were on the homepage instead of at the top
+          // of it. Only the entry being left is touched; the new one starts
+          // with no position, which is what we want.
+          history.replaceState({ y: window.scrollY }, '');
           history.pushState(null, '', url);
         }
         applyRoute(id);
@@ -3684,7 +3705,23 @@ html.routing-case--light .site-nav { color: var(--ink); border-color: var(--line
       // the path rather than the fragment. hashchange stays for the case the
       // visitor edits the fragment in the address bar by hand; applyRoute is
       // idempotent, so the two firing together costs nothing.
-      window.addEventListener('popstate', function () { applyRoute(); });
+      window.addEventListener('popstate', function (event) {
+        applyRoute();
+        // Only the homepage needs this. Every other route opens at its own top
+        // by design, and applyRoute has already scrolled it there.
+        var y = event.state && typeof event.state.y === 'number' ? event.state.y : null;
+        if (y !== null && !ROUTES[normalisePath(location.pathname)]) {
+          // Instant, not smooth. html carries scroll-behavior: smooth, so a
+          // plain scrollTo glided the visitor back down the page over a second
+          // and a half after they pressed Back, which reads as the site
+          // scrolling itself. The page also carries scroll-snap-type: y
+          // mandatory, so the browser settles on the nearest section boundary
+          // rather than the exact pixel. That is the intended behaviour here:
+          // Back returns to the section the visitor left, not to the pixel.
+          try { window.scrollTo({ top: y, behavior: 'instant' }); }
+          catch (e) { window.scrollTo(0, y); }
+        }
+      });
       window.addEventListener('hashchange', function () { applyRoute(); });
 
       // Intercept in-page links ourselves rather than letting the browser's
