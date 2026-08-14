@@ -1,8 +1,33 @@
 # Optia Data email signature
 
 Replaces the Borna / `#3E4899` signature in `optiadata/signature_optia`, which
-predates the current site. This one uses Ultraviolet `#4828E5`, the live hero
-line, and the same composition as the LinkedIn covers.
+predates the current site. Ultraviolet `#4828E5`, the live hero line, and the
+same composition as the LinkedIn covers.
+
+## Pick one
+
+Open **`index.html`** and press copy on whichever you want. Once this folder is
+pushed it is live at
+<https://optiadata.github.io/website/signature/>.
+
+| Variant | File | Use it for |
+| --- | --- | --- |
+| **Full** | `signature-a-strip.html` | The most brand. First contact and outbound. |
+| **Panel** | `signature-b-panel.html` | Same weight of brand, half the height. |
+| **Line** | `signature-c-mark.html` | One small mark and a rule. Tagline stays live text. |
+| **Reply** | `signature-d-reply.html` | No images at all. Replies inside a thread. |
+
+## About the typeface
+
+Switzer and Zodiak cannot be used for live text in an email. Mail clients do not
+load webfonts: Outlook renders through Word, and Gmail strips the `<style>`
+block that `@font-face` would need, including when you paste into its signature
+box. Anything set in Switzer would silently fall back and lose its metrics,
+which is what the old builder was doing.
+
+So the brand line is drawn as an image, in real Switzer, and everything else is
+set in the stack the site itself falls back to. The **Reply** variant carries no
+image at all and therefore shows the fallback everywhere, deliberately.
 
 ## Before anyone installs it
 
