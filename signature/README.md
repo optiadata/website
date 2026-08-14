@@ -4,18 +4,25 @@ Replaces the Borna / `#3E4899` signature in `optiadata/signature_optia`, which
 predates the current site. Ultraviolet `#4828E5`, the live hero line, and the
 same composition as the LinkedIn covers.
 
-## Pick one
+## Use the builder
 
-Open **`index.html`** and press copy on whichever you want. Once this folder is
-pushed it is live at
-<https://optiadata.github.io/website/signature/>.
+**<https://optiadata.github.io/website/signature/builder.html>** — type your own
+name, role, email and phone, pick a layout, press copy. This is the link to
+share with the team.
 
-| Variant | File | Use it for |
-| --- | --- | --- |
-| **Full** | `signature-a-strip.html` | The most brand. First contact and outbound. |
-| **Panel** | `signature-b-panel.html` | Same weight of brand, half the height. |
-| **Line** | `signature-c-mark.html` | One small mark and a rule. Tagline stays live text. |
-| **Reply** | `signature-d-reply.html` | No images at all. Replies inside a thread. |
+`index.html` is the older gallery: the same layouts with fixed example details
+and no form. The builder supersedes it.
+
+| Variant | Use it for |
+| --- | --- |
+| **Full** | The most brand. First contact and outbound. |
+| **Panel** | Same weight of brand, half the height. |
+| **Classic** | The previous signature's shape, in the new colour, with the round mark. |
+| **Reply** | No images at all. Replies inside a thread. |
+
+Classic keeps the old layout but replaces the dotted divider's run of 36 bullet
+characters with a dotted CSS border. The characters wrapped into nonsense in a
+narrow window; the border cannot.
 
 ## About the typeface
 

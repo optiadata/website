@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Optia email signature builder</title>
+<style>
+  /* The page chrome uses the real site fonts. The signature preview
+     deliberately does not: it shows what a mail client will actually render,
+     and a preview in Switzer would be a preview of something nobody receives. */
+  @font-face { font-family:'Switzer'; src:url('fonts/Switzer-500.woff2') format('woff2');
+               font-weight:500; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Switzer'; src:url('fonts/Switzer-700.woff2') format('woff2');
+               font-weight:700; font-style:normal; font-display:swap; }
+
+  :root { --uv:#4828E5; --ink:#05070D; --paper:#f6f6f1; --line:rgba(5,7,13,.14); --muted:#4a4a56; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:44px 24px 96px; background:var(--paper); color:var(--ink);
+         font:500 15px/1.5 'Switzer',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  h1 { font-weight:700; font-size:clamp(28px,4vw,42px); letter-spacing:-.035em; margin:0 0 10px; }
+  .lede { max-width:64ch; margin:0 0 36px; color:var(--muted); }
+  .cols { display:grid; grid-template-columns:340px 1fr; gap:28px; align-items:start; }
+  @media (max-width:860px) { .cols { grid-template-columns:1fr; } }
+
+  .panel { background:#fff; border:1px solid var(--line); padding:22px; }
+  .panel h2 { margin:0 0 16px; font-size:11px; font-weight:700; letter-spacing:.12em;
+              text-transform:uppercase; color:var(--uv); }
+  label { display:block; margin:0 0 13px; font-size:12px; letter-spacing:.02em; color:var(--muted); }
+  input[type=text] { display:block; width:100%; margin-top:5px; padding:9px 11px;
+                     border:1px solid var(--line); border-radius:0; background:#fff;
+                     font:400 14px/1.3 Arial,Helvetica,sans-serif; color:var(--ink); }
+  input[type=text]:focus { outline:2px solid var(--uv); outline-offset:1px; border-color:transparent; }
+  fieldset { border:0; padding:0; margin:0 0 6px; }
+  .opt { display:flex; align-items:flex-start; gap:9px; margin:0 0 9px; font-size:13px; color:var(--ink); }
+  .opt input { margin:3px 0 0; accent-color:var(--uv); }
+  .opt span small { display:block; color:var(--muted); font-size:12px; line-height:1.4; }
+
+  .stage { background:#fff; border:1px solid var(--line); }
+  .bar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+         padding:14px 20px; border-bottom:1px solid var(--line); }
+  .bar strong { flex:1 1 auto; font-size:11px; font-weight:700; letter-spacing:.12em;
+                text-transform:uppercase; color:var(--uv); }
+  button { border:1px solid var(--uv); background:var(--uv); color:#fff; font:inherit; font-weight:500;
+           font-size:13px; padding:8px 15px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--uv); }
+  button:hover { opacity:.88; }
+  #preview { padding:28px 20px; overflow-x:auto; }
+  details { border-top:1px solid var(--line); }
+  summary { padding:12px 20px; cursor:pointer; font-size:13px; color:var(--muted); }
+  textarea { display:block; width:100%; height:230px; padding:14px 20px; border:0; border-top:1px solid var(--line);
+             font:400 12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; resize:vertical; }
+  footer { max-width:70ch; margin:40px auto 0; font-size:13px; line-height:1.6; color:var(--muted); }
+  footer h3 { font-size:13px; letter-spacing:.02em; color:var(--ink); margin:22px 0 6px; }
+  code { background:#ececeb; padding:1px 5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Email signature builder</h1>
+  <p class="lede">Fill in your details, pick how much brand you want, then copy. The preview shows
+  what a mail client actually renders, not a mock-up.</p>
+
+  <div class="cols">
+    <form class="panel" id="form" autocomplete="off">
+      <h2>Your details</h2>
+      <label>Name <input type="text" id="f-name" value="Your Name"></label>
+      <label>Role <input type="text" id="f-role" value="Your role"></label>
+      <label>Email <input type="text" id="f-email" value="you@optiadata.com"></label>
+      <label>Phone <small>(leave blank to omit)</small>
+        <input type="text" id="f-tel" value=""></label>
+      <label>Website <input type="text" id="f-site" value="optiadata.com"></label>
+
+      <h2 style="margin-top:24px;">Layout</h2>
+      <fieldset id="f-variant">
+        <div class="opt"><input type="radio" name="v" value="full" id="v-full" checked>
+          <span><label for="v-full" style="margin:0;color:inherit;font-size:13px;">Full</label>
+          <small>The brand strip. First contact and outbound.</small></span></div>
+        <div class="opt"><input type="radio" name="v" value="panel" id="v-panel">
+          <span><label for="v-panel" style="margin:0;color:inherit;font-size:13px;">Panel</label>
+          <small>Same brand, half the height.</small></span></div>
+        <div class="opt"><input type="radio" name="v" value="classic" id="v-classic">
+          <span><label for="v-classic" style="margin:0;color:inherit;font-size:13px;">Classic</label>
+          <small>The previous signature, in the new colour, with the round mark.</small></span></div>
+        <div class="opt"><input type="radio" name="v" value="reply" id="v-reply">
+          <span><label for="v-reply" style="margin:0;color:inherit;font-size:13px;">Reply</label>
+          <small>No images. For replies inside a thread.</small></span></div>
+      </fieldset>
+
+      <h2 style="margin-top:24px;">Options</h2>
+      <div class="opt"><input type="checkbox" id="f-disc" checked>
+        <span><label for="f-disc" style="margin:0;color:inherit;font-size:13px;">Legal disclaimer</label></span></div>
+      <div class="opt"><input type="checkbox" id="f-iso" checked>
+        <span><label for="f-iso" style="margin:0;color:inherit;font-size:13px;">ISO 27001 line</label></span></div>
+      <div class="opt"><input type="checkbox" id="f-font">
+        <span><label for="f-font" style="margin:0;color:inherit;font-size:13px;">Try the site fonts</label>
+        <small>Adds Switzer for the few clients that load webfonts. Apple Mail honours it;
+        Gmail and Outlook ignore it and fall back. See the note below.</small></span></div>
+    </form>
+
+    <div>
+      <div class="stage">
+        <div class="bar">
+          <strong id="label">Full</strong>
+          <button type="button" id="copy">Copy signature</button>
+          <button type="button" class="ghost" id="copycode">Copy HTML</button>
+        </div>
+        <div id="preview"></div>
+        <details>
+          <summary>Show the HTML</summary>
+          <textarea id="code" readonly spellcheck="false"></textarea>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <h3>Installing</h3>
+    <p>Gmail: Settings, See all settings, Signature. Outlook web: Settings, Mail, Compose and reply.
+    Outlook desktop: File, Options, Mail, Signatures. Apple Mail: Settings, Signatures, then untick
+    <em>Always match my default message font</em>. Use <strong>Copy signature</strong> and paste
+    straight in; <strong>Copy HTML</strong> is for anyone pasting into a system that wants markup.</p>
+
+    <h3>Why the type is not Switzer</h3>
+    <p>Mail clients do not load webfonts. Outlook renders through Word, and Gmail strips the
+    <code>&lt;style&gt;</code> block that <code>@font-face</code> needs, including when you paste into
+    its own signature box. Type set in Switzer therefore falls back silently and loses its metrics,
+    which is what the previous signature was doing. Here the brand line is drawn as an image in real
+    Switzer, and the rest uses the stack the site itself falls back to. <em>Try the site fonts</em>
+    adds the webfont for the minority of clients that honour it, and changes nothing for everyone else.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var BASE = 'https://optiadata.github.io/website/signature';
+  var UV = '#4828E5', INK = '#05070D', MUTED = '#5C5C68', FAINT = '#8A8A95', RULE = '#C9C9D2';
+  var STACK = 'Arial,Helvetica,sans-serif';
+  var WEBSTACK = "'Switzer',Arial,Helvetica,sans-serif";
+  var DISC = 'This electronic message transmission contains information from Optia Data which may be ' +
+             'confidential or privileged. If you are not the intended recipient, be aware that any ' +
+             'disclosure, copying, distribution or use of the contents of this information is prohibited.';
+  var FONTCSS = '<style>@font-face{font-family:"Switzer";src:url("' + BASE +
+    '/fonts/Switzer-500.woff2") format("woff2");font-weight:400 600;font-style:normal;}' +
+    '@font-face{font-family:"Switzer";src:url("' + BASE +
+    '/fonts/Switzer-700.woff2") format("woff2");font-weight:700;font-style:normal;}</style>';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  };
+
+  function read() {
+    var v = document.querySelector('input[name=v]:checked').value;
+    return {
+      name: $('f-name').value.trim() || 'Your Name',
+      role: $('f-role').value.trim(),
+      email: $('f-email').value.trim(),
+      tel: $('f-tel').value.trim(),
+      site: ($('f-site').value.trim() || 'optiadata.com').replace(/^https?:\/\//, '').replace(/\/$/, ''),
+      variant: v,
+      disc: $('f-disc').checked,
+      iso: $('f-iso').checked,
+      font: $('f-font').checked
+    };
+  }
+
+  function stack(c) { return c.font ? WEBSTACK : STACK; }
+
+  function img(c, file, w, h, alt) {
+    return '<img src="' + BASE + '/' + file + '" width="' + w + '" height="' + h + '" alt="' + esc(alt) +
+           '" style="display:block; border:0; outline:none; text-decoration:none; width:' + w +
+           'px; height:' + h + 'px;">';
+  }
+
+  function bits(c) {
+    var S = stack(c);
+    var name = '<span style="font-family:' + S + '; font-size:17px; font-weight:bold; line-height:1.25; color:' +
+               INK + ';">' + esc(c.name) + '</span>';
+    var role = '';
+    if (c.role) {
+      role = '<span style="font-family:' + S + '; font-size:13px; line-height:1.4; color:' + MUTED + ';">' +
+             esc(c.role) + '&nbsp;&nbsp;<span style="color:' + RULE + ';">|</span>&nbsp;&nbsp;Optia Data</span>';
+    }
+    var L = [];
+    if (c.email) L.push('<a href="mailto:' + esc(c.email) + '" style="color:' + UV +
+                        '; text-decoration:none;">' + esc(c.email) + '</a>');
+    if (c.tel) L.push('<a href="tel:' + c.tel.replace(/[^\d+]/g, '') + '" style="color:' + INK +
+                      '; text-decoration:none;">' + esc(c.tel) + '</a>');
+    L.push('<a href="https://' + esc(c.site) + '" style="color:' + UV +
+           '; text-decoration:none;">' + esc(c.site) + '</a>');
+    var links = '<span style="font-family:' + S + '; font-size:13px; line-height:1.75; color:' + INK + ';">' +
+                L.join('<br>') + '</span>';
+    var f = [];
+    if (c.iso) f.push('ISO 27001:2022 certified');
+    if (c.disc) f.push(DISC);
+    var foot = f.length ? '<span style="font-family:' + S + '; font-size:10px; line-height:1.5; color:' +
+               FAINT + ';">' + f.join('<br><br>') + '</span>' : '';
+    return { name: name, role: role, links: links, foot: foot, S: S };
+  }
+
+  function open_(c, extra) {
+    return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;' +
+           ' mso-table-lspace:0pt; mso-table-rspace:0pt; font-family:' + stack(c) + '; color:' + INK + ';' +
+           (extra || '') + '">';
+  }
+
+  var T = {
+    full: function (c) {
+      var b = bits(c);
+      return open_(c, ' max-width:520px;') +
+        '<tr><td style="padding:0 0 3px 0;">' + b.name + '</td></tr>' +
+        (b.role ? '<tr><td style="padding:0 0 13px 0;">' + b.role + '</td></tr>' : '') +
+        '<tr><td style="padding:0 0 15px 0;">' + b.links + '</td></tr>' +
+        '<tr><td style="padding:0 0 13px 0; line-height:0;"><a href="https://' + esc(c.site) +
+          '" style="text-decoration:none;">' +
+          img(c, 'optia-signature-strip-2x.png', 520, 104, 'Optia Data. Intelligence. Built for Decisions.') +
+          '</a></td></tr>' +
+        (b.foot ? '<tr><td>' + b.foot + '</td></tr>' : '') + '</table>';
+    },
+    panel: function (c) {
+      var b = bits(c);
+      return open_(c) +
+        '<tr><td valign="top" width="132" style="width:132px; padding:0 20px 0 0; line-height:0;">' +
+          '<a href="https://' + esc(c.site) + '" style="text-decoration:none;">' +
+          img(c, 'optia-signature-panel-2x.png', 132, 132, 'Optia Data. Intelligence. Built for Decisions.') +
+          '</a></td>' +
+        '<td valign="top" style="padding:0;"><table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">' +
+          '<tr><td style="padding:0 0 3px 0;">' + b.name + '</td></tr>' +
+          (b.role ? '<tr><td style="padding:0 0 12px 0;">' + b.role + '</td></tr>' : '') +
+          '<tr><td>' + b.links + '</td></tr></table></td></tr>' +
+        (b.foot ? '<tr><td colspan="2" style="padding:16px 0 0 0;">' + b.foot + '</td></tr>' : '') +
+        '</table>';
+    },
+    /* The previous signature's shape: details, a dotted rule, the round mark,
+       then the strapline. Recoloured to Ultraviolet. The rule is a dotted CSS
+       border rather than the old run of 36 bullet characters, which wrapped
+       into nonsense in a narrow window. */
+    classic: function (c) {
+      var b = bits(c);
+      return open_(c, ' max-width:460px;') +
+        '<tr><td style="padding:0 0 3px 0;">' + b.name + '</td></tr>' +
+        (b.role ? '<tr><td style="padding:0 0 12px 0;">' + b.role + '</td></tr>' : '') +
+        '<tr><td style="padding:0 0 14px 0;">' + b.links + '</td></tr>' +
+        '<tr><td style="padding:0; font-size:0; line-height:0; border-top:2px dotted ' + UV + ';">&nbsp;</td></tr>' +
+        '<tr><td style="padding:16px 0 0 0;"><table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">' +
+          '<tr><td valign="middle" style="padding:0 12px 0 0; line-height:0;">' +
+            '<a href="https://' + esc(c.site) + '" style="text-decoration:none;">' +
+            img(c, 'optia-badge-2x.png', 44, 44, 'Optia Data') + '</a></td>' +
+          '<td valign="middle" style="font-family:' + b.S + '; font-size:13px; line-height:1.35; color:' + INK + ';">' +
+            'Intelligence.<br><span style="color:' + MUTED + ';">Built for Decisions.</span></td>' +
+          '</tr></table></td></tr>' +
+        (b.foot ? '<tr><td style="padding:16px 0 0 0;">' + b.foot + '</td></tr>' : '') +
+        '</table>';
+    },
+    reply: function (c) {
+      var b = bits(c), S = b.S, out = [];
+      out.push('<tr><td style="font-family:' + S + '; font-size:13px; line-height:1.6; color:' + INK + ';">' +
+        '<strong>' + esc(c.name) + '</strong>' +
+        (c.role ? '<span style="color:' + RULE + ';"> &nbsp;|&nbsp; </span><span style="color:' + MUTED + ';">' +
+          esc(c.role) + '</span>' : '') + '</td></tr>');
+      var L = [];
+      if (c.email) L.push('<a href="mailto:' + esc(c.email) + '" style="color:' + UV + '; text-decoration:none;">' + esc(c.email) + '</a>');
+      if (c.tel) L.push('<a href="tel:' + c.tel.replace(/[^\d+]/g, '') + '" style="color:' + INK + '; text-decoration:none;">' + esc(c.tel) + '</a>');
+      L.push('<a href="https://' + esc(c.site) + '" style="color:' + UV + '; text-decoration:none;">' + esc(c.site) + '</a>');
+      out.push('<tr><td style="padding:4px 0 0 0; font-family:' + S + '; font-size:13px; line-height:1.6;">' +
+        L.join('<span style="color:' + RULE + ';"> &nbsp;|&nbsp; </span>') + '</td></tr>');
+      out.push('<tr><td style="padding:8px 0 0 0; font-family:' + S + '; font-size:11px; line-height:1.5; color:' +
+        FAINT + ';">Optia Data &mdash; Intelligence. Built for Decisions.</td></tr>');
+      return open_(c, ' max-width:460px;') + out.join('') + '</table>';
+    }
+  };
+
+  var LABEL = { full: 'Full', panel: 'Panel', classic: 'Classic', reply: 'Reply' };
+
+  function render() {
+    var c = read();
+    var html = T[c.variant](c);
+    if (c.font) html = FONTCSS + html;
+    $('label').textContent = LABEL[c.variant];
+    $('preview').innerHTML = html;
+    $('code').value = html;
+  }
+
+  function copyNode(node, btn, msg) {
+    var sel = window.getSelection(), r = document.createRange();
+    r.selectNodeContents(node); sel.removeAllRanges(); sel.addRange(r);
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    sel.removeAllRanges();
+    var was = btn.textContent;
+    btn.textContent = ok ? (msg || 'Copied') : 'Select it and copy';
+    setTimeout(function () { btn.textContent = was; }, 2200);
+  }
+
+  $('form').addEventListener('input', render);
+  $('form').addEventListener('change', render);
+  $('copy').addEventListener('click', function () { copyNode($('preview'), this); });
+  $('copycode').addEventListener('click', function () {
+    var t = $('code'); t.select(); t.setSelectionRange(0, 99999);
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    var was = this.textContent;
+    this.textContent = ok ? 'Copied' : 'Select it and copy';
+    var b = this; setTimeout(function () { b.textContent = was; }, 2200);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
