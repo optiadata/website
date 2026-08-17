@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<!-- DO NOT let this tag reach the build source on geo-knowledge-layer.
+     This copy is the one GitHub Pages serves at optiadata.github.io/website/v7/,
+     which is a duplicate of production and must stay out of the index. The
+     same path on geo-knowledge-layer is what build-routes.py reads to generate
+     optiadata.com, and a noindex there would deindex the live site. The two
+     copies have diverged by design; do not merge this file between them. -->
+<meta name="robots" content="noindex, follow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Optia makes complex consumer data dependable enough to act on.">
